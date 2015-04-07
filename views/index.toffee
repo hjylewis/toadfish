@@ -1,0 +1,27 @@
+<!-- index.toffee -->
+
+<body>
+
+  <input type="text" name="search" id = 'first_search' autofocus autocomplete="off">
+
+  <!-- This is just a sample for styling purposes -->
+  <ul>
+    <li class = 'result'>
+      <h2>Girls</h2>
+      <span>The 1975</span>
+      <img src = "./images/albums/1975.jpg" />
+    </li>
+    <li class = 'result'>
+      <h2>Tainted Love</h2>
+      <span>Soft Cell</span>
+      <img src = "./images/albums/tainted.jpg" />
+    </li>
+    <li class = 'result'>
+      <h2>Satin in a Coffin</h2>
+      <span>Modest Mouse</span>
+      <img src = "./images/albums/modest.jpg" />
+    </li>
+  </ul>
+
+
+</body>
