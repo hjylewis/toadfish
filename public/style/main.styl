@@ -66,8 +66,26 @@ nav
   width 50%
   font-size 40px
   margin-top 20px
-  padding 20px 30px
+  padding 20px 25px
   border 1px solid purple
+  color black
+
+  input_grey = #bbb
+
+  &::-webkit-input-placeholder { /* WebKit browsers */
+    color:    input_grey;
+  }
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    input_grey;
+    opacity:  1;
+  }
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    input_grey;
+    opacity:  1;
+  }
+  &:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    input_grey;
+  }
 
 
 ul
@@ -79,12 +97,21 @@ ul
   margin auto
   margin-top 20px
 
+  &.hidden-ul
+    display none
+
   li.result
     position relative
     min-height 150px
     border-top 1px solid black
     clear both
     width 100%
+
+    &.hidden_result
+      display none
+
+    &.no_border_result
+      border-top none
 
     h2
       padding-top 20px
