@@ -36,19 +36,19 @@ $('#first_search').keyup (e) ->
       $('ul').removeClass('hidden-ul')
 
 search = (str, done) ->
-  console.log str
+  console.log "search: " + str
   return done null if str == ""
   return done JSON.parse(sessionStorage.getItem(str)) if sessionStorage.getItem(str)?
-  console.log "nope"
   async.parallel {
       "soundcloud": (callback) ->
-        SC.get '/tracks', { q: str }, (tracks, err) ->
+        SC.get '/tracks', { q: str, limit: 10 }, (tracks, err) ->
           logError err if err?
           callback null, tracks
       ,"youtube": (callback) ->
         request = gapi.client.youtube.search.list {
           q: str,
           type: 'video',
+          maxResults: 10,
           part: 'snippet'
         }
         request.execute (response) ->
