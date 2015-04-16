@@ -1,5 +1,7 @@
 # custom.coffee
 
+DEBUG = true
+
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
 }
@@ -7,7 +9,6 @@ SC.initialize {
 googleApiClientReady = ->
   gapi.client.setApiKey 'AIzaSyDxetqce82LNsSBK4aSQ_7sSFDelsRtwSM'
   gapi.client.load 'youtube', 'v3'
-
 
 $('#first_search').keyup (e) ->
   value = $(this).val()
@@ -36,16 +37,18 @@ $('#first_search').keyup (e) ->
 
 search = (str, done) ->
   console.log str
-  return null if str == ""
-  return JSON.parse(sessionStorage.getItem(str)) if sessionStorage.getItem(str)?
+  return done null if str == ""
+  return done JSON.parse(sessionStorage.getItem(str)) if sessionStorage.getItem(str)?
   console.log "nope"
   async.parallel {
       "soundcloud": (callback) ->
         SC.get '/tracks', { q: str }, (tracks, err) ->
+          logError err if err?
           callback null, tracks
       ,"youtube": (callback) ->
         request = gapi.client.youtube.search.list {
           q: str,
+          type: 'video',
           part: 'snippet'
         }
         request.execute (response) ->
@@ -59,4 +62,13 @@ search = (str, done) ->
         }
     }, (err, results) ->
       results.query = str
+      sessionStorage.setItem(str, JSON.stringify(results))
       done results
+
+logError = (msg) ->
+  $.post "/error", { "msg" : msg }
+
+window.onerror = (msg, url, line) ->
+    message = "clientError: "+url+"["+line+"] : "+msg
+    logError message
+    not DEBUG
