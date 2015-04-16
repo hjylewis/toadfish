@@ -29,10 +29,18 @@
     <!-- Javascript and the Like -->
 
     <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <!-- soundcloud -->
+    <script src="//connect.soundcloud.com/sdk.js"></script>
+
 
     <!-- Local Javascript Tags -->
     <script src="/custom.js"></script>
+    <script type="text/javascript" src="/script/async.js"></script>
+
+    <!-- youtube -->
+    <script src="//apis.google.com/js/client.js?onload=googleApiClientReady"></script>
 
   </body>
 

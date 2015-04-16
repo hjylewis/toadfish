@@ -15,7 +15,8 @@ paths = require("./paths")
 
 
 app.use coffee {
-	src: __dirname + '/public/script'
+	src: __dirname + '/public/script',
+	bare: true
 }
 
 app.use(body_parser.urlencoded({ extended: false }))
