@@ -50,6 +50,13 @@ search = (str, done) ->
         }
         request.execute (response) ->
           callback null, response.items
+      ,"rdio": (callback) ->
+        $.ajax {
+          url: '/rdio/search',
+          data: {'q': str},
+          success: (res) ->
+              callback null, res
+        }
     }, (err, results) ->
       results.query = str
       done results

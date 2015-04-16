@@ -14,5 +14,11 @@
     "serve-favicon": "^2.1.1",
     "stylus": "^0.48.1",
     "toffee": "^0.1.12"
+  },
+  "devDependencies": {
+    "napa": "^1.2.0"
+  },
+    "scripts": {
+    "install": "napa rdio/rdio-simple"
   }
 }
