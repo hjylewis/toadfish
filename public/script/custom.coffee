@@ -42,7 +42,7 @@ search = (str, done) ->
   async.parallel {
       "soundcloud": (callback) ->
         SC.get '/tracks', { q: str, limit: 10 }, (tracks, err) ->
-          logError err if err?
+          logError "soundcloud err:" + err if err?
           callback null, cleanUpResults(tracks, "soundcloud")
       ,"youtube": (callback) ->
         request = gapi.client.youtube.search.list {
@@ -52,7 +52,7 @@ search = (str, done) ->
           part: 'snippet'
         }
         request.execute (response) ->
-          logError response.error if response.error?
+          logError "youtube err:" + JSON.stringify(response.error) if response.error?
           callback null, cleanUpResults(response.items, "youtube")
       ,"rdio": (callback) ->
         $.ajax {
@@ -67,7 +67,7 @@ search = (str, done) ->
       done results
 
 logError = (msg) ->
-  $.post "/error", { "msg" : JSON.stringify(msg) }
+  $.post "/error", { "msg" : msg }
 
 window.onerror = (msg, url, line) ->
     message = "clientError: "+url+"["+line+"] : "+msg
