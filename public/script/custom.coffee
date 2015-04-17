@@ -66,6 +66,28 @@ search = (str, done) ->
       sessionStorage.setItem(str, JSON.stringify(results))
       done results
 
+cleanUpResults = (results, type) ->
+  _.map results, (result) ->
+    retObj = {}
+    retObj.id = result.key || result.id.videoId || result.id
+    retObj.permalink_url = result.permalink_url || result.shortUrl || ('https://www.youtube.com/watch?v=' + retObj.id if type == 'youtube')
+    retObj.title = result.title || result.name || result.snippet.title
+    retObj.artist = result.artist
+    retObj.duration = result.duration
+    retObj.user = result.user.username if result.user?
+    retObj.type = type
+
+    if type == 'soundcloud'
+      if result.artwork_url?
+        retObj.artwork_url = result.artwork_url.replace('large','t500x500')
+      else
+        retObj.artwork_url = result.user.avatar_url.replace('large','t500x500') if  result.user.avatar_url?
+    else if type == 'rdio'
+      retObj.artwork_url = result.icon400.replace('400','600') if result.icon400?
+    else if type == 'youtube'
+      retObj.artwork_url = result.snippet.thumbnails.high.url
+
+
 logError = (msg) ->
   $.post "/error", { "msg" : msg }
 
@@ -73,30 +95,3 @@ window.onerror = (msg, url, line) ->
     message = "clientError: "+url+"["+line+"] : "+msg
     logError message
     not DEBUG
-
-cleanUpResults = (results, type) ->
-  _.map results, (result) ->
-    if type == 'soundcloud'
-      scObj =  _.pick(result, 'artwork_url','duration','id','permalink_url','title')
-      scObj.user = result.user.username
-      if scObj.artwork_url?
-        scObj.artwork_url = scObj.artwork_url.replace('large','t500x500')
-      else
-        scObj.artwork_url = result.user.avatar_url.replace('large','t500x500') if  result.user.avatar_url?
-      return _.extend scObj, {type: 'soundcloud'}
-    if type == 'youtube'
-      ytObj = {}
-      ytObj.id = result.id.videoId
-      ytObj.artwork_url = result.snippet.thumbnails.high.url
-      ytObj.permalink_url = 'https://www.youtube.com/watch?v=' + ytObj.id
-      ytObj.title = result.snippet.title
-      return _.extend ytObj, {type: 'youtube'}
-    if type == 'rdio'
-      rdioObj = {}
-      rdioObj.id = result.key
-      rdioObj.artwork_url = result.icon400.replace('400','600') if result.icon400?
-      rdioObj.permalink_url = result.shortUrl
-      rdioObj.title = result.name
-      rdioObj.artist = result.artist
-      rdioObj.duration = result.duration
-      return _.extend rdioObj, {type: 'rdio'}
