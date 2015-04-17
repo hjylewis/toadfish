@@ -80,12 +80,13 @@ cleanUpResults = (results, type) ->
     if type == 'soundcloud'
       if result.artwork_url?
         retObj.artwork_url = result.artwork_url.replace('large','t500x500')
-      else
-        retObj.artwork_url = result.user.avatar_url.replace('large','t500x500') if  result.user.avatar_url?
+      else if result.user.avatar_url? && not result.user.avatar_url.includes('a1')
+        retObj.artwork_url = result.user.avatar_url.replace('large','t500x500')
     else if type == 'rdio'
       retObj.artwork_url = result.icon400.replace('400','600') if result.icon400?
     else if type == 'youtube'
       retObj.artwork_url = result.snippet.thumbnails.high.url
+    return retObj
 
 
 logError = (msg) ->
