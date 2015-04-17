@@ -10,20 +10,20 @@ rdio = new Rdio([config.rdio_cred.key, config.rdio_cred.secret]);
 
 start = (app) ->
 
-  app.get "/", (request, result) ->
-    result.render "index", {title: "Toadfish", layout: "views/layout.toffee"}
+  app.get "/", (req, res) ->
+    res.render "index", {title: "Toadfish", layout: "views/layout.toffee"}
 
-  app.get "/rdio/search", (request, result) ->
-    query = request.query.q
+  app.get "/rdio/search", (req, res) ->
+    query = req.query.q
     rdio.call 'search', {'query': query, 'types': 'Track'}, (err, msg) ->
       if err?
         console.error "rdio error:" + JSON.stringify(err)
-        result.send []
+        res.send []
       else 
-        result.send msg.result.results
+        res.send msg.result.results
 
-  app.post "/error", (request, result) ->
-    console.error request.body.msg
-    result.send "Logged"
+  app.post "/error", (req, res) ->
+    console.error req.body.msg
+    res.sendStatus 200
 
 exports.start = start
