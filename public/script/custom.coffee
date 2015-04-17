@@ -43,7 +43,7 @@ search = (str, done) ->
       "soundcloud": (callback) ->
         SC.get '/tracks', { q: str, limit: 10 }, (tracks, err) ->
           logError err if err?
-          callback null, tracks
+          callback null, cleanUpResults(tracks, "soundcloud")
       ,"youtube": (callback) ->
         request = gapi.client.youtube.search.list {
           q: str,
@@ -52,13 +52,14 @@ search = (str, done) ->
           part: 'snippet'
         }
         request.execute (response) ->
-          callback null, response.items
+          logError response.error if response.error?
+          callback null, cleanUpResults(response.items, "youtube")
       ,"rdio": (callback) ->
         $.ajax {
           url: '/rdio/search',
           data: {'q': str},
           success: (res) ->
-              callback null, res
+              callback null, cleanUpResults(res, "rdio")
         }
     }, (err, results) ->
       results.query = str
@@ -66,9 +67,36 @@ search = (str, done) ->
       done results
 
 logError = (msg) ->
-  $.post "/error", { "msg" : msg }
+  $.post "/error", { "msg" : JSON.stringify(msg) }
 
 window.onerror = (msg, url, line) ->
     message = "clientError: "+url+"["+line+"] : "+msg
     logError message
     not DEBUG
+
+cleanUpResults = (results, type) ->
+  _.map results, (result) ->
+    if type == 'soundcloud'
+      scObj =  _.pick(result, 'artwork_url','duration','id','permalink_url','title')
+      scObj.user = result.user.username
+      if scObj.artwork_url?
+        scObj.artwork_url = scObj.artwork_url.replace('large','t500x500')
+      else
+        scObj.artwork_url = result.user.avatar_url.replace('large','t500x500') if  result.user.avatar_url?
+      return _.extend scObj, {type: 'soundcloud'}
+    if type == 'youtube'
+      ytObj = {}
+      ytObj.id = result.id.videoId
+      ytObj.artwork_url = result.snippet.thumbnails.high.url
+      ytObj.permalink_url = 'https://www.youtube.com/watch?v=' + ytObj.id
+      ytObj.title = result.snippet.title
+      return _.extend ytObj, {type: 'youtube'}
+    if type == 'rdio'
+      rdioObj = {}
+      rdioObj.id = result.key
+      rdioObj.artwork_url = result.icon400.replace('400','600') if result.icon400?
+      rdioObj.permalink_url = result.shortUrl
+      rdioObj.title = result.name
+      rdioObj.artist = result.artist
+      rdioObj.duration = result.duration
+      return _.extend rdioObj, {type: 'rdio'}

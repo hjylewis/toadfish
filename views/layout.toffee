@@ -37,7 +37,9 @@
 
     <!-- Local Javascript Tags -->
     <script src="/custom.js"></script>
-    <script type="text/javascript" src="/script/async.js"></script>
+    <script type="text/javascript" src="/script/async-min.js"></script>
+    <script type="text/javascript" src="/script/underscore-min.js"></script>
+
 
     <!-- youtube -->
     <script src="//apis.google.com/js/client.js?onload=googleApiClientReady"></script>

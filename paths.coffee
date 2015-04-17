@@ -24,6 +24,6 @@ start = (app) ->
 
   app.post "/error", (req, res) ->
     console.error req.body.msg
-    res.sendStatus 200
+    res.status(200).send("Error Logged")
 
 exports.start = start
