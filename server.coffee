@@ -6,6 +6,7 @@ coffee = require("coffee-middleware")
 path = require("path")
 params = require('express-params')
 http = require('http')
+logger = require('morgan');
 
 app = express()
 params.extend(app)
@@ -27,6 +28,8 @@ app.use stylus.middleware {
 	src: __dirname + '/public',
 	compress: true
 }
+
+app.use logger('dev')
 
 app.use express.static 'public'
 
