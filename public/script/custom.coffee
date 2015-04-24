@@ -1,6 +1,7 @@
 # custom.coffee
 
 DEBUG = true
+PAGE_LENGTH = 3
 
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
@@ -35,45 +36,90 @@ $('#first_search').keyup (e) ->
     else
       $('ul').removeClass('hidden-ul')
 
-search = (str, done) ->
+# str: string query
+# options: object (optional)
+#    next: boolean, get another page.  DEFAULT: false
+#    types: array, of 'soundcloud','youtube','rdio'.  DEFAULT: ['soundcloud','youtube','rdio']
+# done: callback function(obj)
+search = (str, options, done) ->
+  if _.isFunction(options)
+    done = options
+    options = {}
+  options.types = ['soundcloud','youtube','rdio'] if not options.types?
   console.log "search: " + str
   return done null if str == ""
-  return done JSON.parse(sessionStorage.getItem(str)) if sessionStorage.getItem(str)?
+  
+  storedResults = if sessionStorage.getItem(str) then JSON.parse(sessionStorage.getItem(str)) else {}
+  if not options.next?
+    ret = _.reduce options.types, ((memo, type) -> return storedResults[type] && memo), true
+    return (done storedResults) if ret?
+    options.types = _.filter options.types, (type) -> return not storedResults[type]
+
   async.parallel {
       "soundcloud": (callback) ->
-        SC.get '/tracks', { q: str, limit: 10 }, (tracks, err) ->
-          logError "soundcloud err:" + err if err?
-          callback null, cleanUpResults(tracks, "soundcloud")
+
+        return callback null, null if _.indexOf(options.types,'soundcloud') == -1
+        if options.next && storedResults.soundcloud && storedResults.soundcloud.next
+          $.ajax(storedResults.soundcloud.next)
+            .done (tracks) ->
+              callback null, cleanUpResults(tracks, "soundcloud")
+            .fail (jqXHR, textStatus, errorThrown) ->
+              logError "soundcloud err:" + textStatus + ": " + errorThrown
+        else
+          SC.get '/tracks', { q: str, limit: PAGE_LENGTH, linked_partitioning: 1}, (tracks, err) ->
+            logError "soundcloud err:" + err if err?
+            callback null, cleanUpResults(tracks, "soundcloud")
       ,"youtube": (callback) ->
-        request = gapi.client.youtube.search.list {
+        return callback null, null if _.indexOf(options.types,'youtube') == -1
+        ytOptions = {
           q: str,
           type: 'video',
-          maxResults: 10,
+          maxResults: PAGE_LENGTH,
           part: 'snippet'
         }
+        ytOptions.pageToken = storedResults.youtube.next if options.next && storedResults.youtube && storedResults.youtube.next?
+        request = gapi.client.youtube.search.list ytOptions
         request.execute (response) ->
           logError "youtube err:" + JSON.stringify(response.error) if response.error?
-          callback null, cleanUpResults(response.items, "youtube")
+          callback null, cleanUpResults(response, "youtube")
       ,"rdio": (callback) ->
+        return callback null, null if _.indexOf(options.types,'rdio') == -1
+        page = if options.next && storedResults.rdio && storedResults.rdio.next then storedResults.rdio.next else 0
         $.ajax {
           url: '/rdio/search',
-          data: {'q': str},
+          data: {'q': str, 'page_length': PAGE_LENGTH, 'page': page},
           success: (res) ->
               callback null, cleanUpResults(res, "rdio")
         }
     }, (err, results) ->
+      results = _.mapObject results, (obj, type) ->
+        obj = {} if not obj
+        collections = if storedResults[type] then storedResults[type].collections.concat(obj.collections || []) else obj.collections
+        next = obj.next || (storedResults[type].next if storedResults[type])
+        if collections && next
+          return {
+            collections: collections,
+            next: next
+          }
+        else
+          return null
       results.query = str
-      sessionStorage.setItem(str, JSON.stringify(results))
+      sessionStorage.setItem(str, JSON.stringify(results)) #if not DEBUG
       done results
 
 cleanUpResults = (results, type) ->
-  _.map results, (result) ->
+  resultObj = {}
+  resultObj.next = results.next_href || results.nextPageToken || results.next_page
+
+  results = results.collection || results.items
+
+  resultObj.collections = _.map results, (result) ->
     retObj = {}
     retObj.id = result.key || result.id.videoId || result.id
     retObj.permalink_url = result.permalink_url || result.shortUrl || ('https://www.youtube.com/watch?v=' + retObj.id if type == 'youtube')
     retObj.title = result.title || result.name || result.snippet.title
-    retObj.artist = result.artist
-    retObj.duration = result.duration
+    retObj.artist = result.artist if result.artist?
+    retObj.duration = result.duration if result.duration?
     retObj.user = result.user.username if result.user?
     retObj.type = type
 
@@ -87,6 +133,8 @@ cleanUpResults = (results, type) ->
     else if type == 'youtube'
       retObj.artwork_url = result.snippet.thumbnails.high.url
     return retObj
+
+  return resultObj
 
 
 logError = (msg) ->
