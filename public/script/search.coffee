@@ -1,6 +1,5 @@
-# custom.coffee
+# search.coffee
 
-DEBUG = true
 PAGE_LENGTH = 3
 waiting_time = -1
 
@@ -24,15 +23,6 @@ display_result = (results) ->
     _.each res.collections, (item) ->
       $("#result_list").append "<li class = 'result'><h2>#{item.title}</h2><span>#{item.artist || ""}</span>
       <img src='#{item.artwork_url}' /></li>"
-      
-
-SC.initialize {
-    client_id: "3baff77b75f4de090413f7aa542254cd"
-}
-
-googleApiClientReady = ->
-  gapi.client.setApiKey 'AIzaSyDxetqce82LNsSBK4aSQ_7sSFDelsRtwSM'
-  gapi.client.load 'youtube', 'v3'
 
 $('#first_search').keyup (e) ->
   waiting_time = 3
@@ -140,11 +130,3 @@ cleanUpResults = (results, type) ->
 
   return resultObj
 
-
-logError = (msg) ->
-  $.post "/error", { "msg" : msg }
-
-window.onerror = (msg, url, line) ->
-    message = "clientError: "+url+"["+line+"] : "+msg
-    logError message
-    not DEBUG
