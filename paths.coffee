@@ -7,7 +7,6 @@ config = require('./config');
 rdio = new Rdio([config.rdio_cred.key, config.rdio_cred.secret]);
 
 
-
 start = (app) ->
 
   app.get "/", (req, res) ->

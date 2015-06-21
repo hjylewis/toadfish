@@ -2,6 +2,39 @@
 
 DEBUG = true
 PAGE_LENGTH = 3
+waiting_time = -1
+
+keystroke_count_down = ->
+  if waiting_time == 0
+    waiting_time = -1
+    value = $("#first_search").val()
+    search value, (res) ->
+      console.log res
+      display_result(res)
+    first = true
+    any = false
+    $("ul li.result").each (item) ->
+      text = "*" + $(this).text() + "*"
+      if text.match(value) and value
+        any = true
+        if first
+          $(this).addClass 'no_border_result'
+          first = false
+        else
+          $(this).removeClass 'no_border_result'
+        $(this).removeClass('hidden_result')
+      else
+        $(this).addClass("hidden_result")
+        $(this).removeClass 'no_border_result'
+
+      if not any
+        $('ul').addClass('hidden-ul')
+      else
+        $('ul').removeClass('hidden-ul')
+  else
+    waiting_time -= 1
+
+setInterval keystroke_count_down, 100
 
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
@@ -12,29 +45,10 @@ googleApiClientReady = ->
   gapi.client.load 'youtube', 'v3'
 
 $('#first_search').keyup (e) ->
-  value = $(this).val()
-  search value, (res) ->
-    console.log res
-  first = true
-  any = false
-  $("ul li.result").each (item) ->
-    text = "*" + $(this).text() + "*"
-    if text.match(value) and value
-      any = true
-      if first
-        $(this).addClass 'no_border_result'
-        first = false
-      else
-        $(this).removeClass 'no_border_result'
-      $(this).removeClass('hidden_result')
-    else
-      $(this).addClass("hidden_result")
-      $(this).removeClass 'no_border_result'
-
-    if not any
-      $('ul').addClass('hidden-ul')
-    else
-      $('ul').removeClass('hidden-ul')
+  waiting_time = 3
+  if e.key == 13
+    waiting_time = 0
+    keystroke_count_down()
 
 # str: string query
 # options: object (optional)
