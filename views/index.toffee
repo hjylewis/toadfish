@@ -7,7 +7,7 @@
     id = 'first_search' autofocus autocomplete="off">
 
   <!-- This is just a sample for styling purposes -->
-  <ul class='hidden-ul'>
+  <ul id = "result_list" class='hidden-ul'>
     <li class = 'result hidden_result'>
       <h2>Girls</h2>
       <span>The 1975</span>

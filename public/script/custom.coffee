@@ -11,30 +11,20 @@ keystroke_count_down = ->
     search value, (res) ->
       console.log res
       display_result(res)
-    first = true
-    any = false
-    $("ul li.result").each (item) ->
-      text = "*" + $(this).text() + "*"
-      if text.match(value) and value
-        any = true
-        if first
-          $(this).addClass 'no_border_result'
-          first = false
-        else
-          $(this).removeClass 'no_border_result'
-        $(this).removeClass('hidden_result')
-      else
-        $(this).addClass("hidden_result")
-        $(this).removeClass 'no_border_result'
-
-      if not any
-        $('ul').addClass('hidden-ul')
-      else
-        $('ul').removeClass('hidden-ul')
   else
     waiting_time -= 1
 
 setInterval keystroke_count_down, 100
+
+display_result = (results) ->
+  $("#result_list").removeClass "hidden-ul"
+  $("#result_list").children().hide()
+  _.each results, (res, name) ->
+    $("#result_list").append("<li class = 'seperator'>#{name}</li>")
+    _.each res.collections, (item) ->
+      $("#result_list").append "<li class = 'result'><h2>#{item.title}</h2><span>#{item.artist || ""}</span>
+      <img src='#{item.artwork_url}' /></li>"
+      
 
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"

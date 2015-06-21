@@ -100,32 +100,46 @@ ul
   &.hidden-ul
     display none
 
-  li.result
-    position relative
-    min-height 150px
+  li
     border-top 1px solid black
-    clear both
-    width 100%
+    position relative
+    top -1px
 
-    &.hidden_result
+    &.seperator
+      border-radius radius radius 0 0
+
+    &:last-child // This might be a real problem
       display none
 
-    &.no_border_result
-      border-top none
+    &.seperator
+      font-size 35px
+      background-color lightpink
+      text-transform capitalize 
+      padding 10px
 
-    h2
-      padding-top 20px
-      padding-left 20px
+    &.result
+      min-height 150px
+      clear both
+      width 100%
 
-    span
-      padding-left 20px
+      &.hidden_result
+        display none
 
-    img
-      height 100px
-      position absolute
-      right 20px
-      top 20px
+      &.no_border_result
+        border-top none
 
+      h2
+        padding-top 20px
+        padding-left 30px
+        max-width 70%
+        box-sizing border-box
 
-    &:first-child
-      border-top none
+      span
+        padding-left 30px
+
+      img
+        max-height 100px
+        position absolute
+        right 20px
+        top 20px
+
