@@ -25,5 +25,10 @@
     </li>
   </ul>
 
+  <!-- This is needed for youtube -->
+  <div id="player"></div>
+  <!-- For Rdio -->
+  <div id="apiswf"></div>
+
 
 </body>
