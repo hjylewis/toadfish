@@ -11,6 +11,7 @@ class Playlist
 		@currentIndex = 0;
 		@playlist = [];
 		@state;
+		@volume = 100;
 
 	play: () ->
 		if (@playlist.length == 0)
@@ -55,6 +56,14 @@ class Playlist
 			apiswf.rdio_seek(song.song_details.duration * percent / 100)
 
 	setVolume: (percent) ->
+		song = @playlist[@currentIndex]
+		if (song.song_details.type == "soundcloud")
+			song.obj.setVolume(percent)
+		else if (song.song_details.type == "youtube")
+			player.setVolume(percent)
+		else if (song.song_details.type == "rdio")
+			apiswf.rdio_setVolume(percent / 100)
+		@volume = percent;
 
 
 	next: () ->
@@ -62,6 +71,7 @@ class Playlist
 			@stop()
 			@currentIndex++
 			@loadSong () => #might wanna make is so it doesn't play if player is paused
+				@setVolume @volume
 				@play()
 		else 
 			@seek(100) # seek end of song
@@ -71,6 +81,7 @@ class Playlist
 			@stop()
 			@currentIndex--
 			@loadSong () =>
+				@setVolume @volume
 				@play()
 		else 
 			@seek(0)
