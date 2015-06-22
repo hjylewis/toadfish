@@ -156,7 +156,7 @@ youtubePositionChange = () ->
 			), 500)
 
 positionChanged = (position, type) ->
-	if (type == playlist.playlist[playlist.currentIndex].song_details.type)
+	#if (type == playlist.playlist[playlist.currentIndex].song_details.type)
 		# update graphics
 		# console.log position
 
