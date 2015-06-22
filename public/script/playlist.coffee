@@ -23,7 +23,7 @@ class Playlist
 			else if (song.song_details.type == "youtube")
 				player.playVideo()
 			else if (song.song_details.type == "rdio")
-				apiswf.rdio_play()
+				rdio_player.rdio_play()
 			# set state
 
 
@@ -34,7 +34,7 @@ class Playlist
 		else if (song.song_details.type == "youtube")
 			player.pauseVideo()
 		else if (song.song_details.type == "rdio")
-			apiswf.rdio_pause()
+			rdio_player.rdio_pause()
 		# set state		
 
 	stop: () ->
@@ -44,7 +44,7 @@ class Playlist
 		else if (song.song_details.type == "youtube")
 			player.stopVideo()
 		else if (song.song_details.type == "rdio")
-			apiswf.rdio_stop();
+			rdio_player.rdio_stop();
 
 	seek: (percent) ->
 		song = @playlist[@currentIndex]
@@ -53,7 +53,7 @@ class Playlist
 		else if (song.song_details.type == "youtube")
 			player.seekTo(player.getDuration() * percent / 100)
 		else if (song.song_details.type == "rdio")
-			apiswf.rdio_seek(song.song_details.duration * percent / 100)
+			rdio_player.rdio_seek(song.song_details.duration * percent / 100)
 
 	setVolume: (percent) ->
 		song = @playlist[@currentIndex]
@@ -62,7 +62,7 @@ class Playlist
 		else if (song.song_details.type == "youtube")
 			player.setVolume(percent)
 		else if (song.song_details.type == "rdio")
-			apiswf.rdio_setVolume(percent / 100)
+			rdio_player.rdio_setVolume(percent / 100)
 		@volume = percent;
 
 
@@ -126,8 +126,8 @@ class Playlist
 			else
 				player.loadVideoById(song_details.id)
 		else if (song_details.type == "rdio")
-			apiswf.rdio_play(song_details.id)
-			apiswf.rdio_pause()
+			rdio_player.rdio_play(song_details.id)
+			rdio_player.rdio_pause()
 			cb()
 
 

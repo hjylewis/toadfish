@@ -17,7 +17,7 @@ firstScriptTag = document.getElementsByTagName('script')[0]
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
 
 #rdio stuff
-apiswf = null;
+rdio_player = null;
 flashvars = {
 	'playbackToken': "FglVhvtZ_____1RDTXEzbzQtME5xVHZkWGtvWFJwYndsb2NhbGhvc3T0N1Hvz9ghkI_YzHoIZHzx", # from http://rdioconsole.appspot.com/#domain%3Dlocalhost%26method%3DgetPlaybackToken.js
 	'domain': 'localhost',            
@@ -28,7 +28,7 @@ params = {
 }
 attributes = {}
 swfobject.embedSWF('http://www.rdio.com/api/swf/', # the location of the Rdio Playback API SWF
-	'apiswf', # the ID of the element that will be replaced with the SWF
+	'rdio_player', # the ID of the element that will be replaced with the SWF
 	1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, attributes)
 
 callback_object = {};
@@ -37,9 +37,9 @@ callback_object.ready = (user) ->
           # Called once the API SWF has loaded and is ready to accept method calls.
 
           # find the embed/object element
-	apiswf = $('#apiswf').get(0)
+	rdio_player = $('#rdio_player').get(0)
 
-	apiswf.rdio_startFrequencyAnalyzer({
+	rdio_player.rdio_startFrequencyAnalyzer({
 		frequencies: '10-band',
 		period: 100
 	})

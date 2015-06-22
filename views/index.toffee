@@ -28,7 +28,7 @@
   <!-- This is needed for youtube -->
   <div id="player"></div>
   <!-- For Rdio -->
-  <div id="apiswf"></div>
+  <div id="rdio_player"></div>
 
 
 </body>
