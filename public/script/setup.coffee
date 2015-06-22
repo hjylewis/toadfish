@@ -18,15 +18,20 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
 
 #rdio stuff
 rdio_player = null;
-flashvars = {
-	'playbackToken': "FglVhvtZ_____1RDTXEzbzQtME5xVHZkWGtvWFJwYndsb2NhbGhvc3T0N1Hvz9ghkI_YzHoIZHzx", # from http://rdioconsole.appspot.com/#domain%3Dlocalhost%26method%3DgetPlaybackToken.js
-	'domain': 'localhost',            
-	'listener': 'callback_object'    # the global name of the object that will receive callbacks from the SWF
+$.ajax {
+	url: '/rdio/playbackToken',
+	success: (res) ->
+		flashvars = {
+			'playbackToken': res,
+			'domain': 'localhost',            
+			'listener': 'callback_object'    # the global name of the object that will receive callbacks from the SWF
+		}
+		params = {
+			'allowScriptAccess': 'always'
+		}
+		swfobject.embedSWF('http://www.rdio.com/api/swf/', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
 }
-params = {
-	'allowScriptAccess': 'always'
-}
-swfobject.embedSWF('http://www.rdio.com/api/swf/', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
+
 
 callback_object = {}
 # Called once the API SWF has loaded and is ready to accept method calls.

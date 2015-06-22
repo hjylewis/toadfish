@@ -18,7 +18,7 @@ start = (app) ->
     page_length = parseInt(req.query.page_length)
     rdio.call 'search', {'query': query, 'start': page * page_length, 'count': page_length, 'types': 'Track'}, (err, msg) ->
       if err?
-        console.error "rdio error:" + JSON.stringify(err)
+        console.error "rdio search error:" + JSON.stringify(err)
         res.send []
       else 
         result = {
@@ -26,6 +26,13 @@ start = (app) ->
           next_page: page + 1
         }
         res.send result
+  app.get "/rdio/playbackToken", (req, res) ->
+    rdio.call 'getPlaybackToken', {'domain': 'localhost'}, (err, msg) ->
+      if err?
+        console.error "rdio error getting playbackToken: " + JSON.stringify(err)
+        res.send ""
+      else
+        res.send msg.result
 
   app.post "/error", (req, res) ->
     console.error req.body.msg
