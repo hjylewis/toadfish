@@ -26,7 +26,7 @@
   </ul>
 
   <!-- This is needed for youtube -->
-  <div id="player"></div>
+  <div id="yt_player"></div>
   <!-- For Rdio -->
   <div id="rdio_player"></div>
 

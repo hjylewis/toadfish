@@ -26,19 +26,12 @@ flashvars = {
 params = {
 	'allowScriptAccess': 'always'
 }
-attributes = {}
-swfobject.embedSWF('http://www.rdio.com/api/swf/', # the location of the Rdio Playback API SWF
-	'rdio_player', # the ID of the element that will be replaced with the SWF
-	1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, attributes)
+swfobject.embedSWF('http://www.rdio.com/api/swf/', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
 
-callback_object = {};
-
+callback_object = {}
+# Called once the API SWF has loaded and is ready to accept method calls.
 callback_object.ready = (user) ->
-          # Called once the API SWF has loaded and is ready to accept method calls.
-
-          # find the embed/object element
 	rdio_player = $('#rdio_player').get(0)
-
 	rdio_player.rdio_startFrequencyAnalyzer({
 		frequencies: '10-band',
 		period: 100
