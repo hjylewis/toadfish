@@ -5,6 +5,12 @@ yt_obj = {artwork_url: "https://i.ytimg.com/vi/ih2xubMaZWI/hqdefault.jpg", id: "
 sc_obj = {artwork_url: "https://i1.sndcdn.com/artworks-000110807035-1bxk4l-t500x500.jpg", duration: 226371, id: 178220277, permalink_url: "https://soundcloud.com/alexomfg/omfg-hello", title: "OMFG - Hello", type: "soundcloud", user: "OMFG"}
 rd_obj = {artist: "OMFG", artwork_url: "http://img02.cdn2-rdio.com/album/8/3/5/000000000050f538/2/square-600.jpg", duration: 226, id: "t60862619", permalink_url: "http://rd.io/x/QitB__PE/", title: "Hello", type: "rdio"}
 
+
+# TODO: state
+# 0: pause
+# 1: play
+# 3: buffer
+
 class Playlist
 
 	constructor: () ->
@@ -22,6 +28,7 @@ class Playlist
 				song.obj.play()
 			else if (song.song_details.type == "youtube")
 				yt_player.playVideo()
+				youtubePositionChange()
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_play()
 			# set state
@@ -98,7 +105,10 @@ class Playlist
 	remove: (index) ->
 		@playlist.splice(index, 1)
 		if (index == @currentIndex)
-			@loadSong
+			@stop()
+			@loadSong () =>
+				@setVolume @volume
+				@play() #auto play
 
 	loadSong: (cb) -> 
 		if (cb == undefined)
@@ -110,7 +120,10 @@ class Playlist
 				SC.sound = song.obj
 				cb()
 			else
-				SC.stream "/tracks/" + song_details.id, (sound) ->
+				SC.stream "/tracks/" + song_details.id, {
+						whileplaying: () ->
+							positionChanged this.position, "soundcloud"
+					}, (sound) ->
 					song.obj = sound
 					SC.sound = sound
 					cb()
@@ -133,6 +146,19 @@ class Playlist
 			rdio_player.rdio_play(song_details.id)
 			rdio_player.rdio_pause()
 			cb()
+
+youtubePositionChange = () ->
+	positionChanged yt_player.getCurrentTime(), "youtube"
+	if (playlist.playlist[playlist.currentIndex].song_details.type == "youtube")
+		setTimeout((() ->
+			if (yt_player.getPlayerState() == 1 || yt_player.getPlayerState() == 3)
+				youtubePositionChange()
+			), 500)
+
+positionChanged = (position, type) ->
+	if (type == playlist.playlist[playlist.currentIndex].song_details.type)
+		# update graphics
+		# console.log position
 
 
 

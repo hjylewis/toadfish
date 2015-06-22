@@ -42,6 +42,8 @@ callback_object.ready = (user) ->
 		period: 100
 	})
 	console.log(user)
+callback_object.positionChanged = (position) ->
+	positionChanged position, "rdio"
 
 logError = (msg) ->
   $.post "/error", { "msg" : msg }
