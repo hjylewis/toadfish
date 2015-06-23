@@ -1,6 +1,7 @@
 #playlist.coffee
 
 yt_player = null #for youtube, remember the player div
+YT_TIME_INTERVAL = 500
 yt_obj = {artwork_url: "https://i.ytimg.com/vi/ih2xubMaZWI/hqdefault.jpg", id: "ih2xubMaZWI", permalink_url: "https://www.youtube.com/watch?v=ih2xubMaZWI", title: "OMFG - Hello",type: "youtube"}
 sc_obj = {artwork_url: "https://i1.sndcdn.com/artworks-000110807035-1bxk4l-t500x500.jpg", duration: 226371, id: 178220277, permalink_url: "https://soundcloud.com/alexomfg/omfg-hello", title: "OMFG - Hello", type: "soundcloud", user: "OMFG"}
 rd_obj = {artist: "OMFG", artwork_url: "http://img02.cdn2-rdio.com/album/8/3/5/000000000050f538/2/square-600.jpg", duration: 226, id: "t60862619", permalink_url: "http://rd.io/x/QitB__PE/", title: "Hello", type: "rdio"}
@@ -153,7 +154,7 @@ youtubePositionChange = () ->
 		setTimeout((() ->
 			if (yt_player.getPlayerState() == 1 || yt_player.getPlayerState() == 3)
 				youtubePositionChange()
-			), 500)
+			), YT_TIME_INTERVAL)
 
 positionChanged = (position, type) ->
 	#if (type == playlist.playlist[playlist.currentIndex].song_details.type)
