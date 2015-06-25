@@ -11,6 +11,7 @@
     "express": "4.8.6",
     "express-params": "0.0.3",
     "morgan": "^1.5.2",
+    "rdio": "^1.5.2",
     "redis": "^0.12.1",
     "serve-favicon": "^2.1.1",
     "stylus": "^0.48.1",

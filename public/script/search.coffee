@@ -21,8 +21,9 @@ display_result = (results) ->
   _.each results, (res, name) ->
     $("#result_list").append("<li class = 'seperator'>#{name}</li>")
     _.each res.collections, (item) ->
-      $("#result_list").append "<li class = 'result'><h2>#{item.title}</h2><span>#{item.artist || ""}</span>
-      <img src='#{item.artwork_url}' /></li>"
+      $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2>#{item.title}</h2><span>#{item.artist || ""}</span>
+      <img src='#{item.artwork_url || "/images/no_image.jpg" }' /><br /></li>").append $("<a class='add_to_playlist'>Add to Playlist</a></li>").click ->
+        playlist.add $(this).parent().data().song
 
 $('#first_search').keyup (e) ->
   waiting_time = 3
