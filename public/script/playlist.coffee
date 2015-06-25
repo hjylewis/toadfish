@@ -29,7 +29,7 @@ class Playlist
 				song.obj.play()
 			else if (song.song_details.type == "youtube")
 				yt_player.playVideo()
-				youtubePositionChange()
+				@positionChanged "youtube"
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_play()
 			# set state
@@ -57,11 +57,11 @@ class Playlist
 	seek: (percent) ->
 		song = @playlist[@currentIndex]
 		if (song.song_details.type == "soundcloud")
-			song.obj.setPosition(song.song_details.duration * percent / 100)
+			song.obj.setPosition(song.song_details.duration * (percent / 100))
 		else if (song.song_details.type == "youtube")
-			yt_player.seekTo(yt_player.getDuration() * percent / 100)
+			yt_player.seekTo(yt_player.getDuration() * (percent / 100))
 		else if (song.song_details.type == "rdio")
-			rdio_player.rdio_seek(song.song_details.duration * percent / 100)
+			rdio_player.rdio_seek(song.song_details.duration * (percent / 100))
 
 	setVolume: (percent) ->
 		song = @playlist[@currentIndex]
@@ -116,6 +116,7 @@ class Playlist
 			cb = () ->
 		song = @playlist[@currentIndex]
 		song_details = song.song_details
+		_this = @
 		if (song_details.type == "soundcloud")
 			if (song.obj)
 				SC.sound = song.obj
@@ -123,7 +124,7 @@ class Playlist
 			else
 				SC.stream "/tracks/" + song_details.id, {
 						whileplaying: () ->
-							positionChanged this.position, "soundcloud"
+							_this.positionChanged "soundcloud", this.position
 					}, (sound) ->
 					song.obj = sound
 					SC.sound = sound
@@ -148,18 +149,27 @@ class Playlist
 			rdio_player.rdio_pause()
 			cb()
 
-youtubePositionChange = () ->
-	positionChanged yt_player.getCurrentTime(), "youtube"
-	if (playlist.playlist[playlist.currentIndex].song_details.type == "youtube")
-		setTimeout((() ->
-			if (yt_player.getPlayerState() == 1 || yt_player.getPlayerState() == 3)
-				youtubePositionChange()
-			), YT_TIME_INTERVAL)
+	positionChanged: (type, position) ->
+		if (type == @playlist[@currentIndex].song_details.type)
 
-positionChanged = (position, type) ->
-	#if (type == playlist.playlist[playlist.currentIndex].song_details.type)
-		# update graphics
-		# console.log position
+			# update graphics
+			percent = null;
+			if (type == "youtube")
+				if (position == undefined)
+					return @positionChanged "youtube", (yt_player.getCurrentTime() || 0)
+				setTimeout((() =>
+					if (yt_player.getPlayerState() == 1 || yt_player.getPlayerState() == 3)
+						@positionChanged "youtube", yt_player.getCurrentTime()
+					), YT_TIME_INTERVAL)
+				percent = (position / yt_player.getDuration()) * 100
+			else 
+				percent = (position / @playlist[@currentIndex].song_details.duration) * 100
+			if percent > 99.5
+				@next()
+
+
+
+
 
 
 

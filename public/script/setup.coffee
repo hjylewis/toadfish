@@ -43,7 +43,7 @@ callback_object.ready = (user) ->
 	})
 	console.log(user)
 callback_object.positionChanged = (position) ->
-	positionChanged position, "rdio"
+	playlist.positionChanged "rdio", position
 
 logError = (msg) ->
   $.post "/error", { "msg" : msg }
