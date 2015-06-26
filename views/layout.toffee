@@ -10,6 +10,9 @@
     <!-- Google Fonts -->
 
     <link href='http://fonts.googleapis.com/css?family=Roboto:100|Open+Sans:300' rel='stylesheet' type='text/css'>
+    
+    <!-- JQuery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
   </head>
 
@@ -27,9 +30,6 @@
     #{raw body}
 
     <!-- Javascript and the Like -->
-
-    <!-- JQuery -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
     <!-- soundcloud -->
     <script src="//connect.soundcloud.com/sdk.js"></script>

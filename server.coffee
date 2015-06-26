@@ -15,8 +15,7 @@ logger = require('morgan')
 app = express()
 params.extend(app)
 
-
-paths = require("./paths")
+routes = require('./routes/index')
 
 app.use(cookieParser())
 
@@ -56,7 +55,7 @@ app.set 'view engine', 'toffee'
 app.set('views', __dirname + '/views')
 
 
-paths.start(app)
+app.use('/', routes.router)
 
 
 app.get /.*/, (request, result) ->

@@ -7,8 +7,9 @@ Dependencies
 Set up
 ======
 1. `npm install`
-2. `mongod`
-3. `./server.coffee`
+2. `mkdir /data/db`
+3. `mongod`
+4. `./server.coffee`
 
 Notes
 =====
