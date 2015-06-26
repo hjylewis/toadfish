@@ -16,6 +16,7 @@ app = express()
 params.extend(app)
 
 routes = require('./routes/index')
+rdio_routes = require('./routes/rdio')
 
 app.use(cookieParser())
 
@@ -54,8 +55,14 @@ app.use express.static 'public'
 app.set 'view engine', 'toffee'
 app.set('views', __dirname + '/views')
 
+# Make db accessible to the router
+app.use (req, res, next) ->
+    req.db = db
+    next()
 
+# Routers
 app.use('/', routes.router)
+app.use('/rdio', rdio_routes.router)
 
 
 app.get /.*/, (request, result) ->
