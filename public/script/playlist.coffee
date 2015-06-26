@@ -25,6 +25,9 @@ class Playlist
 			console.log "nothing here"
 		else
 			song = @playlist[@currentIndex]
+			$("body").css "background-image", "url('#{song.song_details.artwork_url || ""}')"
+			$("body").css "background-size", "cover"
+			$("body").css "background-attachment", "fixed"
 			if (song.song_details.type == "soundcloud")
 				song.obj.play()
 			else if (song.song_details.type == "youtube")

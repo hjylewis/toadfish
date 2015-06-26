@@ -24,7 +24,7 @@ a
     color purple
 
 body
-  background grey
+  background grey cover
   min-width 400px
   font-size 20px
   font-family "Raleway", helvetica
@@ -47,7 +47,9 @@ input
 
 nav
   text-align right
+  background rgba(255,255,255,0.8)
   padding-right 14px
+  padding-bottom 15px
 
 
   li
@@ -96,6 +98,7 @@ ul
   width 50%
   margin auto
   margin-top 20px
+  background white
 
   &.hidden-ul
     display none
@@ -121,6 +124,7 @@ ul
       min-height 150px
       clear both
       width 100%
+      position relative
 
       &.hidden_result
         display none
@@ -145,16 +149,22 @@ ul
         right 20px
         top 20px
 
-      .add_to_playlist 
-        margin 15px 30px
-        border none
-        outline none
+      a
+        position absolute
+        bottom 10px
+        border-radius 50px
+        margin-left 30px
+        cursor pointer
+        padding 10px
+        border 1px solid rgba(0,0,0,0)
         color purple
-        background rgba(255,255,255,0)
         font-size 14
-        transition color 0.3s, background 0.3s,
+        transition border 0.3s
+
+        &.play_now
+          left -10px
+        &.add_to_playlist
+          left 95px
 
         &:hover
-          color white
-          background purple
-
+          border 1px solid purple
