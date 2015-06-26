@@ -25,7 +25,7 @@ display_result = (results) ->
       <img src='#{item.artwork_url || "/images/no_image.jpg" }' /><br /></li>").append($("<a class='add_to_playlist'>Add to Playlist</a>").click ->
         playlist.add $(this).parent().data().song
       ).append $("<a class='play_now'>Play Now</a>").click ->
-        playlist.add $(this).parent().data().song
+        playlist.addFirst $(this).parent().data().song
 
 $('#first_search').keyup (e) ->
   waiting_time = 3

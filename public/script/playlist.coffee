@@ -106,6 +106,15 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 
+	addFirst: (song_details) ->
+		if (@playlist.length == 0)
+			@add(song_details)
+		else
+			@playlist.splice(@currentIndex + 1, 0, {
+				song_details: song_details
+			})
+			@next()
+
 	remove: (index) ->
 		@playlist.splice(index, 1)
 		if (index == @currentIndex)
