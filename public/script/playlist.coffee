@@ -25,9 +25,6 @@ class Playlist
 			console.log "nothing here"
 		else
 			song = @playlist[@currentIndex]
-			$("body").css "background-image", "url('#{song.song_details.artwork_url || ""}')"
-			$("body").css "background-size", "cover"
-			$("body").css "background-attachment", "fixed"
 			if (song.song_details.type == "soundcloud")
 				song.obj.play()
 			else if (song.song_details.type == "youtube")
@@ -128,6 +125,11 @@ class Playlist
 			cb = () ->
 		song = @playlist[@currentIndex]
 		song_details = song.song_details
+
+		$("body").css "background-image", "url('#{song_details.artwork_url || ""}')"
+		$("body").css "background-size", "cover"
+		$("body").css "background-attachment", "fixed"
+		
 		_this = @
 		if (song_details.type == "soundcloud")
 			if (song.obj)
