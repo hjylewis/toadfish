@@ -1,12 +1,16 @@
 #!/usr/bin/env coffee
 express = require("express")
+params = require('express-params')
+session = require('express-session')
+cookieParser = require('cookie-parser')
+mongoose = require('mongoose')
+MongoStore = require('connect-mongo')(session)
 stylus = require('stylus')
 body_parser = require("body-parser")
 coffee = require("coffee-middleware")
 path = require("path")
-params = require('express-params')
 http = require('http')
-logger = require('morgan');
+logger = require('morgan')
 
 app = express()
 params.extend(app)
@@ -14,6 +18,21 @@ params.extend(app)
 
 paths = require("./paths")
 
+app.use(cookieParser())
+
+mongoose.connect('mongodb://localhost/toadfish')
+db = mongoose.connection
+db.on('error', console.error.bind(console, 'connection error:'))
+db.once 'open', (callback) ->
+  console.log "Toadfish DB connected"
+
+
+app.use session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore({ mongooseConnection: db })
+})
 
 app.use coffee {
 	src: __dirname + '/public/script',
