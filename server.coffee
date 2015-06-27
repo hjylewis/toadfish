@@ -39,6 +39,7 @@ app.use coffee {
 	bare: true
 }
 
+app.use(body_parser.json()) 
 app.use(body_parser.urlencoded({ extended: false }))
 
 app.use stylus.middleware {
@@ -61,8 +62,8 @@ app.use (req, res, next) ->
     next()
 
 # Routers
-app.use('/', routes.router)
-app.use('/rdio', rdio_routes.router)
+app.use('/', routes)
+app.use('/rdio', rdio_routes)
 
 
 app.get /.*/, (request, result) ->

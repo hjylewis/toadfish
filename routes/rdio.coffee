@@ -28,4 +28,4 @@ router.get "/playbackToken", (req, res) ->
     else
       res.send msg.result
 
-exports.router = router
+module.exports = router

@@ -1,9 +1,9 @@
 $('#createRoom').click () ->
-	roomid = $('createRoomID').val()
+	roomName = $('#createRoomName').val()
 	$.ajax {
 		url: '/createRoom',
-		data: {'roomid': roomid},
-		method: 'post'
+		data: {'roomName': roomName},
+		type: 'POST',
 		success: (res) ->
 			console.log res
 	}

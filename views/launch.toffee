@@ -2,9 +2,9 @@
 
 <body>
 
-    <input id="createRoomID" type="text" placeholder="Room Name (optional)">
+    <input id="createRoomName" type="text" placeholder="Room Name (optional)">
     <input type="button" id="createRoom" value="Create Button">
-    <input id="joinRoomID" type="text" placeholder="Room Name">
+    <input id="joinRoomName" type="text" placeholder="Room Name">
     <input type="button" id="joinRoom" value="Join Button">
 
     <script src="/launch.js"></script>
