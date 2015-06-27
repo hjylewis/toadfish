@@ -5,5 +5,8 @@ $('#createRoom').click () ->
 		data: {'roomName': roomName},
 		type: 'POST',
 		success: (res) ->
-			console.log res
+			if (res.alreadyExists)
+				$('#createWarning').attr('hidden',null)
+			else
+				window.location = '/' + res.roomID
 	}

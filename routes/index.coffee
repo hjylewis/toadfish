@@ -17,13 +17,18 @@ router.post "/createRoom", (req, res) ->
   roomID = if roomName != "" then roomName.split(' ').join('-') else Math.random().toString(36).substr(2, 7)
   Room.find {roomID: roomID}, (err, rooms) ->
     if (rooms.length > 0)
-      return res.send "Room already exists"
+      return res.send {
+        alreadyExists: true
+      }
     Room.create { roomName: req.body.roomName, roomID:  roomID, hostSessionID: sessionID}, (err, newRoom) ->
       if (err)
         console.error "Error creating room: " + JSON.stringify(err)
         res.status(500).send err
       else
-        return res.send('saved')
+        return res.send {
+          roomID: roomID,
+          alreadyExists: false
+        }
 
 router.post "/error", (req, res) ->
   console.error req.body.msg

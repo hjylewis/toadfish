@@ -3,6 +3,7 @@
 <body>
 
     <input id="createRoomName" type="text" placeholder="Room Name (optional)">
+    <span class="warning" id="createWarning" hidden>That room name alrady exists</span>
     <input type="button" id="createRoom" value="Create Button">
     <input id="joinRoomName" type="text" placeholder="Room Name">
     <input type="button" id="joinRoom" value="Join Button">
