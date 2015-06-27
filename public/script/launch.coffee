@@ -8,5 +8,5 @@ $('#createRoom').click () ->
 			if (res.alreadyExists)
 				$('#createWarning').attr('hidden',null)
 			else
-				window.location = '/' + res.roomID
+				window.location = '/host/' + res.roomID
 	}

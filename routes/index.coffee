@@ -30,6 +30,30 @@ router.post "/createRoom", (req, res) ->
           alreadyExists: false
         }
 
+router.get "/host/:roomID", (req, res) ->
+  roomID = req.param("roomID")
+  Room.findOne {roomID: roomID}, (err, room) ->
+    if (err)
+      console.error "Error finding room: " + JSON.stringify(err)
+      return res.status(500).send err
+    if (!room)
+      return res.status(404).end()
+    if (room.hostSessionID != req.sessionID)
+      return res.redirect '/' + roomID
+    res.render "room", {title: "Toadfish - " + req.param("roomID"), layout: "views/layout.toffee"}
+
+router.get "/:roomID", (req, res) ->
+  roomID = req.param("roomID")
+  Room.findOne {roomID: roomID}, (err, room) ->
+    if (err)
+      console.error "Error finding room: " + JSON.stringify(err)
+      return res.status(500).send err
+    if (!room)
+      return res.status(404).end()
+    if (room.hostSessionID == req.sessionID)
+      return res.redirect '/host/' + roomID
+    res.render "room", {title: "Toadfish - " + roomID, layout: "views/layout.toffee"}
+
 router.post "/error", (req, res) ->
   console.error req.body.msg
   res.status(200).send("Error Logged")
