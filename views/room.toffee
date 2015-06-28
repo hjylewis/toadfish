@@ -1,6 +1,6 @@
 <!-- room.toffee -->
 <script>
-  var host = #{host}
+  var host = #{host};
   var roomID = "#{roomID}";
   var playlistSettings = #{playlistSettings};
 </script>
