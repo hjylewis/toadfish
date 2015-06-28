@@ -1,4 +1,6 @@
 DEBUG = true
+rdioLoaded = false
+googleLoaded = false
 
 
 SC.initialize {
@@ -8,6 +10,8 @@ SC.initialize {
 googleApiClientReady = ->
   gapi.client.setApiKey 'AIzaSyDxetqce82LNsSBK4aSQ_7sSFDelsRtwSM'
   gapi.client.load 'youtube', 'v3'
+  googleLoaded = true
+  loadPlaylist()
 
 
 #youtube stuff
@@ -41,6 +45,8 @@ callback_object.ready = (user) ->
 		frequencies: '10-band',
 		period: 100
 	})
+	rdioLoaded = true
+	loadPlaylist()
 	console.log(user)
 callback_object.positionChanged = (position) ->
 	playlist.positionChanged "rdio", position

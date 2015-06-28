@@ -1,9 +1,14 @@
 mongoose = require('mongoose')
 
 roomSchema = new mongoose.Schema({ 
-	roomName: 'string',
-	roomID: 'string',
-	hostSessionID: 'string'
+	roomName: String,
+	roomID: String,
+	hostSessionID: String,
+	playlistSettings: {
+		currentIndex: Number,
+		playlist: String,
+		volume: Number
+	}
 })
 
 Room = mongoose.model('Room', roomSchema)

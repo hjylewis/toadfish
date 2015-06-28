@@ -14,11 +14,15 @@ rd_obj = {artist: "OMFG", artwork_url: "http://img02.cdn2-rdio.com/album/8/3/5/0
 
 class Playlist
 
-	constructor: () ->
-		@currentIndex = 0;
-		@playlist = [];
-		@state;
-		@volume = 100;
+	constructor: (currentIndex, playlist, volume) ->
+		@currentIndex = currentIndex || 0
+		@playlist = if playlist then JSON.parse(playlist) else []
+		@state
+		@volume = volume || 100
+		if @playlist.length > 0
+			@loadSong () =>
+				@setVolume @volume
+				@play() #auto play
 
 	play: () ->
 		if (@playlist.length == 0)
@@ -83,6 +87,8 @@ class Playlist
 				@play()
 		else 
 			@seek(100) # seek end of song
+			@stop()
+		@save() if host
 
 	prev: () ->
 		if (@currentIndex > 0)
@@ -93,6 +99,7 @@ class Playlist
 				@play()
 		else 
 			@seek(0)
+		@save() if host
 
 	add: (song_details) ->
 		@playlist.push({
@@ -102,6 +109,7 @@ class Playlist
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
+		@save() if host
 
 	addFirst: (song_details) ->
 		if (@playlist.length == 0)
@@ -119,6 +127,7 @@ class Playlist
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
+		@save() if host
 
 	loadSong: (cb) -> 
 		if (cb == undefined)
@@ -180,12 +189,26 @@ class Playlist
 				percent = (position / @playlist[@currentIndex].song_details.duration) * 100
 			if percent > 99.5
 				@next()
+	save: () ->
+		stripped_playlist = _.map @playlist, (song) ->
+			return _.omit(song, 'obj')
+		console.log stripped_playlist
+		playlistSettings = {
+			currentIndex: @currentIndex,
+			playlist: stripped_playlist,
+			volume: @volume
+		}
+		$.post('/savePlaylist', { 
+			playlistSettings: JSON.stringify(playlistSettings),
+			roomID: roomID
+		})
 
 
 
 
+playlist = null
 
-
-
-
-playlist = new Playlist
+#this is hacky
+loadPlaylist =  () ->
+	if (googleLoaded && rdioLoaded)
+		playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume)
