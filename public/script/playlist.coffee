@@ -192,7 +192,6 @@ class Playlist
 	save: () ->
 		stripped_playlist = _.map @playlist, (song) ->
 			return _.omit(song, 'obj')
-		console.log stripped_playlist
 		playlistSettings = {
 			currentIndex: @currentIndex,
 			playlist: stripped_playlist,

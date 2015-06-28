@@ -36,8 +36,6 @@ router.post "/createRoom", (req, res) ->
           alreadyExists: false
         }
 router.post "/savePlaylist", (req, res) ->
-
-  console.log req.body.roomID
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
     if (err)
       console.error "Error finding room to save to: " + JSON.stringify(err)
