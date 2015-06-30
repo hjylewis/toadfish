@@ -1,5 +1,7 @@
 <!-- launch.toffee -->
-
+<script>
+	var rooms = #{rooms}
+</script>
 <body>
 
     <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20">
@@ -7,6 +9,11 @@
     <input type="button" id="createRoom" value="Create Button">
     <input id="joinRoomName" type="text" placeholder="Room Name">
     <input type="button" id="joinRoom" value="Join Button">
+    <div hidden>
+    	Your open rooms:
+    	<ul id="list_open_rooms">
+    	</ul>
+    </div>
 
     <script src="/launch.js"></script>
 </body>

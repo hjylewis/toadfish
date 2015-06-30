@@ -6,7 +6,8 @@ Room = require('../models/room')
 router = express.Router()
 
 router.get "/", (req, res) ->
-  res.render "launch", {title: "Toadfish", layout: "views/layout.toffee"}
+  Room.find {hostSessionID: req.sessionID}, (err, rooms) ->
+    res.render "launch", {title: "Toadfish", rooms: rooms, layout: "views/layout.toffee"}
 
 router.get "/demo", (req, res) ->
   res.render "room", {
