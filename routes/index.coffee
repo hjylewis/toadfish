@@ -21,7 +21,6 @@ router.post "/createRoom", (req, res) ->
   db = req.db
   sessionID = req.sessionID
   roomName = req.body.roomName
-  # encodeURIComponent()
   roomID = if roomName != "" then util.encodeHtml(roomName).split(' ').join('-') else Math.random().toString(36).substr(2, 7)
   Room.find {roomID: roomID}, (err, rooms) ->
     if (rooms.length > 0)

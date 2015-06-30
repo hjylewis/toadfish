@@ -1,5 +1,5 @@
 # util.coffee
 
 module.exports.encodeHtml = (str) ->
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\//g,'&#47;')
+    return String(str).replace(/[^0-9a-zA-Z$\-_.+!*'(),]/g, "")
 
