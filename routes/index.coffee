@@ -1,5 +1,6 @@
 log = console.log
 express = require('express')
+util = require('../lib/util')
 mongoose = require('mongoose')
 Room = require('../models/room')
 router = express.Router()
@@ -20,7 +21,8 @@ router.post "/createRoom", (req, res) ->
   db = req.db
   sessionID = req.sessionID
   roomName = req.body.roomName
-  roomID = if roomName != "" then roomName.replace(/\W/g, '').split(' ').join('-') else Math.random().toString(36).substr(2, 7)
+  # encodeURIComponent()
+  roomID = if roomName != "" then util.encodeHtml(roomName).split(' ').join('-') else Math.random().toString(36).substr(2, 7)
   Room.find {roomID: roomID}, (err, rooms) ->
     if (rooms.length > 0)
       return res.send {
