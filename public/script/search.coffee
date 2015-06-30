@@ -19,13 +19,14 @@ display_result = (results) ->
   $("#result_list").removeClass "hidden-ul"
   $("#result_list").children().hide()
   _.each results, (res, name) ->
-    $("#result_list").append("<li class = 'seperator'>#{name}</li>")
-    _.each res.collections, (item) ->
-      $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2>#{item.title}</h2><span>#{item.artist || ""}</span>
-      <img src='#{item.artwork_url || "/images/no_image.jpg" }' /><br /></li>").append($("<a class='add_to_playlist'>Add to Playlist</a>").click ->
-        playlist.add $(this).parent().data().song
-      ).append $("<a class='play_now'>Play Now</a>").click ->
-        playlist.addFirst $(this).parent().data().song
+    if (res != null && res.collections && res.collections.length > 0) 
+      $("#result_list").append("<li class = 'seperator'>#{name}</li>")
+      _.each res.collections, (item) ->
+        $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2>#{item.title}</h2><span>#{item.artist || ""}</span>
+        <img src='#{item.artwork_url || "/images/no_image.jpg" }' /><br /></li>").append($("<a class='add_to_playlist'>Add to Playlist</a>").click ->
+          playlist.add $(this).parent().data().song
+        ).append $("<a class='play_now'>Play Now</a>").click ->
+          playlist.addFirst $(this).parent().data().song
 
 $('#first_search').keyup (e) ->
   waiting_time = 3
