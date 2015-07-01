@@ -108,6 +108,7 @@ class Playlist
 			@loadSong () =>
 				@setVolume @volume
 				@play()
+			@save() if host
 
 	add: (song_details) ->
 		@playlist.push({
