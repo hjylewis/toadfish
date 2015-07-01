@@ -101,6 +101,14 @@ class Playlist
 			@seek(0)
 		@save() if host
 
+	goTo: (index) ->
+		if (index >= 0 && index < @playlist.length)
+			@stop()
+			@currentIndex = index
+			@loadSong () =>
+				@setVolume @volume
+				@play()
+
 	add: (song_details) ->
 		@playlist.push({
 			song_details: song_details
