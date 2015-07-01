@@ -23,7 +23,7 @@ display_result = (results) ->
       $("#result_list").append("<li class = 'seperator'>#{name}</li>")
       _.each res.collections, (item) ->
         $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2>#{item.title}</h2><span>#{item.artist || ""}</span>
-        <img src='#{item.artwork_url || "/images/no_image.jpg" }' /><br /></li>").append($("<a class='add_to_playlist'>Add to Playlist</a>").click ->
+        <img src='#{item.artwork_url}' /><br /></li>").append($("<a class='add_to_playlist'>Add to Playlist</a>").click ->
           playlist.add $(this).parent().data().song
         ).append $("<a class='play_now'>Play Now</a>").click ->
           playlist.addFirst $(this).parent().data().song
@@ -130,6 +130,8 @@ cleanUpResults = (results, type) ->
       retObj.artwork_url = result.icon400.replace('400','600') if result.icon400?
     else if type == 'youtube'
       retObj.artwork_url = result.snippet.thumbnails.high.url
+    if (!retObj.artwork_url)
+      retObj.artwork_url = "/images/no_image.jpg"
     return retObj
 
   return resultObj
