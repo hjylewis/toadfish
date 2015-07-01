@@ -22,10 +22,10 @@ display_result = (results) ->
     if (res != null && res.collections && res.collections.length > 0) 
       $("#result_list").append("<li class = 'seperator'>#{name}</li>")
       _.each res.collections, (item) ->
-        $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2>#{item.title}</h2><span>#{item.artist || ""}</span>
-        <img src='#{item.artwork_url}' /><br /></li>").append($("<a class='add_to_playlist'>Add to Playlist</a>").click ->
+        $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2><a href='#{item.permalink_url}'>#{item.title}</a></h2><span>#{item.artist || ""}</span>
+        <img src='#{item.artwork_url}' /><br /></li>").append($("<a class='add_button add_to_playlist'>Add to Playlist</a>").click ->
           playlist.add $(this).parent().data().song
-        ).append $("<a class='play_now'>Play Now</a>").click ->
+        ).append $("<a class='add_button play_now'>Play Now</a>").click ->
           playlist.addFirst $(this).parent().data().song
 
 $('#first_search').keyup (e) ->

@@ -150,21 +150,24 @@ ul#result_list
         top 20px
 
       a
-        position absolute
-        bottom 10px
-        border-radius 50px
-        margin-left 30px
-        cursor pointer
-        padding 10px
-        border 1px solid rgba(0,0,0,0)
-        color purple
-        font-size 14
-        transition border 0.3s
+        &.add_button
+          position absolute
+          bottom 10px
+          border-radius 50px
+          margin-left 30px
+          cursor pointer
+          padding 10px
+          border 1px solid rgba(0,0,0,0)
+          color purple
+          font-size 14
+          transition border 0.3s
+          
+          &:hover
+            border 1px solid purple
 
         &.play_now
           left -10px
         &.add_to_playlist
           left 95px
 
-        &:hover
-          border 1px solid purple
+
