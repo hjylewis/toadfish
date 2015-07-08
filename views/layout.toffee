@@ -26,19 +26,20 @@
       <li><a href="/register">register</a></li>
     </nav>
 
+    <!-- soundcloud -->
+    <script src="//connect.soundcloud.com/sdk.js"></script>
+
     <!-- Load actual body -->
     #{raw body}
 
     <!-- Javascript and the Like -->
 
-    <!-- soundcloud -->
-    <script src="//connect.soundcloud.com/sdk.js"></script>
+
 
 
     <!-- Local Javascript Tags -->
     <script src="/search.js"></script>
-    <script src="/playlist.js"></script>
-    <script src="/setup.js"></script>
+
 
     <script type="text/javascript" src="/script/async-min.js"></script>
     <script type="text/javascript" src="/script/underscore-min.js"></script>
