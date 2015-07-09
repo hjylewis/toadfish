@@ -11,8 +11,9 @@ socket.on 'roomID', (msg) ->
 	socket.emit('roomID', roomID)
 
 # TODO: state
-# 0: pause
+# 0: stop
 # 1: play
+# 2: pause
 # 3: buffer
 
 class Playlist
@@ -160,8 +161,19 @@ class Playlist
 				cb()
 			else
 				SC.stream "/tracks/" + song_details.id, {
-						whileplaying: () ->
-							_this.positionChanged "soundcloud", this.position
+						whileplaying: (() ->
+							_this.positionChanged "soundcloud", this.position),
+						onplay: (() ->
+							_this.state = 1),
+						onstop: (() ->
+							_this.state = 0),
+						onpause: (() ->
+							_this.state = 2),
+						onbufferchange: () ->
+							if (this.isBuffering)
+								_this.state = 3
+							else
+								_this.state = 1
 					}, (sound) ->
 					song.obj = sound
 					SC.sound = sound
