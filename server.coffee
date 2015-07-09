@@ -5,6 +5,7 @@ session = require('express-session')
 cookieParser = require('cookie-parser')
 mongoose = require('mongoose')
 MongoStore = require('connect-mongo')(session)
+Update = require('./models/update')
 stylus = require('stylus')
 body_parser = require("body-parser")
 coffee = require("coffee-middleware")
@@ -24,7 +25,7 @@ mongoose.connect('mongodb://localhost/toadfish')
 db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once 'open', (callback) ->
-  console.log "Toadfish DB connected"
+	console.log "Toadfish DB connected"
 
 
 app.use session({
@@ -87,5 +88,35 @@ app.use (error, request, result, next) ->
 port = 8000
 
 # For socket.io
-app.listen port, ->
+server = http.Server(app);
+io = require('socket.io')(server);
+
+io.on 'connection', (socket) ->
+	console.log("user connected")
+	socket.emit('roomID')
+	socket.on 'roomID', (roomID) ->
+		console.log "join" + roomID
+		socket.join(roomID)
+	socket.on 'update', (obj) ->
+		socket.broadcast.to(obj.roomID).emit('update', obj)
+	# Update.find().sort({'_id': -1}).limit(1).find (err, doc) ->
+	# 	lastUpdate = doc[0]
+	# 	stream = Update.find().where('_id').gt(lastUpdate._id).tailable(true, { awaitdata: true, numberOfRetries: Number.MAX_VALUE }).stream()
+	# 	stream.on 'data', (doc) ->
+	# 		console.log "SOCKET"
+	# 		socket.broadcast.to(doc.roomID).emit('update', doc);
+	# 	stream.on 'error', (val) ->
+	# 	    console.log('Error: %j', val)
+	# 	stream.on 'end', () ->
+	# 	    console.log('End of stream')
+
+	socket.on 'disconnect', () ->
+		console.log('user disconnected')
+		# stream.destroy()
+
+
+server.listen port, ->
 	console.log "Listening on #{port}..."
+
+
+

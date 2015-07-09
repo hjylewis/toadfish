@@ -3,6 +3,7 @@ express = require('express')
 util = require('../lib/util')
 mongoose = require('mongoose')
 Room = require('../models/room')
+Update = require('../models/update')
 router = express.Router()
 
 router.get "/", (req, res) ->
@@ -55,6 +56,14 @@ router.post "/savePlaylist", (req, res) ->
         return res.status(500).end()
       res.status(200).end()
 
+router.post "/sendUpdate", (req, res) ->
+  Update.create { roomID: req.body.roomID, type:  req.body.type, data: req.body.data, host: req.body.host}, (err, newUpdate) ->
+    if (err)
+      console.error "Error creating update: " + JSON.stringify(err)
+      res.status(500).send err
+    else
+      return res.status(200).end()
+
 router.get "/host/:roomID", (req, res) ->
   roomID = req.param("roomID")
   Room.findOne {roomID: roomID}, (err, room) ->
@@ -65,7 +74,7 @@ router.get "/host/:roomID", (req, res) ->
       return res.status(404).end()
     if (room.hostSessionID != req.sessionID)
       return res.redirect '/' + roomID
-    res.render "room", {
+    res.render "host-room", {
       title: "Toadfish - " + roomID, 
       host: true,
       roomID: roomID, 
@@ -85,7 +94,7 @@ router.get "/:roomID", (req, res) ->
       return res.redirect '/host/' + roomID
 
     #Probably will have some different page here, that doesn't load stuff.
-    res.render "room", {
+    res.render "basic-room", {
       title: "Toadfish - " + roomID, 
       host: false,
       roomID: roomID, 
