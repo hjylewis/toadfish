@@ -185,9 +185,19 @@ class Playlist
 					width: '0',
 					videoId: song_details.id,
 					events: {
-						'onReady': () ->
+						'onReady': (() ->
 							yt_player.unMute()
-							cb()
+							cb()),
+						'onStateChange': (event) ->
+							console.log event.data
+							if (event.data == YT.PlayerState.PLAYING)
+								_this.state = 1
+							else if (event.data == YT.PlayerState.PAUSED)
+								_this.state = 2
+							else if (event.data == YT.PlayerState.BUFFERING)
+								_this.state = 3
+							else if (event.data == -1)
+								_this.state = 0
 					}
 		        })
 			else
