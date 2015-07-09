@@ -189,7 +189,6 @@ class Playlist
 							yt_player.unMute()
 							cb()),
 						'onStateChange': (event) ->
-							console.log event.data
 							if (event.data == YT.PlayerState.PLAYING)
 								_this.state = 1
 							else if (event.data == YT.PlayerState.PAUSED)
