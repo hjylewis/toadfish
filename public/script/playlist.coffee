@@ -214,9 +214,17 @@ class Playlist
 	readUpdate: (update) ->
 		console.log update
 		if (update.type == "addFirst")
-			@addFirst update.data, true
+			@addFirst JSON.parse(update.data), true
 		else if (update.type == "add")
-			@add update.data, true
+			@add JSON.parse(update.data), true
+		else if (update.type == "next")
+			@next true
+		else if (update.type == "prev")
+			@prev true
+		else if (update.type == "goTo")
+			@goTo update.data, true
+		else if (update.type == "remove")
+			@remove update.data, true
 	save: (type, data) ->
 		@sendUpdate type, data
 		if host
