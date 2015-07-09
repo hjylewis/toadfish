@@ -1,12 +1,19 @@
 <!-- room.toffee -->
 <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
 <script src="/playlist.js"></script>
-<script src="/setup.js"></script>
 <script>
   var host = #{host};
   var roomID = "#{roomID}";
   var playlistSettings = #{playlistSettings};
+  var playlist = null;
+
+  //this is hacky
+  var loadPlaylist =  function () {
+    if (googleLoaded && rdioLoaded)
+      playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
+  }
 </script>
+<script src="/setup.js"></script>
 <body>
   <input type="text" name="search"
   placeholder = 'Type to search'

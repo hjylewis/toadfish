@@ -16,7 +16,6 @@ socket.on 'roomID', (msg) ->
 # 3: buffer
 
 class Playlist
-
 	constructor: (currentIndex, playlist, volume) ->
 		@currentIndex = currentIndex || 0
 		@playlist = if playlist then JSON.parse(playlist) else []
@@ -127,7 +126,7 @@ class Playlist
 
 	addFirst: (song_details, update) ->
 		if (@playlist.length == 0)
-			@add(song_details)
+			@add(song_details, update)
 		else
 			@sendUpdate "addFirst", JSON.stringify(song_details)
 			@playlist.splice(@currentIndex + 1, 0, {
@@ -243,9 +242,4 @@ class Playlist
 
 
 
-playlist = null
 
-#this is hacky
-loadPlaylist =  () ->
-	if (googleLoaded && rdioLoaded)
-		playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume)
