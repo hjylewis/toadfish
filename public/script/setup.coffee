@@ -52,6 +52,16 @@ callback_object.ready = (user) ->
 callback_object.positionChanged = (position) ->
 	playlist.positionChanged "rdio", position
 
+callback_object.playStateChanged = (playState) ->
+	if (playState == 2)
+		playlist.state = 0
+	else if (playState == 1)
+		playlist.state = 1
+	else if (playState == 0 || playState == 4)
+		playlist.state = 2
+	else if (playState == 3)
+		playlist.state = 3
+
 logError = (msg) ->
   $.post "/error", { "msg" : msg }
 

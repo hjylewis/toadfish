@@ -11,8 +11,9 @@ socket.on 'roomID', (msg) ->
 	socket.emit('roomID', roomID)
 
 # TODO: state
-# 0: pause
+# 0: stop
 # 1: play
+# 2: pause
 # 3: buffer
 
 class Playlist
@@ -90,6 +91,7 @@ class Playlist
 				@setVolume @volume
 				@play()
 		else 
+			@state = 0
 			@seek(100) # seek end of song
 			@stop()
 		@save('next', @currentIndex.toString()) if !update
@@ -160,8 +162,19 @@ class Playlist
 				cb()
 			else
 				SC.stream "/tracks/" + song_details.id, {
-						whileplaying: () ->
-							_this.positionChanged "soundcloud", this.position
+						whileplaying: (() ->
+							_this.positionChanged "soundcloud", this.position),
+						onplay: (() ->
+							_this.state = 1),
+						onstop: (() ->
+							_this.state = 0),
+						onpause: (() ->
+							_this.state = 2),
+						onbufferchange: () ->
+							if (this.isBuffering)
+								_this.state = 3
+							else
+								_this.state = 1
 					}, (sound) ->
 					song.obj = sound
 					SC.sound = sound
@@ -173,9 +186,18 @@ class Playlist
 					width: '0',
 					videoId: song_details.id,
 					events: {
-						'onReady': () ->
+						'onReady': (() ->
 							yt_player.unMute()
-							cb()
+							cb()),
+						'onStateChange': (event) ->
+							if (event.data == YT.PlayerState.PLAYING)
+								_this.state = 1
+							else if (event.data == YT.PlayerState.PAUSED)
+								_this.state = 2
+							else if (event.data == YT.PlayerState.BUFFERING)
+								_this.state = 3
+							else if (event.data == -1)
+								_this.state = 0
 					}
 		        })
 			else
@@ -187,7 +209,7 @@ class Playlist
 			cb()
 
 	positionChanged: (type, position) ->
-		if (type == @playlist[@currentIndex].song_details.type)
+		if (type == @playlist[@currentIndex].song_details.type && @state != 0)
 
 			# update graphics
 			percent = null;
