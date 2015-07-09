@@ -5,18 +5,31 @@
     <!-- CSS Tag -->
 
     <link rel="stylesheet" type="text/css" href="/style/main.css">
+    <link rel="stylesheet" type="text/css" href="/style/canvas.css">
 
 
     <!-- Google Fonts -->
 
     <link href='http://fonts.googleapis.com/css?family=Roboto:100|Open+Sans:300' rel='stylesheet' type='text/css'>
-    
+
     <!-- JQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <style> /* For the background */
+
+
+    </style>
+
 
   </head>
 
   <body>
+    <!-- soundcloud -->
+    <script src="//connect.soundcloud.com/sdk.js"></script>
+
+    <!-- Load actual body -->
+    #{raw body}
+
 
     <!-- Would load navbar here too -->
 
@@ -26,14 +39,13 @@
       <li><a href="/register">register</a></li>
     </nav>
 
-    <!-- soundcloud -->
-    <script src="//connect.soundcloud.com/sdk.js"></script>
 
-    <!-- Load actual body -->
-    #{raw body}
+
 
     <!-- Javascript and the Like -->
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="/script/canvas.js"></script>
 
 
 

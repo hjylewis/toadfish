@@ -2,6 +2,7 @@
 
 grey = #f6f6f6
 purple = #7f00ff
+darkpurple = darken(purple, 60%)
 black = #333
 radius = 5px
 
@@ -15,18 +16,20 @@ transition()
   padding 0
   margin 0
   font-weight 100
-  color black
+  // color black
 
 a
   text-decoration none
-  color black
+  color white
   &:hover
-    color purple
+    color black
 
 body
-  background grey cover
   min-width 400px
   font-size 20px
+  padding-top 50px
+  color white
+  background transparent
   font-family "Raleway", helvetica
 
 input
@@ -47,13 +50,21 @@ input
 
 nav
   text-align right
-  background rgba(255,255,255,0.8)
+  background rgba(0,0,0,0.5)
   padding-right 14px
   padding-bottom 15px
+  position fixed
+  width 100%
+  top 0px
+  left 0px
+
+  a
+    color white
+
 
 
   li
-    font-family "Open Sans", courier
+    font-family courier, "Open Sans"
     display inline-block
     position relative
     padding-top 14px
@@ -98,7 +109,10 @@ ul#result_list
   width 50%
   margin auto
   margin-top 20px
-  background white
+  // background white
+
+  *
+    background none
 
   &.hidden-ul
     display none
@@ -116,8 +130,8 @@ ul#result_list
 
     &.seperator
       font-size 20px
-      background-color lightpink
-      text-transform capitalize 
+      background-color rgba(0,0,0,0.5)
+      text-transform capitalize
       padding 10px
 
     &.result
@@ -125,6 +139,7 @@ ul#result_list
       clear both
       width 100%
       position relative
+      background-color white
 
       &.hidden_result
         display none
@@ -150,8 +165,9 @@ ul#result_list
         top 20px
 
       a
+        color black
         &:hover
-          color black
+          color purple
           text-decoration underline
 
         &.add_button
@@ -174,5 +190,3 @@ ul#result_list
           left -10px
         &.add_to_playlist
           left 95px
-
-
