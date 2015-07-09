@@ -8,8 +8,9 @@ keystroke_count_down = ->
     waiting_time = -1
     value = $("#first_search").val()
     search value, (res) ->
-      console.log res
-      display_result(res)
+      if (value == $("#first_search").val())
+        console.log res
+        display_result(res)
   else
     waiting_time -= 1
 
