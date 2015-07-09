@@ -91,6 +91,7 @@ class Playlist
 				@setVolume @volume
 				@play()
 		else 
+			@state = 0
 			@seek(100) # seek end of song
 			@stop()
 		@save('next', @currentIndex.toString()) if !update
@@ -208,7 +209,7 @@ class Playlist
 			cb()
 
 	positionChanged: (type, position) ->
-		if (type == @playlist[@currentIndex].song_details.type)
+		if (type == @playlist[@currentIndex].song_details.type && @state != 0)
 
 			# update graphics
 			percent = null;
