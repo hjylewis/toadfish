@@ -23,7 +23,7 @@ getAccess = () ->
         console.error "Error: Rdio Auth, " + err
       else
         rdio_access_token = body.access_token
-        setTimeout(getAccess, body.expires_in * 1000))
+        setTimeout(getAccess, body.expires_in * 900))
 
 rdioRequest = (data, cb) ->
   request({
