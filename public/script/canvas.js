@@ -2,7 +2,7 @@
 var width = $(window).width(),
   height = $(window).height();
 
-var vertices = d3.range(10).map(function(d) {
+var vertices = d3.range(3).map(function(d) {
 return [Math.random() * width, Math.random() * height];
 });
 
@@ -13,6 +13,18 @@ var svg = d3.select("body").insert("svg", ":first-child")
   .attr("width", width)
   .attr("id", "canvas")
   .attr("height", height)
+  .attr("filter", "url(#blur)")
+
+
+
+var filter = svg.append("defs")
+  .append("filter")
+    .attr("id", "blur")
+  .append("feGaussianBlur")
+    .attr("stdDeviation", 200);
+
+
+
   // .on("mousemove", function() { vertices[0] = d3.mouse(this); redraw(); });
 
 var path = svg.append("g").selectAll("path");
