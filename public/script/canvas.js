@@ -1,6 +1,6 @@
 
-var width = $(window).width(),
-  height = $(window).height();
+var width = $(window).width() * 1.5,
+  height = $(window).height() * 1.5;
 
 var vertices = d3.range(3).map(function(d) {
 return [Math.random() * width, Math.random() * height];
@@ -21,7 +21,7 @@ var filter = svg.append("defs")
   .append("filter")
     .attr("id", "blur")
   .append("feGaussianBlur")
-    .attr("stdDeviation", 200);
+    .attr("stdDeviation", 100);
 
 
 
