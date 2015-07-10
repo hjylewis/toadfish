@@ -95,7 +95,6 @@ io.on 'connection', (socket) ->
 	console.log("user connected")
 	socket.emit('roomID')
 	socket.on 'roomID', (roomID) ->
-		console.log "join" + roomID
 		socket.join(roomID)
 	socket.on 'update', (obj) ->
 		socket.broadcast.to(obj.roomID).emit('update', obj)
