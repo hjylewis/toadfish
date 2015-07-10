@@ -1,32 +1,64 @@
 log = console.log
 express = require('express')
 router = express.Router()
-Rdio = require("../node_modules/rdio-simple/node/rdio");
-config = require('../config');
+request = require('request')
+config = require('../config')
 
-rdio = new Rdio([config.rdio_cred.key, config.rdio_cred.secret]);
+rdio_access_token = null
+
+getAccess = () ->
+  request({
+      url: 'https://services.rdio.com/oauth2/token',
+      method: 'POST',
+      auth: {
+        user: config.rdio_cred.client_id,
+        pass: config.rdio_cred.client_secret
+      },
+      json: true,
+      body: {
+        grant_type: 'client_credentials'
+      }
+    }, (err, res, body) ->
+      if (err)
+        console.error "Error: Rdio Auth, " + err
+      else
+        rdio_access_token = body.access_token
+        setTimeout(getAccess, body.expires_in * 1000))
+
+rdioRequest = (data, cb) ->
+  request({
+    url: 'https://services.rdio.com/api/1/',
+    method: 'POST',
+    auth: {
+      bearer: rdio_access_token
+    },
+    form: data
+    }, cb)
+
+getAccess()
 
 router.get "/search", (req, res) ->
   query = req.query.q
   page = parseInt(req.query.page) || 0
   page_length = parseInt(req.query.page_length)
-  rdio.call 'search', {'query': query, 'start': page * page_length, 'count': page_length, 'types': 'Track'}, (err, msg) ->
-    if err?
-      # DONT COMMIT THIS
-      # console.error "rdio search error:" + JSON.stringify(err)
-      res.send []
-    else 
-      result = {
-        collection: msg.result.results,
-        next_page: page + 1
-      }
-      res.send result
+  rdioRequest {'method': 'search', 'query': query, 'start': page * page_length, 'count': page_length, 'types': 'Track'}, (err, response, body) ->
+      if (err)
+        console.error "rdio search error:" + JSON.stringify(err)
+        res.send []
+      else
+        result = {
+          collection: JSON.parse(body).result.results,
+          next_page: page + 1
+        }
+        res.send result
+
+
 router.get "/playbackToken", (req, res) ->
-  rdio.call 'getPlaybackToken', {'domain': 'localhost'}, (err, msg) ->
+  rdioRequest {'method': 'getPlaybackToken', 'domain': 'localhost'}, (err, response, body) ->
     if err?
-      # console.error "rdio error getting playbackToken: " + JSON.stringify(err)
+      console.error "rdio error getting playbackToken: " + JSON.stringify(err)
       res.send ""
     else
-      res.send msg.result
+      res.send JSON.parse(body).result
 
 module.exports = router
