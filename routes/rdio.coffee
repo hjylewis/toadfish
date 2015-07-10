@@ -2,10 +2,8 @@ log = console.log
 express = require('express')
 router = express.Router()
 request = require('request')
-# Rdio = require("../node_modules/rdio-simple/node/rdio")
 config = require('../config')
 
-# rdio = new Rdio([config.rdio_cred.key, config.rdio_cred.secret]);
 rdio_access_token = null
 
 getAccess = () ->
