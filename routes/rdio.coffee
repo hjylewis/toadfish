@@ -27,37 +27,38 @@ request({
       # refresh token?
       console.log body)
 
-router.get "/search", (req, res) ->
-  query = req.query.q
-  page = parseInt(req.query.page) || 0
-  page_length = parseInt(req.query.page_length)
-
+rdioRequest = (data, cb) ->
   request({
     url: 'https://services.rdio.com/api/1/',
     method: 'POST',
     auth: {
       bearer: rdio_access_token
     },
-    form: {'method': 'search', 'query': query, 'start': page * page_length, 'count': page_length, 'types': 'Track'}
-    }, (err, response, body) ->
+    form: data
+    }, cb)
+
+router.get "/search", (req, res) ->
+  query = req.query.q
+  page = parseInt(req.query.page) || 0
+  page_length = parseInt(req.query.page_length)
+  rdioRequest {'method': 'search', 'query': query, 'start': page * page_length, 'count': page_length, 'types': 'Track'}, (err, response, body) ->
       if (err)
         console.error "rdio search error:" + JSON.stringify(err)
         res.send []
       else
-        console.log body
         result = {
           collection: JSON.parse(body).result.results,
           next_page: page + 1
         }
-        res.send result)
-  
+        res.send result
+
+
 router.get "/playbackToken", (req, res) ->
-  res.send ""
-  # rdio.call 'getPlaybackToken', {'domain': 'localhost'}, (err, msg) ->
-  #   if err?
-  #     # console.error "rdio error getting playbackToken: " + JSON.stringify(err)
-  #     res.send ""
-  #   else
-  #     res.send msg.result
+  rdioRequest {'method': 'getPlaybackToken', 'domain': 'localhost'}, (err, response, body) ->
+    if err?
+      console.error "rdio error getting playbackToken: " + JSON.stringify(err)
+      res.send ""
+    else
+      res.send JSON.parse(body).result
 
 module.exports = router
