@@ -5,12 +5,23 @@
   var playlistSettings = #{playlistSettings};
 </script>
 <body>
-  <input type="text" name="search"
+  <input ng-model="query" type="text" name="search"
   placeholder = 'Type to search'
+  ng-keypress="$event.which == 13 && Search()"
   id = 'first_search' autofocus autocomplete="off">
 
   <!-- This is just a sample for styling purposes -->
-  <ul id = "result_list" class='hidden-ul'>
+  <ul id = "result_list">
+    <li ng-repeat = "(name, result) in results" class = 'seperator'>
+      <div>{{name}}</div>
+      <div class = 'result' ng-repeat="item in result.collections">
+        <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>
+        <span>{{item.artist || ""}}</span>
+        <img ng-src='{{item.artwork_url}}' /><br />
+        <a class='add_button add_to_playlist'>Add to Playlist</a>
+        <a class='add_button play_now'>Play Now</a>
+      </div>
+    </li>
   </ul>
 
   <!-- This is needed for youtube -->

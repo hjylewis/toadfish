@@ -3,37 +3,38 @@
 PAGE_LENGTH = 3
 waiting_time = -1
 
-keystroke_count_down = ->
-  if waiting_time == 0
-    waiting_time = -1
-    value = $("#first_search").val()
-    search value, (res) ->
-      if (value == $("#first_search").val())
-        console.log res
-        display_result(res)
-  else
-    waiting_time -= 1
+# TAKE AWAY THIS FUNCTION
+# keystroke_count_down = ->
+#   if waiting_time == 0
+#     waiting_time = -1
+#     value = $("#first_search").val()
+#     search value, (res) ->
+#       if (value == $("#first_search").val())
+#         console.log res
+#         # display_result(res)
+#   else
+#     waiting_time -= 1
 
-setInterval keystroke_count_down, 100
+# setInterval keystroke_count_down, 100
 
-display_result = (results) ->
-  $("#result_list").removeClass "hidden-ul"
-  $("#result_list").children().hide()
-  _.each results, (res, name) ->
-    if (res != null && res.collections && res.collections.length > 0) 
-      $("#result_list").append("<li class = 'seperator'>#{name}</li>")
-      _.each res.collections, (item) ->
-        $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2><a href='#{item.permalink_url}' target='_blank'>#{item.title}</a></h2><span>#{item.artist || ""}</span>
-        <img src='#{item.artwork_url}' /><br /></li>").append($("<a class='add_button add_to_playlist'>Add to Playlist</a>").click ->
-          playlist.add $(this).parent().data().song
-        ).append $("<a class='add_button play_now'>Play Now</a>").click ->
-          playlist.addFirst $(this).parent().data().song
-
-$('#first_search').keyup (e) ->
-  waiting_time = 3
-  if e.key == 13
-    waiting_time = 0
-    keystroke_count_down()
+# display_result = (results) ->
+#   $("#result_list").removeClass "hidden-ul"
+#   $("#result_list").children().hide()
+#   _.each results, (res, name) ->
+#     if (res != null && res.collections && res.collections.length > 0)
+#       $("#result_list").append("<li class = 'seperator'>#{name}</li>")
+#       _.each res.collections, (item) ->
+#         $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2><a href='#{item.permalink_url}' target='_blank'>#{item.title}</a></h2><span>#{item.artist || ""}</span>
+#         <img src='#{item.artwork_url}' /><br /></li>").append($("<a class='add_button add_to_playlist'>Add to Playlist</a>").click ->
+#           playlist.add $(this).parent().data().song
+#         ).append $("<a class='add_button play_now'>Play Now</a>").click ->
+#           playlist.addFirst $(this).parent().data().song
+#
+# $('#first_search').keyup (e) ->
+#   waiting_time = 3
+#   if e.key == 13
+#     waiting_time = 0
+#     keystroke_count_down()
 
 # str: string query
 # options: object (optional)
@@ -47,7 +48,7 @@ search = (str, options, done) ->
   options.types = ['soundcloud','youtube','rdio'] if not options.types?
   console.log "search: " + str
   return done null if str == ""
-  
+
   storedResults = if sessionStorage.getItem(str) then JSON.parse(sessionStorage.getItem(str)) else {}
   if not options.next?
     ret = _.reduce options.types, ((memo, type) -> return storedResults[type] && memo), true
@@ -136,4 +137,3 @@ cleanUpResults = (results, type) ->
     return retObj
 
   return resultObj
-

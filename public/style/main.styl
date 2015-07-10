@@ -51,8 +51,6 @@ input
 nav
   text-align right
   background rgba(0,0,0,0.5)
-  padding-right 14px
-  padding-bottom 15px
   position fixed
   width 100%
   top 0px
@@ -61,17 +59,20 @@ nav
   a
     color white
 
-
+    a:hover
+      color purple
 
   li
     font-family courier, "Open Sans"
     display inline-block
     position relative
-    padding-top 14px
-    padding-left 20px
+    padding 15px 10px
 
+  li:last-child
+    padding-right 20px
 
   li:first-child
+    padding-left 20px
     float left
 
 
@@ -125,8 +126,8 @@ ul#result_list
     &.seperator
       border-radius radius radius 0 0
 
-    &:last-child // This might be a real problem
-      display none
+    // &:last-child // This might be a real problem
+    //   display none
 
     &.seperator
       font-size 20px
@@ -134,59 +135,59 @@ ul#result_list
       text-transform capitalize
       padding 10px
 
-    &.result
-      min-height 150px
-      clear both
-      width 100%
-      position relative
-      background-color white
+  .result
+    min-height 150px
+    clear both
+    width 100%
+    position relative
+    background-color white
 
-      &.hidden_result
-        display none
+    &.hidden_result
+      display none
 
-      &.no_border_result
-        border-top none
+    &.no_border_result
+      border-top none
 
-      h2
-        padding-top 20px
-        padding-left 30px
-        max-width 70%
-        box-sizing border-box
-        font-size 20px
+    h2
+      padding-top 20px
+      padding-left 30px
+      max-width 70%
+      box-sizing border-box
+      font-size 20px
 
-      span
-        padding-left 30px
-        font-size 16px
+    span
+      padding-left 30px
+      font-size 16px
 
-      img
-        max-height 100px
+    img
+      max-height 100px
+      position absolute
+      right 20px
+      top 20px
+
+    a
+      color black
+      &:hover
+        color purple
+        text-decoration underline
+
+      &.add_button
         position absolute
-        right 20px
-        top 20px
+        bottom 10px
+        border-radius 50px
+        margin-left 30px
+        cursor pointer
+        padding 10px
+        border 1px solid rgba(0,0,0,0)
+        color purple
+        font-size 14
+        transition border 0.3s
+        text-decoration none
 
-      a
-        color black
         &:hover
-          color purple
-          text-decoration underline
+          border 1px solid purple
 
-        &.add_button
-          position absolute
-          bottom 10px
-          border-radius 50px
-          margin-left 30px
-          cursor pointer
-          padding 10px
-          border 1px solid rgba(0,0,0,0)
-          color purple
-          font-size 14
-          transition border 0.3s
-          text-decoration none
-
-          &:hover
-            border 1px solid purple
-
-        &.play_now
-          left -10px
-        &.add_to_playlist
-          left 95px
+      &.play_now
+        left -10px
+      &.add_to_playlist
+        left 95px

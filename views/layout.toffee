@@ -1,4 +1,4 @@
-<html> <!-- layout.toffee -->
+<html ng-app> <!-- layout.toffee -->
   <head>
     <title>#{title}</title>
 
@@ -23,8 +23,9 @@
 
   </head>
 
-  <body>
+  <body ng-controller="PlaylistController">
 
+    <h1>{{name}}</h1>
 
     <!-- Load actual body -->
     #{raw body}
@@ -43,6 +44,7 @@
 
     <!-- Javascript and the Like -->
 
+    <!-- D3 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="/script/canvas.js"></script>
 
@@ -50,10 +52,16 @@
     <script src="//connect.soundcloud.com/sdk.js"></script>
 
 
+
+
     <!-- Local Javascript Tags -->
     <script src="/search.js"></script>
     <script src="/playlist.js"></script>
     <script src="/setup.js"></script>
+
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+    <script src="/script/playlistController.js"></script>
 
     <script type="text/javascript" src="/script/async-min.js"></script>
     <script type="text/javascript" src="/script/underscore-min.js"></script>
