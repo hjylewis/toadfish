@@ -32,7 +32,7 @@ router.post "/createRoom", (req, res) ->
             alreadyExists: true
           }
         else
-          checkAndCreate()
+          return checkAndCreate()
       Room.create { roomName: req.body.roomName, roomID:  roomID, hostSessionID: sessionID }, (err, newRoom) ->
         if (err)
           console.error "Error creating room: " + JSON.stringify(err)
@@ -43,7 +43,7 @@ router.post "/createRoom", (req, res) ->
             alreadyExists: false
           }
   checkAndCreate()
-    
+
 router.post "/savePlaylist", (req, res) ->
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
     if (err)
