@@ -8,7 +8,8 @@ roomSchema = new mongoose.Schema({
 		currentIndex: Number,
 		playlist: String,
 		volume: Number
-	}
+	},
+	update: Date
 })
 
 Room = mongoose.model('Room', roomSchema)
