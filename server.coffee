@@ -6,6 +6,7 @@ cookieParser = require('cookie-parser')
 mongoose = require('mongoose')
 MongoStore = require('connect-mongo')(session)
 Update = require('./models/update')
+Room = require('./models/room')
 stylus = require('stylus')
 body_parser = require("body-parser")
 coffee = require("coffee-middleware")
@@ -117,5 +118,12 @@ io.on 'connection', (socket) ->
 server.listen port, ->
 	console.log "Listening on #{port}..."
 
+cleanUpDB = () ->
+	oneWeekAgo = new Date()
+	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+	Room.find({update: {"$lt": oneWeekAgo}}).remove().exec()
+	setTimeout(cleanUpDB, 86400000) #one day
+
+cleanUpDB()
 
 

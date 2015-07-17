@@ -33,7 +33,7 @@ router.post "/createRoom", (req, res) ->
           }
         else
           return checkAndCreate()
-      Room.create { roomName: req.body.roomName, roomID:  roomID, hostSessionID: sessionID }, (err, newRoom) ->
+      Room.create { roomName: req.body.roomName, roomID:  roomID, hostSessionID: sessionID, update: new Date()}, (err, newRoom) ->
         if (err)
           console.error "Error creating room: " + JSON.stringify(err)
           res.status(500).send err
@@ -56,6 +56,7 @@ router.post "/savePlaylist", (req, res) ->
     room.playlistSettings.currentIndex = playlistSettings.currentIndex
     room.playlistSettings.playlist = JSON.stringify(playlistSettings.playlist)
     room.playlistSettings.volume = playlistSettings.volume
+    room.update = new Date()
     room.save (err) ->
       if (err)
         console.error "Error saving playlist: " + JSON.stringify(err)
