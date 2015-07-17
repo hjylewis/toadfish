@@ -5,7 +5,7 @@
     <!-- CSS Tag -->
 
     <link rel="stylesheet" type="text/css" href="/style/main.css">
-    <link rel="stylesheet" type="text/css" href="/style/canvas.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/style/canvas.css"> -->
 
 
     <!-- Google Fonts -->
@@ -55,8 +55,8 @@
     <!-- youtube -->
     <script src="//apis.google.com/js/client.js?onload=googleApiClientReady"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-    <script src="/script/canvas.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="/script/canvas.js"></script>-->
 
   </body>
 

@@ -81,6 +81,10 @@ router.get "/host/:roomID", (req, res) ->
       return res.status(404).end()
     if (room.hostSessionID != req.sessionID)
       return res.redirect '/' + roomID
+
+    room.update = new Date()
+    room.save 
+    
     res.render "host-room", {
       title: "Toadfish - " + roomID, 
       host: true,
@@ -100,7 +104,9 @@ router.get "/:roomID", (req, res) ->
     if (room.hostSessionID == req.sessionID)
       return res.redirect '/host/' + roomID
 
-    #Probably will have some different page here, that doesn't load stuff.
+    room.update = new Date()
+    room.save 
+    
     res.render "basic-room", {
       title: "Toadfish - " + roomID, 
       host: false,
