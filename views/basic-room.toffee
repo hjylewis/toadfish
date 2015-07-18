@@ -1,6 +1,7 @@
 <!-- room.toffee -->
 <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
 <script src="/basic-playlist.js"></script>
+<script src="/script/controllers/playlistController.js"></script>
 <script>
   var host = #{host};
   var roomID = "#{roomID}";
@@ -8,13 +9,14 @@
   var playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
 </script>
 <script src="/setup.js"></script>
-<body>
+<body ng-controller="PlaylistController">
+  <h1>{{name}}</h1>
+
   <input ng-model="query" type="text" name="search"
   placeholder = 'Type to search'
   ng-keypress="$event.which == 13 && Search()"
   id = 'first_search' autofocus autocomplete="off">
 
-  <!-- This is just a sample for styling purposes -->
   <ul id = "result_list">
     <li ng-repeat = "(name, result) in results" class = 'seperator'>
       <div>{{name}}</div>

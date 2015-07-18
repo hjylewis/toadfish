@@ -92,6 +92,7 @@ search = (str, options, done) ->
               callback null, cleanUpResults(res, "rdio")
         }
     }, (err, results) ->
+      ret = {}
       results = _.mapObject results, (obj, type) ->
         obj = {} if not obj
         collections = if storedResults[type] then storedResults[type].collections.concat(obj.collections || []) else obj.collections
@@ -103,9 +104,10 @@ search = (str, options, done) ->
           }
         else
           return null
-      results.query = str
-      sessionStorage.setItem(str, JSON.stringify(results)) #if not DEBUG
-      done results
+      ret.query = str
+      ret.results = results
+      sessionStorage.setItem(str, JSON.stringify(ret)) #if not DEBUG
+      done ret
 
 cleanUpResults = (results, type) ->
   resultObj = {}

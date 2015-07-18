@@ -5,9 +5,9 @@ function PlaylistController($scope){
   $scope.results = []
   $scope.query = "";
   $scope.Search = function() {
-    search($scope.query, {}, function (results) {
-      console.log(results);
-      $scope.results = results;
+    search($scope.query, {}, function (ret) {
+      console.log(ret);
+      $scope.results = ret.results;
     });
   }
 }

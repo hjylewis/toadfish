@@ -23,11 +23,10 @@
 
   </head>
 
-  <body ng-controller="PlaylistController">
+  <body>
     <!-- soundcloud -->
     <script src="//connect.soundcloud.com/sdk.js"></script>
 
-    <h1>{{name}}</h1>
 
     <!-- Load actual body -->
     #{raw body}
@@ -51,7 +50,6 @@
 
     <!-- Angular -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
-    <script src="/script/playlistController.js"></script>
 
     <script type="text/javascript" src="/script/async-min.js"></script>
     <script type="text/javascript" src="/script/underscore-min.js"></script>
