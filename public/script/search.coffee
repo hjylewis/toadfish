@@ -1,6 +1,6 @@
 # search.coffee
 
-PAGE_LENGTH = 3
+PAGE_LENGTH = 10
 waiting_time = -1
 
 # TAKE AWAY THIS FUNCTION
