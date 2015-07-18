@@ -115,6 +115,21 @@ div.content
   &:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    input_grey;
   }
+  
+
+div#playlist
+  li
+    list-style none
+    border 1px solid black
+    font-size 20px
+    background-color rgba(0,0,0,0.5)
+    padding 10px
+    position relative
+    margin-top -1px
+    &:first-child
+      border-radius radius radius 0 0
+    &:last-child
+      border-radius 0 0 radius radius   
 
 
 ul#result_list
@@ -139,18 +154,16 @@ ul#result_list
 
     &.seperator
       border-radius radius radius 0 0
+      font-size 20px
+      background-color rgba(0,0,0,0.5)
+      text-transform capitalize
+      padding 10px
       span
         font-size 85%  
         float right
         cursor pointer
         &:hover
           text-decoration underline
-
-    &.seperator
-      font-size 20px
-      background-color rgba(0,0,0,0.5)
-      text-transform capitalize
-      padding 10px
 
   .result
     min-height 150px
@@ -173,6 +186,7 @@ ul#result_list
       font-size 20px
 
     span
+      color black
       padding-left 30px
       font-size 16px
 

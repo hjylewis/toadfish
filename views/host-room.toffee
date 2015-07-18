@@ -1,6 +1,7 @@
 <!-- room.toffee -->
 <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
 <script src="/playlist.js"></script>
+<script src="/script/controllers/playlistController.js"></script>
 <script>
   var host = #{host};
   var roomID = "#{roomID}";
@@ -17,7 +18,6 @@
     }
   }
 </script>
-<script src="/script/controllers/playlistController.js"></script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController">
   <h1>#{roomName}</h1>
@@ -52,12 +52,10 @@
       </div>
     </ul>
 
-    <div>
+    <div id="playlist">
       <ul>
-        <div ng-repeat="song in playlist.playlist track by $index">
-          <li>{{song.song_details.title}}</li>
-        </div>
-      <ul>
+        <li ng-repeat="song in playlist.playlist track by $index">{{song.song_details.title}} - {{song.song_details.artist}}</li>
+      </ul>
     </div>
   </div>
 
