@@ -35,8 +35,8 @@
             <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>
             <span>{{item.artist || ""}}</span>
             <img ng-src='{{item.artwork_url}}' /><br />
-            <a class='add_button add_to_playlist'>Add to Playlist</a>
-            <a class='add_button play_now'>Play Now</a>
+            <a class='add_button add_to_playlist'ng-click="add(item)">Add to Playlist</a>
+            <a class='add_button play_now' ng-click="playNow(item)">Play Now</a>
           </li>
         </div>
       </div>
