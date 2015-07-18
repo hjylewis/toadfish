@@ -1,9 +1,13 @@
 <!-- room.toffee -->
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+<script src="/basic-playlist.js"></script>
 <script>
   var host = #{host};
   var roomID = "#{roomID}";
   var playlistSettings = #{playlistSettings};
+  var playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
 </script>
+<script src="/setup.js"></script>
 <body>
   <input ng-model="query" type="text" name="search"
   placeholder = 'Type to search'
@@ -23,11 +27,5 @@
       </div>
     </li>
   </ul>
-
-  <!-- This is needed for youtube -->
-  <div id="yt_player"></div>
-  <!-- For Rdio -->
-  <div id="rdio_player"></div>
-
 
 </body>

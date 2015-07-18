@@ -3,6 +3,7 @@ express = require('express')
 util = require('../lib/util')
 mongoose = require('mongoose')
 Room = require('../models/room')
+Update = require('../models/update')
 router = express.Router()
 
 router.get "/", (req, res) ->
@@ -22,21 +23,27 @@ router.post "/createRoom", (req, res) ->
   db = req.db
   sessionID = req.sessionID
   roomName = req.body.roomName
-  roomID = if roomName != "" then util.encodeHtml(roomName).split(' ').join('-') else Math.random().toString(36).substr(2, 7)
-  Room.find {roomID: roomID}, (err, rooms) ->
-    if (rooms.length > 0)
-      return res.send {
-        alreadyExists: true
-      }
-    Room.create { roomName: req.body.roomName, roomID:  roomID, hostSessionID: sessionID }, (err, newRoom) ->
-      if (err)
-        console.error "Error creating room: " + JSON.stringify(err)
-        res.status(500).send err
-      else
-        return res.send {
-          roomID: roomID,
-          alreadyExists: false
-        }
+  checkAndCreate = () ->
+    roomID = if roomName != "" then util.encodeHtml(roomName).split(' ').join('-') else Math.random().toString(36).substr(2, 7)
+    Room.find {roomID: roomID}, (err, rooms) ->
+      if (rooms.length > 0)
+        if (roomName != "")
+          return res.send {
+            alreadyExists: true
+          }
+        else
+          return checkAndCreate()
+      Room.create { roomName: req.body.roomName, roomID:  roomID, hostSessionID: sessionID, update: new Date()}, (err, newRoom) ->
+        if (err)
+          console.error "Error creating room: " + JSON.stringify(err)
+          res.status(500).send err
+        else
+          return res.send {
+            roomID: roomID,
+            alreadyExists: false
+          }
+  checkAndCreate()
+
 router.post "/savePlaylist", (req, res) ->
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
     if (err)
@@ -49,11 +56,20 @@ router.post "/savePlaylist", (req, res) ->
     room.playlistSettings.currentIndex = playlistSettings.currentIndex
     room.playlistSettings.playlist = JSON.stringify(playlistSettings.playlist)
     room.playlistSettings.volume = playlistSettings.volume
+    room.update = new Date()
     room.save (err) ->
       if (err)
         console.error "Error saving playlist: " + JSON.stringify(err)
         return res.status(500).end()
       res.status(200).end()
+
+router.post "/sendUpdate", (req, res) ->
+  Update.create { roomID: req.body.roomID, type:  req.body.type, data: req.body.data, host: req.body.host}, (err, newUpdate) ->
+    if (err)
+      console.error "Error creating update: " + JSON.stringify(err)
+      res.status(500).send err
+    else
+      return res.status(200).end()
 
 router.get "/host/:roomID", (req, res) ->
   roomID = req.param("roomID")
@@ -65,7 +81,11 @@ router.get "/host/:roomID", (req, res) ->
       return res.status(404).end()
     if (room.hostSessionID != req.sessionID)
       return res.redirect '/' + roomID
-    res.render "room", {
+
+    room.update = new Date()
+    room.save 
+    
+    res.render "host-room", {
       title: "Toadfish - " + roomID, 
       host: true,
       roomID: roomID, 
@@ -84,8 +104,10 @@ router.get "/:roomID", (req, res) ->
     if (room.hostSessionID == req.sessionID)
       return res.redirect '/host/' + roomID
 
-    #Probably will have some different page here, that doesn't load stuff.
-    res.render "room", {
+    room.update = new Date()
+    room.save 
+    
+    res.render "basic-room", {
       title: "Toadfish - " + roomID, 
       host: false,
       roomID: roomID, 

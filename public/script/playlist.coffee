@@ -6,19 +6,24 @@ yt_obj = {artwork_url: "https://i.ytimg.com/vi/ih2xubMaZWI/hqdefault.jpg", id: "
 sc_obj = {artwork_url: "https://i1.sndcdn.com/artworks-000110807035-1bxk4l-t500x500.jpg", duration: 226371, id: 178220277, permalink_url: "https://soundcloud.com/alexomfg/omfg-hello", title: "OMFG - Hello", type: "soundcloud", user: "OMFG"}
 rd_obj = {artist: "OMFG", artwork_url: "http://img02.cdn2-rdio.com/album/8/3/5/000000000050f538/2/square-600.jpg", duration: 226, id: "t60862619", permalink_url: "http://rd.io/x/QitB__PE/", title: "Hello", type: "rdio"}
 
+socket = io('http://localhost:8000')
+socket.on 'roomID', (msg) ->
+	socket.emit('roomID', roomID)
 
 # TODO: state
-# 0: pause
+# 0: stop
 # 1: play
+# 2: pause
 # 3: buffer
 
 class Playlist
-
 	constructor: (currentIndex, playlist, volume) ->
 		@currentIndex = currentIndex || 0
 		@playlist = if playlist then JSON.parse(playlist) else []
 		@state
 		@volume = volume || 100
+		socket.on 'update', (update) =>
+			@readUpdate(update)
 		if @playlist.length > 0
 			@loadSong () =>
 				@setVolume @volume
@@ -78,7 +83,7 @@ class Playlist
 		@volume = percent;
 
 
-	next: () ->
+	next: (update) ->
 		if (@currentIndex + 1 < @playlist.length )
 			@stop()
 			@currentIndex++
@@ -86,11 +91,12 @@ class Playlist
 				@setVolume @volume
 				@play()
 		else 
+			@state = 0
 			@seek(100) # seek end of song
 			@stop()
-		@save() if host
+		@save('next', @currentIndex.toString()) if !update
 
-	prev: () ->
+	prev: (update) ->
 		if (@currentIndex > 0)
 			@stop()
 			@currentIndex--
@@ -99,18 +105,18 @@ class Playlist
 				@play()
 		else 
 			@seek(0)
-		@save() if host
+		@save('prev', @currentIndex.toString()) if !update
 
-	goTo: (index) ->
+	goTo: (index, update) ->
 		if (index >= 0 && index < @playlist.length)
 			@stop()
 			@currentIndex = index
 			@loadSong () =>
 				@setVolume @volume
 				@play()
-			@save() if host
+			@save('goTo', @currentIndex.toString()) if !update
 
-	add: (song_details) ->
+	add: (song_details, update) ->
 		@playlist.push({
 			song_details: song_details
 		})
@@ -118,25 +124,26 @@ class Playlist
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
-		@save() if host
+		@save('add', JSON.stringify(song_details)) if !update
 
-	addFirst: (song_details) ->
+	addFirst: (song_details, update) ->
 		if (@playlist.length == 0)
-			@add(song_details)
+			@add(song_details, update)
 		else
+			@sendUpdate "addFirst", JSON.stringify(song_details)
 			@playlist.splice(@currentIndex + 1, 0, {
 				song_details: song_details
 			})
-			@next()
+			@next(true)
 
-	remove: (index) ->
+	remove: (index, update) ->
 		@playlist.splice(index, 1)
 		if (index == @currentIndex)
 			@stop()
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
-		@save() if host
+		@save('remove', index.toString()) if !update
 
 	loadSong: (cb) -> 
 		if (cb == undefined)
@@ -155,8 +162,19 @@ class Playlist
 				cb()
 			else
 				SC.stream "/tracks/" + song_details.id, {
-						whileplaying: () ->
-							_this.positionChanged "soundcloud", this.position
+						whileplaying: (() ->
+							_this.positionChanged "soundcloud", this.position),
+						onplay: (() ->
+							_this.state = 1),
+						onstop: (() ->
+							_this.state = 0),
+						onpause: (() ->
+							_this.state = 2),
+						onbufferchange: () ->
+							if (this.isBuffering)
+								_this.state = 3
+							else
+								_this.state = 1
 					}, (sound) ->
 					song.obj = sound
 					SC.sound = sound
@@ -168,9 +186,18 @@ class Playlist
 					width: '0',
 					videoId: song_details.id,
 					events: {
-						'onReady': () ->
+						'onReady': (() ->
 							yt_player.unMute()
-							cb()
+							cb()),
+						'onStateChange': (event) ->
+							if (event.data == YT.PlayerState.PLAYING)
+								_this.state = 1
+							else if (event.data == YT.PlayerState.PAUSED)
+								_this.state = 2
+							else if (event.data == YT.PlayerState.BUFFERING)
+								_this.state = 3
+							else if (event.data == -1)
+								_this.state = 0
 					}
 		        })
 			else
@@ -182,7 +209,7 @@ class Playlist
 			cb()
 
 	positionChanged: (type, position) ->
-		if (type == @playlist[@currentIndex].song_details.type)
+		if (type == @playlist[@currentIndex].song_details.type && @state != 0)
 
 			# update graphics
 			percent = null;
@@ -198,25 +225,43 @@ class Playlist
 				percent = (position / @playlist[@currentIndex].song_details.duration) * 100
 			if percent > 99.5
 				@next()
-	save: () ->
-		stripped_playlist = _.map @playlist, (song) ->
-			return _.omit(song, 'obj')
-		playlistSettings = {
-			currentIndex: @currentIndex,
-			playlist: stripped_playlist,
-			volume: @volume
+	sendUpdate: (type, data) ->
+		socket.emit 'update', {
+			type: type,
+			roomID: roomID,
+			host: host,
+			data: data
 		}
-		$.post('/savePlaylist', { 
-			playlistSettings: JSON.stringify(playlistSettings),
-			roomID: roomID
-		})
+	readUpdate: (update) ->
+		console.log update
+		if (update.type == "addFirst")
+			@addFirst JSON.parse(update.data), true
+		else if (update.type == "add")
+			@add JSON.parse(update.data), true
+		else if (update.type == "next")
+			@next true
+		else if (update.type == "prev")
+			@prev true
+		else if (update.type == "goTo")
+			@goTo update.data, true
+		else if (update.type == "remove")
+			@remove update.data, true
+	save: (type, data) ->
+		@sendUpdate type, data
+		if host
+			stripped_playlist = _.map @playlist, (song) ->
+				return _.omit(song, 'obj')
+			playlistSettings = {
+				currentIndex: @currentIndex,
+				playlist: stripped_playlist,
+				volume: @volume
+			}
+			$.post('/savePlaylist', { 
+				playlistSettings: JSON.stringify(playlistSettings),
+				roomID: roomID
+			})
 
 
 
 
-playlist = null
 
-#this is hacky
-loadPlaylist =  () ->
-	if (googleLoaded && rdioLoaded)
-		playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume)

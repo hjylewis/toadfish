@@ -1,14 +1,16 @@
 
-purple = #7f00ff
+
+original_purple = #7f00ff
+purple = darken(original_purple, 0%)
 
 #canvas
   position fixed
-  left 0px
-  top 0px
+  left -25%
+  top -25vh
   z-index -1
 
-path
-  stroke #fff
+// path
+//   stroke darken(purple, 10%)
 
 pathfirst-child
   fill yellow !important
@@ -16,6 +18,29 @@ pathfirst-child
 circle
   fill transparent
   pointer-events none
+
+
+// .q0-9
+//   fill lighten(purple, 3%)
+// .q1-9
+//   fill darken(purple, 3%)
+// .q2-9
+//   fill darken(purple, 10%)
+// .q3-9
+//   fill lighten(purple, 10%)
+// .q4-9
+//   fill darken(purple, 5%)
+// .q5-9
+//   fill lighten(purple, 5%)
+// .q6-9
+//   fill darken(purple, 8%)
+// .q7-9
+//   fill lighten(purple, 8%)
+// .q8-9
+//   fill purple
+
+
+
 
 .q0-9
   fill lighten(purple, 20%)
