@@ -20,7 +20,7 @@
 
   <input ng-model="query" type="text" name="search"
   placeholder = 'Type to search'
-  ng-keypress="$event.which == 13 && Search()"
+  ng-keypress="triggerSearch($event.which == 13)"
   id = 'first_search' autofocus autocomplete="off">
 
   <ul id = "result_list">
