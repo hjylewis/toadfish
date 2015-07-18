@@ -5,7 +5,7 @@ function PlaylistController($scope){
   $scope.results = []
   $scope.query = "";
   $scope.Search = function() {
-    search($scope.query, {}, function (ret) {
+    search.search($scope.query, {}, function (ret) {
       console.log(ret);
       $scope.results = ret.results;
     });
