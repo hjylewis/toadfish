@@ -17,13 +17,18 @@ socket.on 'roomID', (msg) ->
 # 3: buffer
 
 class Playlist
-	constructor: (currentIndex, playlist, volume) ->
-		@currentIndex = currentIndex || 0
-		@playlist = if playlist then JSON.parse(playlist) else []
+	constructor: () ->
+		@currentIndex = 0
+		@playlist = []
 		@state
-		@volume = volume || 100
+		@volume = 100
 		socket.on 'update', (update) =>
 			@readUpdate(update)
+
+	load: (currentIndex, playlist, volume) ->
+		@currentIndex = currentIndex || 0
+		@playlist = if playlist then JSON.parse(playlist) else []
+		@volume = volume || 100
 		if @playlist.length > 0
 			@loadSong () =>
 				@setVolume @volume
