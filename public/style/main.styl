@@ -25,7 +25,6 @@ a
     color black
 
 body
-  min-width 400px
   font-size 20px
   padding-top 50px
   color white
@@ -40,7 +39,6 @@ input
   border-radius radius
   padding 5px
   display block
-  margin auto
   margin-top 10px
   color: black
   font-family "Roboto", helvetica
@@ -51,6 +49,8 @@ input
 nav
   text-align right
   background rgba(0,0,0,0.5)
+  padding-right 14px
+  padding-bottom 15px
   position fixed
   width 100%
   top 0px
@@ -66,7 +66,9 @@ nav
     font-family courier, "Open Sans"
     display inline-block
     position relative
-    padding 15px 10px
+    padding-top 14px
+    padding-left 20px
+    padding-right 20px
 
   li:last-child
     padding-right 20px
@@ -74,15 +76,24 @@ nav
   li:first-child
     padding-left 20px
     float left
-
+  li#register
+    @media screen and (max-width: 500px)
+      display none
+    
+div.content
+  min-width 300px
+  width 80%
+  max-width 700px
+  margin auto
 
 #first_search
-  width 50%
   font-size 40px
   margin-top 20px
+  width 100% 
   padding 20px 25px
-  border 1px solid purple
+  border 1px solid black
   color black
+  background rgba(255,255,255,0.5)
 
   input_grey = #bbb
 
@@ -103,13 +114,12 @@ nav
 
 
 ul#result_list
-  margin-top 20px
   list-style none
   border 1px solid black
   border-radius radius
-  width 50%
   margin auto
   margin-top 20px
+  margin-bottom 100px
   // background white
 
   *
@@ -131,9 +141,6 @@ ul#result_list
         cursor pointer
         &:hover
           text-decoration underline
-
-    // &:last-child // This might be a real problem
-    //   display none
 
     &.seperator
       font-size 20px

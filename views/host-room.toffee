@@ -18,28 +18,30 @@
 <body ng-controller="PlaylistController">
   <h1>{{name}}</h1>
 
-  <input ng-model="query" type="text" name="search"
-  placeholder = 'Type to search'
-  ng-keydown="triggerSearch($event.which == 13)"
-  id = 'first_search' autofocus autocomplete="off">
+  <div class="content">
+    <input ng-model="query" type="text" name="search"
+    placeholder = 'Type to search'
+    ng-keydown="triggerSearch($event.which == 13)"
+    id = 'first_search' autofocus autocomplete="off">
 
-  <ul id = "result_list" ng-hide="results.length == 0">
-    <div ng-repeat = "(type, result) in results" >
-      <li class = 'seperator' ng-show="result">{{type}}
-        <span ng-hide="expandSearch" ng-click="expandResults(type)">More</span>
-        <span ng-show="expandSearch" ng-click="expandResults()">Back</span>
-      </li>
-      <div ng-repeat="item in result.collections">
-        <li class='result' ng-hide="!expandSearch && $index > 2">
-          <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>
-          <span>{{item.artist || ""}}</span>
-          <img ng-src='{{item.artwork_url}}' /><br />
-          <a class='add_button add_to_playlist'>Add to Playlist</a>
-          <a class='add_button play_now'>Play Now</a>
+    <ul id = "result_list" ng-hide="results.length == 0">
+      <div ng-repeat = "(type, result) in results" >
+        <li class = 'seperator' ng-show="result">{{type}}
+          <span ng-hide="expandSearch" ng-click="expandResults(type)">More</span>
+          <span ng-show="expandSearch" ng-click="expandResults()">Back</span>
         </li>
+        <div ng-repeat="item in result.collections">
+          <li class='result' ng-hide="!expandSearch && $index > 2">
+            <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>
+            <span>{{item.artist || ""}}</span>
+            <img ng-src='{{item.artwork_url}}' /><br />
+            <a class='add_button add_to_playlist'>Add to Playlist</a>
+            <a class='add_button play_now'>Play Now</a>
+          </li>
+        </div>
       </div>
-    </div>
-  </ul>
+    </ul>
+  </div>
 
   <!-- This is needed for youtube -->
   <div id="yt_player"></div>
