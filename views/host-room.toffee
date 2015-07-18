@@ -15,13 +15,15 @@
 </script>
 <script src="/setup.js"></script>
 <body>
-  <input type="text" name="search"
-  placeholder = 'Type to search'
-  id = 'first_search' autofocus autocomplete="off">
+  <div class="content">
+    <input type="text" name="search"
+    placeholder = 'Type to search'
+    id = 'first_search' autofocus autocomplete="off">
 
-  <!-- This is just a sample for styling purposes -->
-  <ul id = "result_list" class='hidden-ul'>
-  </ul>
+    <!-- This is just a sample for styling purposes -->
+    <ul id = "result_list" class='hidden-ul'>
+    </ul>
+  </div>
 
   <!-- This is needed for youtube -->
   <div id="yt_player"></div>
