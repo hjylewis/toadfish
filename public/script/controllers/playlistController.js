@@ -24,7 +24,6 @@ function PlaylistController($scope, $timeout, $q){
   	if (enter) {
   		$scope.Search;
   	} else {
-  		console.log("HERE")
 	  	timeoutPromise = $timeout($scope.Search, 500);
   	}
   }
