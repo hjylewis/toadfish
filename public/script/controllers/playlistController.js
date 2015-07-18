@@ -1,10 +1,10 @@
 
 
 function PlaylistController($scope, $timeout, $q, $window){
-	$scope.playlist = playlist;
-	$scope.results = []
+	$scope.results = [];
 	$scope.query = "";
 	$scope.expandSearch = null;
+	$scope.mode = "playlist";
 	var timeoutPromise;
 
 	$scope.Search = function(options) {
@@ -46,10 +46,10 @@ function PlaylistController($scope, $timeout, $q, $window){
 
 	}
 	$scope.playNow = function (item) {
-		$scope.playlist.addFirst(item);
+		playlist.addFirst(item);
 	}
 	$scope.add = function (item) {
-		$scope.playlist.add(item);
+		playlist.add(item);
 	}
 	angular.element($window).bind("scroll", function() {
 	    var windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;

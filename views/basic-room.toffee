@@ -5,12 +5,13 @@
 <script>
   var host = #{host};
   var roomID = "#{roomID}";
+  var roomName = "#{roomName}";
   var playlistSettings = #{playlistSettings};
   var playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
 </script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController">
-  <h1>{{name}}</h1>
+  <h1>{{roomName}}</h1>
 
   <div class="content">
     <input ng-model="query" type="text" name="search"
