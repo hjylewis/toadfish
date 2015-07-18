@@ -13,9 +13,9 @@ function PlaylistController($scope, $timeout, $q){
     });
 
     deferred.promise.then(function (ret) {
-      if ($scope.query = ret.query) {
-	      $scope.results = ret.results;
-      }
+		if ($scope.query == ret.query) {
+			$scope.results = ret.results;
+		}
     });
   }
   $scope.triggerSearch = function (enter) {

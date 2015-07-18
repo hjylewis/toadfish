@@ -43,6 +43,12 @@ waiting_time = -1
 # done: callback function(obj)
 class Search
   search: (str, options, done) ->
+    if (!str)
+      return done {
+        query: str,
+        results: []
+      }
+
     if _.isFunction(options)
       done = options
       options = {}
