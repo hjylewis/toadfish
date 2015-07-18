@@ -56,6 +56,7 @@ class Search
       done = options
       options = {}
     options.types = ['soundcloud','youtube','rdio'] if not options.types?
+    retTypes = options.types
     console.log "search: " + str
     return done null if str == ""
 
@@ -64,6 +65,9 @@ class Search
     storedResults = if sessionStorage.getItem(str) then JSON.parse(sessionStorage.getItem(str)) else { results: {} }
     if not options.next?
       ret = _.reduce options.types, ((memo, type) -> return storedResults.results[type] && memo), true
+      console.log storedResults
+      console.log options.types
+      console.log ret
       return (done storedResults) if ret?
       options.types = _.filter options.types, (type) -> return not storedResults.results[type]
 
@@ -119,7 +123,7 @@ class Search
             return null
 
         results = _.mapObject storeResults, (obj, type) ->
-          return if options.types.indexOf(type) != -1 then obj else null
+          return if retTypes.indexOf(type) != -1 then obj else null
 
         console.log results
 
