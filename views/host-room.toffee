@@ -24,8 +24,8 @@
   id = 'first_search' autofocus autocomplete="off">
 
   <ul id = "result_list" ng-hide="results.length == 0">
-    <div ng-repeat = "(name, result) in results" >
-      <li class = 'seperator'>{{name}}<span>More</span></li>
+    <div ng-repeat = "(type, result) in results" >
+      <li class = 'seperator' ng-show="result">{{type}}<span ng-click="expandResults(type)">More</span></li>
       <div ng-repeat="item in result.collections">
         <li class='result'>
           <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>

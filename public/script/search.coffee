@@ -49,12 +49,17 @@ class Search
         results: []
       }
 
+    if (!options)
+      options = {}
+
     if _.isFunction(options)
       done = options
       options = {}
     options.types = ['soundcloud','youtube','rdio'] if not options.types?
     console.log "search: " + str
     return done null if str == ""
+
+    console.log options
 
     storedResults = if sessionStorage.getItem(str) then JSON.parse(sessionStorage.getItem(str)) else {}
     if not options.next?

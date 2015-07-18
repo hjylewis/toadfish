@@ -6,14 +6,15 @@ function PlaylistController($scope, $timeout, $q){
   $scope.query = "";
   var timeoutPromise;
 
-  $scope.Search = function() {
+  $scope.Search = function(options) {
   	var deferred = $q.defer();
-	search.search($scope.query, {}, function (ret) {
+	search.search($scope.query, options, function (ret) {
 		deferred.resolve(ret);
     });
 
     deferred.promise.then(function (ret) {
 		if ($scope.query == ret.query) {
+			console.log(ret.results);
 			$scope.results = ret.results;
 		}
     });
@@ -25,5 +26,12 @@ function PlaylistController($scope, $timeout, $q){
   	} else {
 	  	timeoutPromise = $timeout($scope.Search, 500);
   	}
+  }
+  $scope.expandResults = function (type) {
+  	console.log(type);
+  	$scope.Search({
+  		types: [type],
+  		next: true
+  	});
   }
 }
