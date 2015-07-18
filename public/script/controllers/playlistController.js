@@ -7,7 +7,6 @@ function PlaylistController($scope, $timeout, $q){
   var timeoutPromise;
 
   $scope.Search = function() {
-
   	var deferred = $q.defer();
 	search.search($scope.query, {}, function (ret) {
 		deferred.resolve(ret);
@@ -22,7 +21,7 @@ function PlaylistController($scope, $timeout, $q){
   $scope.triggerSearch = function (enter) {
   	$timeout.cancel(timeoutPromise);
   	if (enter) {
-  		$scope.Search;
+  		$scope.Search();
   	} else {
 	  	timeoutPromise = $timeout($scope.Search, 500);
   	}
