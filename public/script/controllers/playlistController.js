@@ -1,15 +1,22 @@
 
 
-function PlaylistController($scope, $timeout){
+function PlaylistController($scope, $timeout, $q){
   $scope.playlist = playlist;
   $scope.results = []
   $scope.query = "";
   var timeoutPromise;
 
   $scope.Search = function() {
-    search.search($scope.query, {}, function (ret) {
-      console.log(ret);
-      $scope.results = ret.results;
+
+  	var deferred = $q.defer();
+	search.search($scope.query, {}, function (ret) {
+		deferred.resolve(ret);
+    });
+
+    deferred.promise.then(function (ret) {
+      if ($scope.query = ret.query) {
+	      $scope.results = ret.results;
+      }
     });
   }
   $scope.triggerSearch = function (enter) {
@@ -17,6 +24,7 @@ function PlaylistController($scope, $timeout){
   	if (enter) {
   		$scope.Search;
   	} else {
+  		console.log("HERE")
 	  	timeoutPromise = $timeout($scope.Search, 500);
   	}
   }
