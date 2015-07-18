@@ -42,9 +42,6 @@ waiting_time = -1
 #    types: array, of 'soundcloud','youtube','rdio'.  DEFAULT: ['soundcloud','youtube','rdio']
 # done: callback function(obj)
 class Search
-  constructor: () ->
-
-
   search: (str, options, done) ->
     if _.isFunction(options)
       done = options
@@ -60,20 +57,20 @@ class Search
       options.types = _.filter options.types, (type) -> return not storedResults[type]
 
     async.parallel {
-        "soundcloud": (callback) ->
+        "soundcloud": (callback) =>
 
           return callback null, null if _.indexOf(options.types,'soundcloud') == -1
           if options.next && storedResults.soundcloud && storedResults.soundcloud.next
             $.ajax(storedResults.soundcloud.next)
-              .done (tracks) ->
+              .done (tracks) =>
                 callback null, @cleanUpResults(tracks, "soundcloud")
               .fail (jqXHR, textStatus, errorThrown) ->
                 logError "soundcloud err:" + textStatus + ": " + errorThrown
           else
-            SC.get '/tracks', { q: str, limit: PAGE_LENGTH, linked_partitioning: 1}, (tracks, err) ->
+            SC.get '/tracks', { q: str, limit: PAGE_LENGTH, linked_partitioning: 1}, (tracks, err) =>
               logError "soundcloud err:" + err if err?
               callback null, @cleanUpResults(tracks, "soundcloud")
-        ,"youtube": (callback) ->
+        ,"youtube": (callback) =>
           return callback null, null if _.indexOf(options.types,'youtube') == -1
           ytOptions = {
             q: str,
@@ -83,16 +80,16 @@ class Search
           }
           ytOptions.pageToken = storedResults.youtube.next if options.next && storedResults.youtube && storedResults.youtube.next?
           request = gapi.client.youtube.search.list ytOptions
-          request.execute (response) ->
+          request.execute (response) =>
             logError "youtube err:" + JSON.stringify(response.error) if response.error?
             callback null, @cleanUpResults(response, "youtube")
-        ,"rdio": (callback) ->
+        ,"rdio": (callback) =>
           return callback null, null if _.indexOf(options.types,'rdio') == -1
           page = if options.next && storedResults.rdio && storedResults.rdio.next then storedResults.rdio.next else 0
           $.ajax {
             url: '/rdio/search',
             data: {'q': str, 'page_length': PAGE_LENGTH, 'page': page},
-            success: (res) ->
+            success: (res) =>
                 callback null, @cleanUpResults(res, "rdio")
           }
       }, (err, results) ->
@@ -145,4 +142,4 @@ class Search
     return resultObj
 
 
-playlist = new Search
+search = new Search
