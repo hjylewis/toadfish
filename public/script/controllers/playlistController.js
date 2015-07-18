@@ -4,9 +4,11 @@ function PlaylistController($scope, $timeout, $q){
   $scope.playlist = playlist;
   $scope.results = []
   $scope.query = "";
+  $scope.expandSearch = false;
   var timeoutPromise;
 
   $scope.Search = function(options) {
+
   	var deferred = $q.defer();
 	search.search($scope.query, options, function (ret) {
 		deferred.resolve(ret);
@@ -29,9 +31,16 @@ function PlaylistController($scope, $timeout, $q){
   }
   $scope.expandResults = function (type) {
   	console.log(type);
-  	$scope.Search({
-  		types: [type],
-  		next: true
-  	});
+  	if ($scope.expandSearch) {
+  		$scope.expandSearch = false
+  		$scope.Search();
+  	} else {
+  		$scope.expandSearch = true
+	  	$scope.Search({
+	  		types: [type],
+	  		next: true
+	  	});
+	}
+
   }
 }

@@ -61,18 +61,19 @@ class Search
 
     console.log options
 
-    storedResults = if sessionStorage.getItem(str) then JSON.parse(sessionStorage.getItem(str)) else {}
+    storedResults = if sessionStorage.getItem(str) then JSON.parse(sessionStorage.getItem(str)) else { results: {} }
     if not options.next?
-      ret = _.reduce options.types, ((memo, type) -> return storedResults[type] && memo), true
+      ret = _.reduce options.types, ((memo, type) -> return storedResults.results[type] && memo), true
       return (done storedResults) if ret?
-      options.types = _.filter options.types, (type) -> return not storedResults[type]
+      options.types = _.filter options.types, (type) -> return not storedResults.results[type]
 
     async.parallel {
         "soundcloud": (callback) =>
 
           return callback null, null if _.indexOf(options.types,'soundcloud') == -1
-          if options.next && storedResults.soundcloud && storedResults.soundcloud.next
-            $.ajax(storedResults.soundcloud.next)
+          if options.next && storedResults.results.soundcloud && storedResults.results.soundcloud.next
+            console.log "next sc"
+            $.ajax(storedResults.results.soundcloud.next)
               .done (tracks) =>
                 callback null, @cleanUpResults(tracks, "soundcloud")
               .fail (jqXHR, textStatus, errorThrown) ->
@@ -89,14 +90,14 @@ class Search
             maxResults: PAGE_LENGTH,
             part: 'snippet'
           }
-          ytOptions.pageToken = storedResults.youtube.next if options.next && storedResults.youtube && storedResults.youtube.next?
+          ytOptions.pageToken = storedResults.results.youtube.next if options.next && storedResults.results.youtube && storedResults.results.youtube.next?
           request = gapi.client.youtube.search.list ytOptions
           request.execute (response) =>
             logError "youtube err:" + JSON.stringify(response.error) if response.error?
             callback null, @cleanUpResults(response, "youtube")
         ,"rdio": (callback) =>
           return callback null, null if _.indexOf(options.types,'rdio') == -1
-          page = if options.next && storedResults.rdio && storedResults.rdio.next then storedResults.rdio.next else 0
+          page = if options.next && storedResults.results.rdio && storedResults.results.rdio.next then storedResults.results.rdio.next else 0
           $.ajax {
             url: '/rdio/search',
             data: {'q': str, 'page_length': PAGE_LENGTH, 'page': page},
@@ -105,10 +106,10 @@ class Search
           }
       }, (err, results) ->
         ret = {}
-        results = _.mapObject results, (obj, type) ->
+        storeResults = _.mapObject results, (obj, type) ->
           obj = {} if not obj
-          collections = if storedResults[type] then storedResults[type].collections.concat(obj.collections || []) else obj.collections
-          next = obj.next || (storedResults[type].next if storedResults[type])
+          collections = if storedResults.results[type] then storedResults.results[type].collections.concat(obj.collections || []) else obj.collections
+          next = obj.next || (storedResults.results[type].next if storedResults.results[type])
           if collections && next
             return {
               collections: collections,
@@ -116,9 +117,16 @@ class Search
             }
           else
             return null
+
+        results = _.mapObject storeResults, (obj, type) ->
+          return if options.types.indexOf(type) != -1 then obj else null
+
+        console.log results
+
         ret.query = str
-        ret.results = results
+        ret.results = storeResults
         sessionStorage.setItem(str, JSON.stringify(ret)) #if not DEBUG
+        ret.results = results
         done ret
 
   cleanUpResults: (results, type) ->
