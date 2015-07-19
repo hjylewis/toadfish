@@ -29,10 +29,9 @@
     ng-keydown="triggerSearch($event.which == 13)"
     id = 'first_search' autofocus autocomplete="off">
 
-    <button ng-click="prev()">Prev</button>
-    <button ng-click="play()">Play</button>
-    <button ng-click="pause()">Pause</button>
-    <button ng-click="next()">Next</button>
+    <i ng-click="prev()" class="clickable fa fa-fast-backward"></i>
+    <i class="clickable fa" ng-click="play()"ng-class="{'fa-play': playlist.state === 2, 'fa-pause': playlist.state === 1, 'fa-spinner fa-spin': playlist.state === 3}"></i>
+    <i ng-click="next()" class="clickable fa fa-fast-forward"></i>
 
 
     <ul id = "result_list" ng-hide="results.length == 0">

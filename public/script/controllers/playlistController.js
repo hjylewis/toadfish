@@ -53,10 +53,11 @@ function PlaylistController($scope, $timeout, $q, $window){
 		$scope.playlist.add(item);
 	}
 	$scope.play = function () {
-		$scope.playlist.play();
-	}
-	$scope.pause = function () {
-		$scope.playlist.pause();
+		if ($scope.playlist.state == 1) {
+			$scope.playlist.pause();
+		} else if ($scope.playlist.state == 2) {
+			$scope.playlist.play();
+		}
 	}
 	$scope.next = function () {
 		$scope.playlist.next();

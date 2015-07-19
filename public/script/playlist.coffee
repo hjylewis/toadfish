@@ -152,6 +152,13 @@ class Playlist
 				@play() #auto play
 		@save('remove', index.toString()) if !update
 
+	setPlayState: (state) =>
+		scope = angular.element($("body")).scope()
+		if (scope.$$phase || scope.$root.$$phase)
+			scope.playlist.state = state
+		else
+			scope.$apply(scope.playlist.state = state)
+
 	loadSong: (cb) -> 
 		if (cb == undefined)
 			cb = () ->
@@ -172,20 +179,16 @@ class Playlist
 						whileplaying: (() ->
 							_this.positionChanged "soundcloud", this.position),
 						onplay: (() ->
-							scope = angular.element($("body")).scope()
-							if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 1 else scope.$apply(scope.playlist.state = 1)),
+							_this.setPlayState 1),
 						onstop: (() ->
-							scope = angular.element($("body")).scope()
-							if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 0 else scope.$apply(scope.playlist.state = 0)),
+							_this.setPlayState 0),
 						onpause: (() ->
-							scope = angular.element($("body")).scope()
-							if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 2 else scope.$apply(scope.playlist.state = 2)),
-						onbufferchange: () ->
-							scope = angular.element($("body")).scope()
-							if (this.isBuffering)
-								if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 3 else scope.$apply(scope.playlist.state = 3)
+							_this.setPlayState 2),
+						onbufferchange: (() ->
+							if (this.isBuffering) 
+								_this.setPlayState 3
 							else
-								if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 1 else scope.$apply(scope.playlist.state = 1)
+								_this.setPlayState 1)
 					}, (sound) ->
 						song.obj = sound
 						SC.sound = sound
@@ -200,19 +203,15 @@ class Playlist
 						'onReady': (() ->
 							yt_player.unMute()
 							cb()),
-						'onStateChange': (event) ->
-							scope = angular.element($("body")).scope()
-							setPlayState = ()->
-								if (event.data == YT.PlayerState.PLAYING)
-									scope.playlist.state = 1
-								else if (event.data == YT.PlayerState.PAUSED)
-									scope.playlist.state = 2
-								else if (event.data == YT.PlayerState.BUFFERING)
-									scope.playlist.state = 3
-								else if (event.data == -1)
-									scope.playlist.state = 0
-							if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState);
-
+						'onStateChange': (event) =>
+							if (event.data == YT.PlayerState.PLAYING)
+								@setPlayState 1
+							else if (event.data == YT.PlayerState.PAUSED)
+								@setPlayState 2
+							else if (event.data == YT.PlayerState.BUFFERING)
+								@setPlayState 3
+							else if (event.data == -1)
+								@setPlayState 0
 					}
 		        })
 			else
