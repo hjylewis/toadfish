@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="progress">
-        <progress id="seekbar" value="0" max="100"></progress>
+        <progress id="seekbar" class="clickable" value="0" max="100" ng-click="seek($event)"></progress>
       </div>
     </div>
 

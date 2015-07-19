@@ -1,6 +1,6 @@
 
 
-function PlaylistController($scope, $timeout, $q, $window){
+function PlaylistController($scope, $timeout, $q, $window, $document){
 	$scope.results = [];
 	$scope.query = "";
 	$scope.expandSearch = null;
@@ -70,6 +70,12 @@ function PlaylistController($scope, $timeout, $q, $window){
 	}
 	$scope.prev = function () {
 		$scope.playlist.prev();
+	}
+	$scope.seek = function (e) {
+		var el = angular.element(document.getElementById('seekbar'))[0];
+	    var x = e.pageX - (el.offsetLeft || e.offsetX)
+	        clickedValue = x * 100 / el.clientWidth
+    	$scope.playlist.seek(clickedValue);
 	}
 	$scope.changeColor = function(enter) {
 		if (enter && $scope.mode == "search") {
