@@ -5,7 +5,11 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	$scope.query = "";
 	$scope.expandSearch = null;
 	$scope.mode = "playlist";
-	$scope.playlist = new Playlist();
+	if (host) {
+		$scope.playlist = new Playlist();
+	} else {
+		$scope.playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume)
+	}
 	$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
 	var timeoutPromise;
 
@@ -57,6 +61,9 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	}
 	$scope.add = function (item) {
 		$scope.playlist.add(item);
+		if (!host) {
+			$scope.mode = "playlist";
+		}
 	}
 	$scope.play = function () {
 		if ($scope.playlist.state == 1) {

@@ -66,7 +66,7 @@
 
     <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">
       <ul>
-        <li ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)">
+        <li class="hover" ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)">
           <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
         </li>
