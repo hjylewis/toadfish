@@ -7,7 +7,8 @@ roomSchema = new mongoose.Schema({
 	playlistSettings: {
 		currentIndex: Number,
 		playlist: String,
-		volume: Number
+		volume: Number,
+		state: Number
 	},
 	update: Date
 })

@@ -13,7 +13,7 @@
     if (googleLoaded && rdioLoaded) {
       var scope = angular.element($("body")).scope();
       var load = function (){
-          scope.playlist.load(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
+          scope.playlist.load(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume, playlistSettings.state);
           scope.isLoading = false;
       };
       (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);

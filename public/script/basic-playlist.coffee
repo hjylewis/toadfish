@@ -13,10 +13,10 @@ socket.on 'roomID', (msg) ->
 # 3: buffer
 
 class Playlist
-	constructor: (currentIndex, playlist, volume) ->
+	constructor: (currentIndex, playlist, volume, state) ->
 		@currentIndex = currentIndex || 0
 		@playlist = if playlist then JSON.parse(playlist) else []
-		@state
+		@state = state || 0
 		socket.on 'update', (update) =>
 			@readUpdate(update)
 		if @playlist.length > 0
@@ -88,6 +88,10 @@ class Playlist
 			@goTo update.data
 		else if (update.type == "remove")
 			@remove update.data
+		else if (update.type == "play")
+			@state = 1
+		else if (update.type == "pause")
+			@state = 2
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()

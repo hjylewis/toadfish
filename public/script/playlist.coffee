@@ -25,8 +25,9 @@ class Playlist
 		socket.on 'update', (update) =>
 			@readUpdate(update)
 
-	load: (currentIndex, playlist, volume) ->
+	load: (currentIndex, playlist, volume, state) ->
 		@currentIndex = currentIndex || 0
+		@state = state || 0
 		@playlist = if playlist then JSON.parse(playlist) else []
 		@volume = volume || 100
 		if @playlist.length > 0
@@ -34,7 +35,7 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 
-	play: () ->
+	play: (update) ->
 		if (@playlist.length == 0)
 			console.log "nothing here"
 		else if @state == 1
@@ -49,10 +50,11 @@ class Playlist
 				@positionChanged "youtube"
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_play()
+			@save('play') if !update
 			# set state
 
 
-	pause: () ->
+	pause: (update) ->
 		song = @playlist[@currentIndex]
 		if (song.song_details.type == "soundcloud")
 			song.obj.pause()
@@ -60,6 +62,8 @@ class Playlist
 			yt_player.pauseVideo()
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_pause()
+		@save('pause') if !update
+			
 		# set state		
 
 	stop: () ->
@@ -261,6 +265,10 @@ class Playlist
 			@goTo update.data, true
 		else if (update.type == "remove")
 			@remove update.data, true
+		else if (update.type == "play")
+			@state = 0
+		else if (update.type == "pause")
+			@state = 2
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
@@ -272,7 +280,8 @@ class Playlist
 			playlistSettings = {
 				currentIndex: @currentIndex,
 				playlist: stripped_playlist,
-				volume: @volume
+				volume: @volume,
+				state: @state
 			}
 			$.post('/savePlaylist', { 
 				playlistSettings: JSON.stringify(playlistSettings),

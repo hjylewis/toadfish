@@ -24,7 +24,7 @@
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
         <div id="buttons">
-          <div><i class="clickable fa fa-play"></i></div>
+          <div><i class="clickable fa" ng-class="{'fa-pause': playlist.state === 2 || playlist.state === 0, 'fa-play': playlist.state === 1}"></i></div>
         </div>
         <div id="details">
           {{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span>
