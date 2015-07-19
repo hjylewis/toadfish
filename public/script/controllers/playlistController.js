@@ -10,6 +10,7 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 		$scope.playlist = new Playlist();
 	} else {
 		$scope.playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume)
+		$scope.isLoading = false;
 	}
 	$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
 	var timeoutPromise;
