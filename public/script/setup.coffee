@@ -63,7 +63,6 @@ callback_object.playStateChanged = (playState) ->
 			scope.playlist.state = 2
 		else if (playState == 3)
 			scope.playlist.state = 3
-		console.log playState
 	if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState);
 
 

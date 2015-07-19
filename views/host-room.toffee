@@ -54,7 +54,6 @@
     </ul>
 
     <div id="playlist">
-      {{playlist.state}}
       <ul>
         <li ng-repeat="song in playlist.playlist track by $index" >
           <i ng-show="$index == playlist.currentIndex" class="fa" ng-class="{'fa-play': playlist.state === 1, 'fa-pause': playlist.state === 2, 'fa-spinner fa-spin': playlist.state === 3}"></i> 
