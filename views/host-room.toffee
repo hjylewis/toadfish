@@ -12,9 +12,10 @@
   var loadPlaylist =  function () {
     if (googleLoaded && rdioLoaded) {
       var scope = angular.element($("body")).scope();
-      scope.$apply(function(){
+      var load = function (){
           scope.playlist.load(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
-      });
+      };
+      (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);
     }
   }
 </script>
@@ -28,10 +29,10 @@
     ng-keydown="triggerSearch($event.which == 13)"
     id = 'first_search' autofocus autocomplete="off">
 
-    <button ng-click="playlist.prev()">Prev</button>
-    <button ng-click="playlist.play()">Play</button>
-    <button ng-click="playlist.pause()">Pause</button>
-    <button ng-click="playlist.next()">Next</button>
+    <button ng-click="prev()">Prev</button>
+    <button ng-click="play()">Play</button>
+    <button ng-click="pause()">Pause</button>
+    <button ng-click="next()">Next</button>
 
 
     <ul id = "result_list" ng-hide="results.length == 0">
@@ -53,8 +54,12 @@
     </ul>
 
     <div id="playlist">
+      {{playlist.state}}
       <ul>
-        <li ng-repeat="song in playlist.playlist track by $index">{{song.song_details.title}} - {{song.song_details.artist}}</li>
+        <li ng-repeat="song in playlist.playlist track by $index" >
+          <i ng-show="$index == playlist.currentIndex" class="fa" ng-class="{'fa-play': playlist.state === 1, 'fa-pause': playlist.state === 2, 'fa-spinner fa-spin': playlist.state === 3}"></i> 
+          {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
+        </li>
       </ul>
     </div>
   </div>

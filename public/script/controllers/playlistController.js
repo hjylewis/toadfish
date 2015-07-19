@@ -52,6 +52,18 @@ function PlaylistController($scope, $timeout, $q, $window){
 	$scope.add = function (item) {
 		$scope.playlist.add(item);
 	}
+	$scope.play = function () {
+		$scope.playlist.play();
+	}
+	$scope.pause = function () {
+		$scope.playlist.pause();
+	}
+	$scope.next = function () {
+		$scope.playlist.next();
+	}
+	$scope.prev = function () {
+		$scope.playlist.prev();
+	}
 	angular.element($window).bind("scroll", function() {
 	    var windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
 	    var body = document.body, html = document.documentElement;

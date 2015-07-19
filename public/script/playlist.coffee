@@ -20,7 +20,7 @@ class Playlist
 	constructor: () ->
 		@currentIndex = 0
 		@playlist = []
-		@state
+		@state = 0
 		@volume = 100
 		socket.on 'update', (update) =>
 			@readUpdate(update)
@@ -37,6 +37,8 @@ class Playlist
 	play: () ->
 		if (@playlist.length == 0)
 			console.log "nothing here"
+		else if @state == 1
+			console.log "Already playing"
 		else
 			song = @playlist[@currentIndex]
 			if (song.song_details.type == "soundcloud")
@@ -135,11 +137,11 @@ class Playlist
 		if (@playlist.length == 0)
 			@add(song_details, update)
 		else
-			@sendUpdate "addFirst", JSON.stringify(song_details)
 			@playlist.splice(@currentIndex + 1, 0, {
 				song_details: song_details
 			})
 			@next(true)
+			@save "addFirst", JSON.stringify(song_details)
 
 	remove: (index, update) ->
 		@playlist.splice(index, 1)
@@ -170,20 +172,24 @@ class Playlist
 						whileplaying: (() ->
 							_this.positionChanged "soundcloud", this.position),
 						onplay: (() ->
-							_this.state = 1),
+							scope = angular.element($("body")).scope()
+							if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 1 else scope.$apply(scope.playlist.state = 1)),
 						onstop: (() ->
-							_this.state = 0),
+							scope = angular.element($("body")).scope()
+							if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 0 else scope.$apply(scope.playlist.state = 0)),
 						onpause: (() ->
-							_this.state = 2),
+							scope = angular.element($("body")).scope()
+							if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 2 else scope.$apply(scope.playlist.state = 2)),
 						onbufferchange: () ->
+							scope = angular.element($("body")).scope()
 							if (this.isBuffering)
-								_this.state = 3
+								if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 3 else scope.$apply(scope.playlist.state = 3)
 							else
-								_this.state = 1
+								if (scope.$$phase || scope.$root.$$phase) then scope.playlist.state = 1 else scope.$apply(scope.playlist.state = 1)
 					}, (sound) ->
-					song.obj = sound
-					SC.sound = sound
-					cb()
+						song.obj = sound
+						SC.sound = sound
+						cb()
 		else if (song_details.type == "youtube")
 			if (yt_player == null)
 				yt_player = new YT.Player('yt_player', {
@@ -195,14 +201,18 @@ class Playlist
 							yt_player.unMute()
 							cb()),
 						'onStateChange': (event) ->
-							if (event.data == YT.PlayerState.PLAYING)
-								_this.state = 1
-							else if (event.data == YT.PlayerState.PAUSED)
-								_this.state = 2
-							else if (event.data == YT.PlayerState.BUFFERING)
-								_this.state = 3
-							else if (event.data == -1)
-								_this.state = 0
+							scope = angular.element($("body")).scope()
+							setPlayState = ()->
+								if (event.data == YT.PlayerState.PLAYING)
+									scope.playlist.state = 1
+								else if (event.data == YT.PlayerState.PAUSED)
+									scope.playlist.state = 2
+								else if (event.data == YT.PlayerState.BUFFERING)
+									scope.playlist.state = 3
+								else if (event.data == -1)
+									scope.playlist.state = 0
+							if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState);
+
 					}
 		        })
 			else

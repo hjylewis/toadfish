@@ -53,14 +53,19 @@ callback_object.positionChanged = (position) ->
 	playlist.positionChanged "rdio", position
 
 callback_object.playStateChanged = (playState) ->
-	if (playState == 2)
-		playlist.state = 0
-	else if (playState == 1)
-		playlist.state = 1
-	else if (playState == 0 || playState == 4)
-		playlist.state = 2
-	else if (playState == 3)
-		playlist.state = 3
+	scope = angular.element($("body")).scope()
+	setPlayState = ()->
+		if (playState == 2)
+			scope.playlist.state = 0
+		else if (playState == 1)
+			scope.playlist.state = 1
+		else if (playState == 0 || playState == 4)
+			scope.playlist.state = 2
+		else if (playState == 3)
+			scope.playlist.state = 3
+		console.log playState
+	if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState);
+
 
 logError = (msg) ->
   $.post "/error", { "msg" : msg }
