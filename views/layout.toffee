@@ -17,6 +17,8 @@
     <link rel="stylesheet" type="text/css" href="/style/main.css">
     <!-- <link rel="stylesheet" type="text/css" href="/style/canvas.css"> -->
 
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 
     <style> /* For the background */
 
@@ -51,8 +53,7 @@
     <!-- Local Javascript Tags -->
     <script src="/search.js"></script>
 
-    <!-- Angular -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+
 
     <script type="text/javascript" src="/script/async-min.js"></script>
     <script type="text/javascript" src="/script/underscore-min.js"></script>

@@ -14,6 +14,7 @@
       var scope = angular.element($("body")).scope();
       var load = function (){
           scope.playlist.load(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
+          scope.isLoading = false;
       };
       (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);
     }
@@ -22,13 +23,15 @@
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController">
   <h1>#{roomName}</h1>
-
-  <div class="content">
+  <div ng-if="isLoading" id="loader">
+    <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+  </div>
+  <div class="content" ng-hide="isLoading" ng-cloak>
     <input ng-model="query" type="text" name="search"
     placeholder = 'Type to search'
     ng-keydown="triggerSearch($event.which == 13)"
     ng-focus="triggerSearch()"
-    id = 'first_search' autofocus autocomplete="off">
+    id = 'first_search' autofocus autocomplete="off"><i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
 
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
@@ -47,8 +50,8 @@
     </div>
 
     <ul id = "result_list" ng-hide="results.length == 0 || mode !== 'search'">
-      <div ng-repeat = "(type, result) in results" >
-        <li class = 'seperator' ng-show="result">{{type}}
+      <div ng-repeat = "(type, result) in results">
+        <li class = 'seperator' ng-show="result" >{{type}}
           <span ng-hide="expandSearch" ng-click="expandResults(type)">More</span>
           <span ng-show="expandSearch" ng-click="expandResults()">Back</span>
         </li>
@@ -62,6 +65,7 @@
           </li>
         </div>
       </div>
+      <li class = 'infiniteLoading' ng-show="expandSearch"><i class="fa fa-spinner fa-spin"></i> Loading ...</li>
     </ul>
 
     <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">

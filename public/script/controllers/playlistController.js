@@ -5,6 +5,7 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	$scope.query = "";
 	$scope.expandSearch = null;
 	$scope.mode = "playlist";
+	$scope.isLoading = true;
 	if (host) {
 		$scope.playlist = new Playlist();
 	} else {
@@ -14,6 +15,7 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	var timeoutPromise;
 
 	$scope.Search = function(options) {
+		$scope.isSearchLoading = true;
 		if (!options) {
 			$scope.expandSearch = null
 		}
@@ -26,6 +28,7 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 			if ($scope.query == ret.query) {
 				console.log(ret.results);
 				$scope.results = ret.results;
+				$scope.isSearchLoading = false;
 			}
 		});
 	}
