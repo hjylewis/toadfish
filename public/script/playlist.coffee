@@ -261,6 +261,9 @@ class Playlist
 			@goTo update.data, true
 		else if (update.type == "remove")
 			@remove update.data, true
+		scope = angular.element($("body")).scope()
+		if (!scope.$$phase && !scope.$root.$$phase)
+			scope.$apply()
 	save: (type, data) ->
 		@sendUpdate type, data
 		if host

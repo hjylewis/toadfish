@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="progress">
-        <progress id="seekbar" value="0" max="100"></progress>
+        <progress id="seekbar" class="clickable" value="0" max="100" ng-click="seek($event)"></progress>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
           <li class='result' ng-hide="!expandSearch && $index > 2">
             <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>
             <span>{{item.artist || ""}}</span>
-            <img ng-src='{{item.artwork_url}}' /><br />
+            <img ng-src='{{item.artwork_small || item.artwork_url}}' /><br />
             <a class='add_button add_to_playlist'ng-click="add(item)">Add to Playlist</a>
             <a class='add_button play_now' ng-click="playNow(item)">Play Now</a>
           </li>
@@ -66,7 +66,7 @@
 
     <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">
       <ul>
-        <li ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)">
+        <li class="hover" ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)">
           <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
         </li>

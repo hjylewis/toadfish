@@ -151,12 +151,16 @@ class Search
 
       if type == 'soundcloud'
         if result.artwork_url?
+          retObj.artwork_small = result.artwork_url
           retObj.artwork_url = result.artwork_url.replace('large','t500x500')
         else if result.user.avatar_url? && not result.user.avatar_url.includes('a1')
+          retObj.artwork_small = result.user.avatar_url
           retObj.artwork_url = result.user.avatar_url.replace('large','t500x500')
-      else if type == 'rdio'
+      else if type == 'rdio' 
+        retObj.artwork_small = result.icon if result.icon?
         retObj.artwork_url = result.icon400.replace('400','600') if result.icon400?
       else if type == 'youtube'
+        retObj.artwork_small = result.snippet.thumbnails.default.url
         retObj.artwork_url = result.snippet.thumbnails.high.url
       if (!retObj.artwork_url)
         retObj.artwork_url = "/images/no_image.jpg"
