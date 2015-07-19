@@ -29,10 +29,23 @@
     ng-keydown="triggerSearch($event.which == 13)"
     id = 'first_search' autofocus autocomplete="off">
 
-    <i ng-click="prev()" class="clickable fa fa-fast-backward"></i>
-    <i class="clickable fa" ng-click="play()"ng-class="{'fa-play': playlist.state === 2, 'fa-pause': playlist.state === 1, 'fa-spinner fa-spin': playlist.state === 3}"></i>
-    <i ng-click="next()" class="clickable fa fa-fast-forward"></i>
-
+    <div id="player">
+      <div id="top-line">
+        <div id="buttons">
+          <div><i ng-click="prev()" class="clickable fa fa-fast-backward"></i></div>
+          <div><i class="clickable fa" ng-click="play()"ng-class="{'fa-play': playlist.state === 2 || playlist.state === 0, 'fa-pause': playlist.state === 1, 'fa-spinner fa-spin': playlist.state === 3}"></i></div>
+          <div><i ng-click="next()" class="clickable fa fa-fast-forward"></i></div>
+        </div>
+        <div id="details">
+          {{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+          <span class="sr-only">60% Complete</span>
+        </div>
+      </div>
+    </div>
 
     <ul id = "result_list" ng-hide="results.length == 0">
       <div ng-repeat = "(type, result) in results" >
@@ -55,7 +68,7 @@
     <div id="playlist">
       <ul>
         <li ng-repeat="song in playlist.playlist track by $index" >
-          <i ng-show="$index == playlist.currentIndex" class="fa" ng-class="{'fa-play': playlist.state === 1, 'fa-pause': playlist.state === 2, 'fa-spinner fa-spin': playlist.state === 3}"></i> 
+          <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
         </li>
       </ul>

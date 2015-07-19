@@ -50,7 +50,9 @@ callback_object.ready = (user) ->
 	loadPlaylist()
 	console.log(user)
 callback_object.positionChanged = (position) ->
-	playlist.positionChanged "rdio", position
+	scope = angular.element($("body")).scope()
+	setPostion = () -> scope.playlist.positionChanged "rdio", position
+	if (scope.$$phase || scope.$root.$$phase) then setPostion() else scope.$apply(setPostion);
 
 callback_object.playStateChanged = (playState) ->
 	scope = angular.element($("body")).scope()
@@ -63,7 +65,7 @@ callback_object.playStateChanged = (playState) ->
 			scope.playlist.state = 2
 		else if (playState == 3)
 			scope.playlist.state = 3
-	if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState);
+	if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState)
 
 
 logError = (msg) ->
