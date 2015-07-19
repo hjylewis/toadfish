@@ -6,6 +6,7 @@ function PlaylistController($scope, $timeout, $q, $window){
 	$scope.expandSearch = null;
 	$scope.mode = "playlist";
 	$scope.playlist = new Playlist();
+	$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
 	var timeoutPromise;
 
 	$scope.Search = function(options) {
@@ -25,6 +26,11 @@ function PlaylistController($scope, $timeout, $q, $window){
 		});
 	}
 	$scope.triggerSearch = function (enter) {
+		if ($scope.query.length > 0) {
+			$scope.mode = "search";
+		} else {
+			$scope.mode = "playlist";
+		}
 		$timeout.cancel(timeoutPromise);
 		if (enter) {
 			$scope.Search();
@@ -64,6 +70,13 @@ function PlaylistController($scope, $timeout, $q, $window){
 	}
 	$scope.prev = function () {
 		$scope.playlist.prev();
+	}
+	$scope.changeColor = function(enter) {
+		if (enter && $scope.mode == "search") {
+			$scope.playerColor = {'background-color': 'rgba(0,0,0,0.8)'}
+		} else {
+			$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
+		}
 	}
 	angular.element($window).bind("scroll", function() {
 	    var windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;

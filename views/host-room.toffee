@@ -27,9 +27,10 @@
     <input ng-model="query" type="text" name="search"
     placeholder = 'Type to search'
     ng-keydown="triggerSearch($event.which == 13)"
+    ng-focus="triggerSearch()"
     id = 'first_search' autofocus autocomplete="off">
 
-    <div id="player">
+    <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
         <div id="buttons">
           <div><i ng-click="prev()" class="clickable fa fa-fast-backward"></i></div>
@@ -45,7 +46,7 @@
       </div>
     </div>
 
-    <ul id = "result_list" ng-hide="results.length == 0">
+    <ul id = "result_list" ng-hide="results.length == 0 || mode !== 'search'">
       <div ng-repeat = "(type, result) in results" >
         <li class = 'seperator' ng-show="result">{{type}}
           <span ng-hide="expandSearch" ng-click="expandResults(type)">More</span>
@@ -63,7 +64,7 @@
       </div>
     </ul>
 
-    <div id="playlist">
+    <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">
       <ul>
         <li ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)">
           <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
