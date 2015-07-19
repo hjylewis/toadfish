@@ -30,6 +30,10 @@ body
   color white
   background transparent
   font-family "Raleway", helvetica
+  
+h1
+  text-align center
+  margin-top 25px
 
 input
   background grey
@@ -59,7 +63,8 @@ nav
   a
     color white
 
-
+    a:hover
+      color purple
 
   li
     font-family courier, "Open Sans"
@@ -69,8 +74,11 @@ nav
     padding-left 20px
     padding-right 20px
 
+  li:last-child
+    padding-right 20px
 
   li:first-child
+    padding-left 20px
     float left
   li#register
     @media screen and (max-width: 500px)
@@ -81,6 +89,9 @@ div.content
   width 80%
   max-width 700px
   margin auto
+
+.clickable
+  cursor pointer
 
 #first_search
   font-size 40px
@@ -107,6 +118,53 @@ div.content
   &:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    input_grey;
   }
+  
+
+div#player
+  background-color rgba(0,0,0,0.5)
+  border 1px solid black
+  border-radius radius radius radius radius
+  margin-top 20px
+  margin-bottom 20px
+  padding 15px
+  
+  #top-line
+    display inline-block
+    vertical-align middle
+    #buttons
+      float left
+      margin-right 10px
+      div
+        float left
+        width 30px
+        i
+          padding auto
+    #details
+      float left
+  .progress
+    clear both
+    margin-top 10px
+    margin-bottom 0px
+    #seekbar
+      width 100%
+      height 5px
+        
+
+div#playlist
+  li
+    list-style none
+    border 1px solid black
+    font-size 20px
+    background-color rgba(0,0,0,0.5)
+    padding 10px
+    position relative
+    margin-top -1px
+    &:hover
+      background-color rgba(0,0,0,0.8)
+    &:first-child
+      border-radius radius radius 0 0
+    &:last-child
+      border-radius 0 0 radius radius   
 
 
 ul#result_list
@@ -131,66 +189,71 @@ ul#result_list
 
     &.seperator
       border-radius radius radius 0 0
-
-    &.seperator
       font-size 20px
       background-color rgba(0,0,0,0.5)
       text-transform capitalize
       padding 10px
-
-    &.result
-      min-height 150px
-      clear both
-      width 100%
-      position relative
-      background-color white
-
-      &.hidden_result
-        display none
-
-      &.no_border_result
-        border-top none
-
-      h2
-        padding-top 20px
-        padding-left 30px
-        max-width 70%
-        box-sizing border-box
-        font-size 20px
-
       span
-        padding-left 30px
-        font-size 16px
-
-      img
-        max-height 100px
-        position absolute
-        right 20px
-        top 20px
-
-      a
-        color black
+        font-size 85%  
+        float right
+        cursor pointer
         &:hover
-          color purple
           text-decoration underline
 
-        &.add_button
-          position absolute
-          bottom 10px
-          border-radius 50px
-          margin-left 30px
-          cursor pointer
-          padding 10px
-          border 1px solid rgba(0,0,0,0)
-          color purple
-          font-size 14
-          transition border 0.3s
-          text-decoration none
+  .result
+    min-height 150px
+    clear both
+    width 100%
+    position relative
+    background-color white
 
-          &:hover
-            border 1px solid purple
+    &.hidden_result
+      display none
 
-        &.play_now
-          left -10px
-        &.add_to_playlist
-          left 95px
+    &.no_border_result
+      border-top none
+
+    h2
+      padding-top 20px
+      padding-left 30px
+      max-width 70%
+      box-sizing border-box
+      font-size 20px
+
+    span
+      color black
+      padding-left 30px
+      font-size 16px
+
+    img
+      max-height 100px
+      position absolute
+      right 20px
+      top 20px
+
+    a
+      color black
+      &:hover
+        color purple
+        text-decoration underline
+
+      &.add_button
+        position absolute
+        bottom 10px
+        border-radius 50px
+        margin-left 30px
+        cursor pointer
+        padding 10px
+        border 1px solid rgba(0,0,0,0)
+        color purple
+        font-size 14
+        transition border 0.3s
+        text-decoration none
+
+        &:hover
+          border 1px solid purple
+
+      &.add_to_playlist
+        left -10px
+      &.play_now
+        left 110px

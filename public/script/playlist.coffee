@@ -17,13 +17,18 @@ socket.on 'roomID', (msg) ->
 # 3: buffer
 
 class Playlist
-	constructor: (currentIndex, playlist, volume) ->
-		@currentIndex = currentIndex || 0
-		@playlist = if playlist then JSON.parse(playlist) else []
-		@state
-		@volume = volume || 100
+	constructor: () ->
+		@currentIndex = 0
+		@playlist = []
+		@state = 0
+		@volume = 100
 		socket.on 'update', (update) =>
 			@readUpdate(update)
+
+	load: (currentIndex, playlist, volume) ->
+		@currentIndex = currentIndex || 0
+		@playlist = if playlist then JSON.parse(playlist) else []
+		@volume = volume || 100
 		if @playlist.length > 0
 			@loadSong () =>
 				@setVolume @volume
@@ -32,12 +37,15 @@ class Playlist
 	play: () ->
 		if (@playlist.length == 0)
 			console.log "nothing here"
+		else if @state == 1
+			console.log "Already playing"
 		else
 			song = @playlist[@currentIndex]
 			if (song.song_details.type == "soundcloud")
 				song.obj.play()
 			else if (song.song_details.type == "youtube")
 				yt_player.playVideo()
+				@state = 1
 				@positionChanged "youtube"
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_play()
@@ -130,11 +138,11 @@ class Playlist
 		if (@playlist.length == 0)
 			@add(song_details, update)
 		else
-			@sendUpdate "addFirst", JSON.stringify(song_details)
 			@playlist.splice(@currentIndex + 1, 0, {
 				song_details: song_details
 			})
 			@next(true)
+			@save "addFirst", JSON.stringify(song_details)
 
 	remove: (index, update) ->
 		@playlist.splice(index, 1)
@@ -144,6 +152,13 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 		@save('remove', index.toString()) if !update
+
+	setPlayState: (state) =>
+		scope = angular.element($("body")).scope()
+		if (scope.$$phase || scope.$root.$$phase)
+			scope.playlist.state = state
+		else
+			scope.$apply(scope.playlist.state = state)
 
 	loadSong: (cb) -> 
 		if (cb == undefined)
@@ -165,20 +180,20 @@ class Playlist
 						whileplaying: (() ->
 							_this.positionChanged "soundcloud", this.position),
 						onplay: (() ->
-							_this.state = 1),
+							_this.setPlayState 1),
 						onstop: (() ->
-							_this.state = 0),
+							_this.setPlayState 0),
 						onpause: (() ->
-							_this.state = 2),
-						onbufferchange: () ->
-							if (this.isBuffering)
-								_this.state = 3
+							_this.setPlayState 2),
+						onbufferchange: (() ->
+							if (this.isBuffering) 
+								_this.setPlayState 3
 							else
-								_this.state = 1
+								_this.setPlayState 1)
 					}, (sound) ->
-					song.obj = sound
-					SC.sound = sound
-					cb()
+						song.obj = sound
+						SC.sound = sound
+						cb()
 		else if (song_details.type == "youtube")
 			if (yt_player == null)
 				yt_player = new YT.Player('yt_player', {
@@ -189,15 +204,15 @@ class Playlist
 						'onReady': (() ->
 							yt_player.unMute()
 							cb()),
-						'onStateChange': (event) ->
+						'onStateChange': (event) =>
 							if (event.data == YT.PlayerState.PLAYING)
-								_this.state = 1
+								@setPlayState 1
 							else if (event.data == YT.PlayerState.PAUSED)
-								_this.state = 2
+								@setPlayState 2
 							else if (event.data == YT.PlayerState.BUFFERING)
-								_this.state = 3
+								@setPlayState 3
 							else if (event.data == -1)
-								_this.state = 0
+								@setPlayState 0
 					}
 		        })
 			else
@@ -210,7 +225,6 @@ class Playlist
 
 	positionChanged: (type, position) ->
 		if (type == @playlist[@currentIndex].song_details.type && @state != 0)
-
 			# update graphics
 			percent = null;
 			if (type == "youtube")
@@ -223,6 +237,7 @@ class Playlist
 				percent = (position / yt_player.getDuration()) * 100
 			else 
 				percent = (position / @playlist[@currentIndex].song_details.duration) * 100
+			$('#seekbar').attr("value",  percent)
 			if percent > 99.5
 				@next()
 	sendUpdate: (type, data) ->

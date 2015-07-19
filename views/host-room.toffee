@@ -1,28 +1,77 @@
 <!-- room.toffee -->
 <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
 <script src="/playlist.js"></script>
+<script src="/script/controllers/playlistController.js"></script>
 <script>
   var host = #{host};
   var roomID = "#{roomID}";
+  var roomName = "#{roomName}";
   var playlistSettings = #{playlistSettings};
-  var playlist = null;
 
   //this is hacky
   var loadPlaylist =  function () {
-    if (googleLoaded && rdioLoaded)
-      playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
+    if (googleLoaded && rdioLoaded) {
+      var scope = angular.element($("body")).scope();
+      var load = function (){
+          scope.playlist.load(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume);
+      };
+      (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);
+    }
   }
 </script>
 <script src="/setup.js"></script>
-<body>
+<body ng-controller="PlaylistController">
+  <h1>#{roomName}</h1>
+
   <div class="content">
-    <input type="text" name="search"
+    <input ng-model="query" type="text" name="search"
     placeholder = 'Type to search'
+    ng-keydown="triggerSearch($event.which == 13)"
+    ng-focus="triggerSearch()"
     id = 'first_search' autofocus autocomplete="off">
 
-    <!-- This is just a sample for styling purposes -->
-    <ul id = "result_list" class='hidden-ul'>
+    <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
+      <div id="top-line">
+        <div id="buttons">
+          <div><i ng-click="prev()" class="clickable fa fa-fast-backward"></i></div>
+          <div><i class="clickable fa" ng-click="play()"ng-class="{'fa-play': playlist.state === 2 || playlist.state === 0, 'fa-pause': playlist.state === 1, 'fa-spinner fa-spin': playlist.state === 3}"></i></div>
+          <div><i ng-click="next()" class="clickable fa fa-fast-forward"></i></div>
+        </div>
+        <div id="details">
+          {{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span>
+        </div>
+      </div>
+      <div class="progress">
+        <progress id="seekbar" value="0" max="100"></progress>
+      </div>
+    </div>
+
+    <ul id = "result_list" ng-hide="results.length == 0 || mode !== 'search'">
+      <div ng-repeat = "(type, result) in results" >
+        <li class = 'seperator' ng-show="result">{{type}}
+          <span ng-hide="expandSearch" ng-click="expandResults(type)">More</span>
+          <span ng-show="expandSearch" ng-click="expandResults()">Back</span>
+        </li>
+        <div ng-repeat="item in result.collections">
+          <li class='result' ng-hide="!expandSearch && $index > 2">
+            <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>
+            <span>{{item.artist || ""}}</span>
+            <img ng-src='{{item.artwork_url}}' /><br />
+            <a class='add_button add_to_playlist'ng-click="add(item)">Add to Playlist</a>
+            <a class='add_button play_now' ng-click="playNow(item)">Play Now</a>
+          </li>
+        </div>
+      </div>
     </ul>
+
+    <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">
+      <ul>
+        <li ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)">
+          <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
+          {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <!-- This is needed for youtube -->

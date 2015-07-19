@@ -88,7 +88,8 @@ router.get "/host/:roomID", (req, res) ->
     res.render "host-room", {
       title: "Toadfish - " + roomID, 
       host: true,
-      roomID: roomID, 
+      roomID: roomID,
+      roomName: room.roomName || "Toadfish Room",
       playlistSettings: room.playlistSettings, 
       layout: "views/layout.toffee"
     }
@@ -111,6 +112,7 @@ router.get "/:roomID", (req, res) ->
       title: "Toadfish - " + roomID, 
       host: false,
       roomID: roomID, 
+      roomName: room.roomName || "Toadfish Room",
       playlistSettings: room.playlistSettings, 
       layout: "views/layout.toffee"
     }
