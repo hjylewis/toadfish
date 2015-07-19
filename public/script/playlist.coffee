@@ -224,11 +224,7 @@ class Playlist
 			cb()
 
 	positionChanged: (type, position) ->
-		console.log "here"
-		console.log @playlist[@currentIndex].song_details.type
-		console.log @state
 		if (type == @playlist[@currentIndex].song_details.type && @state != 0)
-			console.log "playing"
 			# update graphics
 			percent = null;
 			if (type == "youtube")
@@ -241,8 +237,7 @@ class Playlist
 				percent = (position / yt_player.getDuration()) * 100
 			else 
 				percent = (position / @playlist[@currentIndex].song_details.duration) * 100
-			console.log percent.toString() + "%"
-			$('div.progress-bar').css("width", percent.toString() + "%")
+			$('#seekbar').attr("value",  percent)
 			if percent > 99.5
 				@next()
 	sendUpdate: (type, data) ->

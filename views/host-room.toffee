@@ -41,9 +41,7 @@
         </div>
       </div>
       <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-          <span class="sr-only">60% Complete</span>
-        </div>
+        <progress id="seekbar" value="0" max="100"></progress>
       </div>
     </div>
 
@@ -67,7 +65,7 @@
 
     <div id="playlist">
       <ul>
-        <li ng-repeat="song in playlist.playlist track by $index" >
+        <li ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)">
           <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
         </li>
