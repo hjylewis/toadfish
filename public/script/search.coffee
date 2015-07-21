@@ -1,46 +1,7 @@
 # search.coffee
 
 PAGE_LENGTH = 10
-waiting_time = -1
 
-# TAKE AWAY THIS FUNCTION
-# keystroke_count_down = ->
-#   if waiting_time == 0
-#     waiting_time = -1
-#     value = $("#first_search").val()
-#     search value, (res) ->
-#       if (value == $("#first_search").val())
-#         console.log res
-#         # display_result(res)
-#   else
-#     waiting_time -= 1
-
-# setInterval keystroke_count_down, 100
-
-# display_result = (results) ->
-#   $("#result_list").removeClass "hidden-ul"
-#   $("#result_list").children().hide()
-#   _.each results, (res, name) ->
-#     if (res != null && res.collections && res.collections.length > 0)
-#       $("#result_list").append("<li class = 'seperator'>#{name}</li>")
-#       _.each res.collections, (item) ->
-#         $("#result_list").append $("<li class = 'result' data-song='#{JSON.stringify item}'><h2><a href='#{item.permalink_url}' target='_blank'>#{item.title}</a></h2><span>#{item.artist || ""}</span>
-#         <img src='#{item.artwork_url}' /><br /></li>").append($("<a class='add_button add_to_playlist'>Add to Playlist</a>").click ->
-#           playlist.add $(this).parent().data().song
-#         ).append $("<a class='add_button play_now'>Play Now</a>").click ->
-#           playlist.addFirst $(this).parent().data().song
-#
-# $('#first_search').keyup (e) ->
-#   waiting_time = 3
-#   if e.key == 13
-#     waiting_time = 0
-#     keystroke_count_down()
-
-# str: string query
-# options: object (optional)
-#    next: boolean, get another page.  DEFAULT: false
-#    types: array, of 'soundcloud','youtube','rdio'.  DEFAULT: ['soundcloud','youtube','rdio']
-# done: callback function(obj)
 class Search
   search: (str, options, done) ->
     if (!str)
@@ -57,17 +18,11 @@ class Search
       options = {}
     options.types = ['soundcloud','youtube','rdio'] if not options.types?
     retTypes = options.types
-    console.log "search: " + str
     return done null if str == ""
-
-    console.log options
 
     storedResults = if sessionStorage.getItem(str) then JSON.parse(sessionStorage.getItem(str)) else { results: {} }
     if not options.next?
       ret = _.reduce options.types, ((memo, type) -> return storedResults.results[type] && memo), true
-      console.log storedResults
-      console.log options.types
-      console.log ret
       return (done storedResults) if ret?
       options.types = _.filter options.types, (type) -> return not storedResults.results[type]
 
@@ -76,7 +31,6 @@ class Search
 
           return callback null, null if _.indexOf(options.types,'soundcloud') == -1
           if options.next && storedResults.results.soundcloud && storedResults.results.soundcloud.next
-            console.log "next sc"
             $.ajax(storedResults.results.soundcloud.next)
               .done (tracks) =>
                 callback null, @cleanUpResults(tracks, "soundcloud")
@@ -124,8 +78,6 @@ class Search
 
         results = _.mapObject storeResults, (obj, type) ->
           return if retTypes.indexOf(type) != -1 then obj else null
-
-        console.log results
 
         ret.query = str
         ret.results = storeResults

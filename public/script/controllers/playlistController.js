@@ -27,7 +27,6 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 
 		deferred.promise.then(function (ret) {
 			if ($scope.query == ret.query) {
-				console.log(ret.results);
 				$scope.results = ret.results;
 				$scope.isSearchLoading = false;
 			}
