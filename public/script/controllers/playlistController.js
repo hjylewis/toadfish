@@ -87,6 +87,13 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	        clickedValue = x * 100 / el.clientWidth
     	$scope.playlist.seek(clickedValue);
 	}
+	$scope.remove = function (index, e) {
+		e.stopPropagation();
+		$scope.playlist.remove(index);
+	}
+	$scope.stopPropagation = function (e) {
+		e.stopPropagation();
+	}
 	$scope.changeColor = function(enter) {
 		if (enter && $scope.mode == "search") {
 			$scope.playerColor = {'background-color': 'rgba(0,0,0,0.8)'}

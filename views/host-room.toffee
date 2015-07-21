@@ -29,16 +29,16 @@
     <h1>#{roomName}</h1>
     <input ng-model="query" type="text" name="search"
     placeholder = 'Type to search'
-    ng-keydown="triggerSearch($event.which == 13)"
+    ng-keyup="triggerSearch($event.which == 13)"
     ng-focus="triggerSearch()"
     id = 'first_search' autofocus autocomplete="off"><i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
 
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
         <div id="buttons">
-          <div><i ng-click="prev()" class="clickable fa fa-fast-backward"></i></div>
-          <div><i class="clickable fa" ng-click="play()"ng-class="{'fa-play': playlist.state === 2 || playlist.state === 0, 'fa-pause': playlist.state === 1, 'fa-spinner fa-spin': playlist.state === 3}"></i></div>
-          <div><i ng-click="next()" class="clickable fa fa-fast-forward"></i></div>
+          <div><i ng-click="prev()" class="hover-purple clickable fa fa-fast-backward"></i></div>
+          <div><i class="clickable hover-purple fa" ng-click="play()"ng-class="{'fa-play': playlist.state === 2 || playlist.state === 0, 'fa-pause': playlist.state === 1, 'fa-spinner fa-spin': playlist.state === 3}"></i></div>
+          <div><i ng-click="next()" class="clickable hover-purple fa fa-fast-forward"></i></div>
         </div>
         <div id="details">
           {{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span>
@@ -70,9 +70,15 @@
 
     <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">
       <ul>
-        <li class="hover clickable" ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)">
+        <li class="hover clickable" ng-repeat="song in playlist.playlist track by $index" ng-click="playlist.goTo($index)"
+        ng-mouseenter="songHover = true" ng-mouseleave="songHover = false">
           <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
+          <span style="font-size:15px" ng-if="song.song_details.type =='rdio'">(30s)</span>
+          <a ng-show="songHover" ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}"><i class="fa fa-long-arrow-right"></i></a>
+          <span style="float:right">
+          <i ng-click="remove($index, $event)" ng-show="songHover" class="hover-purple clickable fa fa-times"></i>
+          </span>
         </li>
       </ul>
     </div>

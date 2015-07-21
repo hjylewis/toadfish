@@ -3,6 +3,7 @@
 grey = #f6f6f6
 purple = #7f00ff
 darkpurple = darken(purple, 60%)
+link-purple = #A347FF
 black = #333
 transblack = rgba(0,0,0,0.6)
 transblacker = rgba(0,0,0,1)
@@ -28,7 +29,7 @@ a
   text-decoration none
   color white
   &:hover
-    color black
+    color link-purple
 
 body
   font-size 20px
@@ -104,6 +105,9 @@ div.content
 
 .clickable
   cursor pointer
+
+.hover-purple:hover
+  color link-purple
   
 .search-loading
   position relative
