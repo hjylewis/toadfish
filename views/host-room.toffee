@@ -22,11 +22,11 @@
 </script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController">
-  <h1>#{roomName}</h1>
   <div ng-if="isLoading" id="loader">
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
+    <h1>#{roomName}</h1>
     <input ng-model="query" type="text" name="search"
     placeholder = 'Type to search'
     ng-keydown="triggerSearch($event.which == 13)"
@@ -65,7 +65,7 @@
           </li>
         </div>
       </div>
-      <li class = 'infiniteLoading' ng-show="expandSearch"><i class="fa fa-spinner fa-spin"></i> Loading ...</li>
+      <li class = 'infiniteLoading' ><span ng-show="expandSearch"><i class="fa fa-spinner fa-spin"></i> Loading ...</span></li>
     </ul>
 
     <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">

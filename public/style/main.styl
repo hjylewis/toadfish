@@ -4,6 +4,8 @@ grey = #f6f6f6
 purple = #7f00ff
 darkpurple = darken(purple, 60%)
 black = #333
+transblack = rgba(0,0,0,0.6)
+transblacker = rgba(0,0,0,1)
 radius = 5px
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -37,7 +39,11 @@ body
   
 h1
   text-align center
+  font-family: 'Roboto';
+  font-size 70px 
   margin-top 25px
+  color: white;
+  padding: 14px;
 
 input
   background grey
@@ -56,7 +62,7 @@ input
 
 nav
   text-align right
-  background rgba(0,0,0,0.5)
+  background transblack
   padding-right 14px
   padding-bottom 15px
   position fixed
@@ -84,6 +90,7 @@ nav
   li:first-child
     padding-left 20px
     float left
+  
   li#register
     @media screen and (max-width: 500px)
       display none
@@ -93,6 +100,7 @@ div.content
   width 80%
   max-width 700px
   margin auto
+  margin-bottom 100px
 
 .clickable
   cursor pointer
@@ -111,9 +119,9 @@ div.content
   padding 20px 25px
   border 1px solid black
   color black
-  background rgba(255,255,255,0.5)
+  background rgba(255,255,255,0.8)
 
-  input_grey = #bbb
+  input_grey = #848484
 
   &::-webkit-input-placeholder { /* WebKit browsers */
     color:    input_grey;
@@ -132,7 +140,7 @@ div.content
   
 
 div#player
-  background-color rgba(0,0,0,0.5)
+  background-color transblack
   border 1px solid black
   border-radius radius radius radius radius
   margin-top 20px
@@ -166,16 +174,18 @@ div#playlist
     list-style none
     border 1px solid black
     font-size 20px
-    background-color rgba(0,0,0,0.5)
+    background-color transblack
     padding 10px
     position relative
     margin-top -1px
     &.hover:hover
-      background-color rgba(0,0,0,0.8)
+      background-color transblacker
     &:first-child
       border-radius radius radius 0 0
     &:last-child
       border-radius 0 0 radius radius
+    &:only-child
+      border-radius radius radius radius radius
       
    
 
@@ -186,7 +196,6 @@ ul#result_list
   border-radius radius
   margin auto
   margin-top 20px
-  margin-bottom 100px
   // background white
 
   *
@@ -201,9 +210,8 @@ ul#result_list
     top -1px
 
     &.seperator
-      border-radius radius radius 0 0
       font-size 20px
-      background-color rgba(0,0,0,0.5)
+      background-color transblack
       text-transform capitalize
       padding 10px
       span
@@ -214,7 +222,8 @@ ul#result_list
           text-decoration underline
           
     &.infiniteLoading
-      background-color rgba(0,0,0,0.5)
+      height 22px
+      background-color transblack
       text-align center
       padding 10px
 
