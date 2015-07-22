@@ -256,7 +256,9 @@ class Playlist
 			else 
 				percent = (position / @playlist[@currentIndex].song_details.duration) * 100
 			$('#seekbar').attr("value",  percent)
-			if percent > 99.5
+			if (type == "rdio" && !rdio_user && position > 29)
+				@next()
+			else if percent > 99.5
 				@next()
 	sendUpdate: (type, data) ->
 		socket.emit 'update', {
