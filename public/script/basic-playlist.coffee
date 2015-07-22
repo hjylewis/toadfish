@@ -56,9 +56,20 @@ class Playlist
 
 	remove: (index) ->
 		@playlist.splice(index, 1)
-		if (index == @currentIndex)
+		if (index < @currentIndex)
+			@currentIndex--
+		else if (index == @currentIndex)
 			@loadSong()
 
+	move: (from, to) ->
+		@playlist.splice(to, 0, @playlist.splice(from, 1)[0])
+		if (from < @currentIndex && to >= @currentIndex)
+			@currentIndex--
+		else if (from > @currentIndex && to <= @currentIndex)
+			@currentIndex++
+		else if (from == @currentIndex)
+			@currentIndex = to
+		
 	loadSong: () -> 
 		song = @playlist[@currentIndex]
 		song_details = song.song_details
@@ -92,6 +103,9 @@ class Playlist
 			@state = 1
 		else if (update.type == "pause")
 			@state = 2
+		else if (update.type == "move")
+			data = JSON.parse(update.data)
+			@move data.from, data.to
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()

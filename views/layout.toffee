@@ -1,4 +1,4 @@
-<html ng-app> <!-- layout.toffee -->
+<html ng-app="tfApp"> <!-- layout.toffee -->
   <head>
     <title>#{title}</title>
 
@@ -19,6 +19,7 @@
 
     <!-- Angular -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+
 
     <style> /* For the background */
 
@@ -62,6 +63,8 @@
     <!-- youtube -->
     <script src="//apis.google.com/js/client.js?onload=googleApiClientReady"></script>
 
+    <script src="/script/tf-app.js"></script>
+    <script src="/script/angular-drag-and-drop-lists.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="/script/canvas.js"></script>-->
 

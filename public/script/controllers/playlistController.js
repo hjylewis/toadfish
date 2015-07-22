@@ -6,6 +6,10 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	$scope.expandSearch = null;
 	$scope.mode = "playlist";
 	$scope.isLoading = true;
+	$scope.from = {
+		index: null
+	};
+
 	if (host) {
 		$scope.playlist = new Playlist();
 	} else {
@@ -101,6 +105,15 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 			$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
 		}
 	}
+
+	$scope.dropCallback = function(to, item) {
+		var from = $scope.from.index
+		if (from < to)
+			to = to - 1
+		$scope.playlist.move(from, to);
+        return false;
+    };
+
 	angular.element($window).bind("scroll", function() {
 	    var windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
 	    var body = document.body, html = document.documentElement;

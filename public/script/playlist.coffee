@@ -150,12 +150,26 @@ class Playlist
 
 	remove: (index, update) ->
 		@playlist.splice(index, 1)
-		if (index == @currentIndex)
+		if (index < @currentIndex)
+			@currentIndex--
+		else if (index == @currentIndex)
 			@stop()
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
 		@save('remove', index.toString()) if !update
+
+	move: (from, to, update) ->
+		console.log from, to
+		song = @playlist.splice(from, 1)[0]
+		@playlist.splice(to, 0, song)
+		if (from < @currentIndex && to >= @currentIndex)
+			@currentIndex--
+		else if (from > @currentIndex && to <= @currentIndex)
+			@currentIndex++
+		else if (from == @currentIndex)
+			@currentIndex = to
+		@save('move', JSON.stringify({from: from, to: to})) if !update
 
 	setPlayState: (state) =>
 		scope = angular.element($("body")).scope()
@@ -269,6 +283,9 @@ class Playlist
 			@state = 0
 		else if (update.type == "pause")
 			@state = 2
+		else if (update.type == "move")
+			data = JSON.parse(update.data)
+			@move data.from, data.to, true
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
