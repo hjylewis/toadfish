@@ -1,7 +1,7 @@
 DEBUG = true
 rdioLoaded = false
 googleLoaded = false
-
+rdio_user = null
 
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
@@ -47,6 +47,7 @@ callback_object.ready = (user) ->
 		period: 100
 	})
 	rdioLoaded = true
+	rdio_user = user
 	loadPlaylist()
 	console.log(user)
 callback_object.positionChanged = (position) ->
