@@ -15,22 +15,13 @@
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
     <h1>#{roomName}</h1>
-    <input ng-model="query" type="text" name="search"
-    placeholder = 'Type to search'
-    ng-keyup="triggerSearch($event.which == 13)"
-    ng-focus="triggerSearch()"
-    id = 'first_search' autofocus autocomplete="off"><i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
-
-    <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
-      <div id="top-line">
-        <div id="buttons">
-          <div><i class="clickable fa" ng-class="{'fa-pause': playlist.state === 2 || playlist.state === 0, 'fa-play': playlist.state === 1}"></i></div>
-        </div>
-        <div id="details">
-          {{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span>
-        </div>
-      </div>
-
+    <div class="search-container">
+      <i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
+      <input ng-model="query" type="text" name="search"
+      placeholder = 'Type to search'
+      ng-keyup="triggerSearch($event.which == 13)"
+      ng-focus="triggerSearch()"
+      id = 'first_search' autofocus autocomplete="off">
     </div>
 
     <ul id = "result_list" ng-hide="results.length == 0 || mode !== 'search'">

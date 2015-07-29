@@ -74,6 +74,7 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 		$scope.playlist.add(item);
 		if (!host) {
 			$scope.mode = "playlist";
+			angular.element("#player").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100)
 		}
 	}
 	$scope.play = function () {

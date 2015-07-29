@@ -118,6 +118,8 @@ div.content
   margin-bottom 100px
   @media screen and (max-width: 450px)
     width 100%
+    box-sizing border-box
+    padding 5px
 
 .clickable
   cursor pointer
@@ -209,10 +211,11 @@ div#player
         
 
 div#playlist
-  text-overflow ellipsis
-  overflow hidden
-  white-space nowrap
   li
+    display block
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
     list-style none
     border 1px solid black
     font-size 20px
