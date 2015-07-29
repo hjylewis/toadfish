@@ -3,6 +3,8 @@
 grey = #f6f6f6
 purple = #7f00ff
 darkpurple = darken(purple, 60%)
+midpurple = darken(purple, 30%)
+
 link-purple = #A347FF
 black = #333
 transblack = rgba(0,0,0,0.6)
@@ -143,7 +145,44 @@ div.content
   
 .search-container
   position relative
-
+  
+.warning
+  color red
+.launch-container
+  text-align center
+  width 660px
+  margin auto
+input#createRoomName
+  border-radius 15px
+  
+  margin auto
+  font-size 55px
+  margin-top 20%
+  padding 30px
+  
+#createWarning
+  margin-top 10px
+#createRoom
+  background-color darkpurple
+  border-radius 15px
+  margin 10px
+  color white
+  font-size 50px
+  padding 10px 
+  float right
+  &:hover
+    background-color #654782
+#list-rooms
+  clear both
+  font-size 20px
+  color black
+  margin-top 20px
+  ul
+    list-style-type none
+    a
+      color purple
+      &:hover
+        color darkpurple
 
 #first_search
   font-size 40px

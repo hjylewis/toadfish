@@ -3,17 +3,18 @@
 	var rooms = #{rooms}
 </script>
 <body>
-
-    <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20">
-    <span class="warning" id="createWarning" hidden>That room name alrady exists</span>
-    <input type="button" id="createRoom" value="Create Button">
-    <input id="joinRoomName" type="text" placeholder="Room Name">
-    <input type="button" id="joinRoom" value="Join Button">
-    <div hidden>
-    	Your open rooms:
-    	<ul id="list_open_rooms">
-    	</ul>
-    </div>
+    <div class="launch-container">
+        <div style='overflow:hidden'>
+            <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20">
+            <span class="warning" id="createWarning" hidden>That room name alrady exists</span>
+            <input type="button" id="createRoom" class="clickable" value="Create">
+        </div>
+        <div id="list-rooms" hidden>
+        	<h4>Your open rooms:</h4>
+        	<ul id="list_open_rooms">
+        	</ul>
+        </div>
+    <div>
 
     <script src="/launch.js"></script>
 </body>
