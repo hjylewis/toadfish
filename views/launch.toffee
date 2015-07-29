@@ -5,9 +5,11 @@
 <body>
     <div class="launch-container">
         <div style='overflow:hidden'>
-            <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20">
-            <span class="warning" id="createWarning" hidden>That room name alrady exists</span>
-            <input type="button" id="createRoom" class="clickable" value="Create">
+            <form action="javascript:submit()" autocomplete="off">
+                <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20" autofocus>
+                <span class="warning" id="createWarning" hidden>That room name alrady exists</span>
+                <input type="submit" id="createRoom" class="clickable" value="Create">
+            </form>
         </div>
         <div id="list-rooms" hidden>
         	<h4>Your open rooms:</h4>

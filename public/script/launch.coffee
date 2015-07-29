@@ -1,4 +1,4 @@
-$('#createRoom').click () ->
+submit = () ->
 	roomName = $('#createRoomName').val()
 	$.ajax {
 		url: '/createRoom',
