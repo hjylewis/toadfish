@@ -27,7 +27,7 @@ class Playlist
 
 	load: (currentIndex, playlist, volume, state) ->
 		@currentIndex = currentIndex || 0
-		@state = state || 0
+		@state = 0
 		@playlist = if playlist then JSON.parse(playlist) else []
 		@volume = volume || 100
 		if @playlist.length > 0
@@ -85,7 +85,6 @@ class Playlist
 			rdio_player.rdio_seek(song.song_details.duration * (percent / 100))
 
 	setVolume: () ->
-		console.log @volume
 		song = @playlist[@currentIndex]
 		if (song.song_details.type == "soundcloud")
 			song.obj.setVolume(@volume)
