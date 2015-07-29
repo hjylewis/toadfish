@@ -7,6 +7,8 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	$scope.mode = "playlist";
 	$scope.isLoading = true;
 	$scope.volumeShow = false;
+	$scope.viewModal = false;
+	$scope.firstModal = true;
 	$scope.rdio_user = null;
 	$scope.from = {
 		index: null
@@ -100,6 +102,11 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	$scope.stopPropagation = function (e) {
 		e.stopPropagation();
 	}
+	$scope.openModal = function (e) {
+		e.stopPropagation();
+		$scope.viewModal = true;
+		$scope.firstModal = false;
+	}
 	$scope.changeColor = function(enter) {
 		if (enter && $scope.mode == "search") {
 			$scope.playerColor = {'background-color': 'rgba(0,0,0,0.8)'}
@@ -118,6 +125,18 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 
     $scope.shortcut = function (e) {
     	// if search bar is focused
+
+  		if (e.keyCode == 27) {
+			if ($scope.viewModal){
+				$scope.viewModal = false;
+				return
+			} 
+			if ($scope.mode == "search") {
+				$scope.query = "";
+				$scope.mode = "playlist";
+				return
+			}
+		}
     	if (document.activeElement.id === 'first_search') {
     		return
     	}

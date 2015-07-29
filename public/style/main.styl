@@ -49,6 +49,11 @@ h1
   padding: 14px;
   @media screen and (max-width: 450px)
     font-size 50px
+    
+h4
+  font-family: 'Roboto';
+  font-size 30px 
+  font-weight: bold
 
 input
   background grey
@@ -322,6 +327,37 @@ ul#result_list
         left -10px
       &.play_now
         left 110px
+        
+div.modal
+  background-color grey
+  border-radius radius
+  color black
+  width 400px
+  height 300px
+  z-index 6
+  position absolute
+  padding 30px
+  top 50%
+  left 50%  
+  margin-top -180px
+  margin-left -230px
+  a
+    color purple
+    &:hover
+      text-decoration underline
+  i
+    position absolute
+    padding 5px
+    right 7px
+    top 7px
+  
+div.overlay
+  background-color rgba(0,0,0,0.7)
+  width 100%
+  height 100%
+  position absolute
+  top 0px    
+  z-index 5
 
 //Loader
 //http://codepen.io/boris-graeff/pen/bdBXmj
@@ -350,7 +386,7 @@ ul#result_list
     }
   }
 }
-  
+
 
 @keyframes sequence1 {
   0%{ height: 10px; }

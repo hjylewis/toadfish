@@ -256,6 +256,12 @@ class Playlist
 				percent = (position / @playlist[@currentIndex].song_details.duration) * 100
 			$('#seekbar').attr("value",  percent)
 			if (type == "rdio" && !rdio_user && position > 29)
+				scope = angular.element($("body")).scope()
+				openModal = () ->
+					if (scope.firstModal)
+						scope.viewModal = true
+						scope.firstModal = false
+				if (scope.$$phase || scope.$root.$$phase) then openModal() else scope.$apply(openModal())
 				@next()
 			else if percent > 99.5
 				@next()

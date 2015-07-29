@@ -85,7 +85,7 @@
         dnd-draggable="song" dnd-dragstart="from.index = $index" dnd-effect-allowed="move">
           <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
-          <span style="font-size:15px" ng-if="song.song_details.type =='rdio' && !rdio_user">(30s)</span>
+          <span style="font-size:15px" class="hover-purple" ng-if="song.song_details.type =='rdio' && !rdio_user" data-ng-click="openModal($event)">(30s)</span>
           <a ng-show="songHover" ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}"><i class="fa fa-long-arrow-right"></i></a>
           <span style="float:right">
           <i ng-click="remove($index, $event)" ng-show="songHover" class="hover-purple clickable fa fa-times"></i>
@@ -95,6 +95,14 @@
     </div>
   </div>
 
+  <div ng-cloak>
+    <div class="overlay" data-ng-show="viewModal"></div>
+    <div class="modal" data-ng-show="viewModal">
+      <i class="fa fa-times clickable hover-purple" data-ng-click="viewModal = false"></i>
+      <h4>Wonder why you only hear 30 seconds?</h4><br />
+      <p>You need to log into a <a href="http://www.rdio.com/" target="_blank">Rdio Account</a> to hear full Rdio tracks.  Once you log in, just refresh this page.</p>
+    </div>
+  <div>
   <!-- This is needed for youtube -->
   <div id="yt_player"></div>
   <!-- For Rdio -->
@@ -102,3 +110,5 @@
 
 
 </body>
+
+
