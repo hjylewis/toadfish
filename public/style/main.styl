@@ -260,6 +260,7 @@ div#player
         
 
 div#playlist
+  margin-top 20px
   li
     display block
     text-overflow ellipsis
@@ -334,11 +335,19 @@ ul#result_list
 
     &.no_border_result
       border-top none
-
+      
+    .art
+      float right
+      padding 20px
+    .details
+      white-space nowrap
+      text-overflow ellipsis
+      display block
+      overflow hidden
+      
     h2
       padding-top 20px
       padding-left 30px
-      max-width 70%
       box-sizing border-box
       font-size 20px
 
@@ -349,12 +358,13 @@ ul#result_list
 
     img
       max-height 100px
-      position absolute
-      right 20px
-      top 20px
 
     a
       color black
+      white-space nowrap
+      text-overflow ellipsis
+      display block
+      overflow hidden
       &:hover
         color purple
         text-decoration underline

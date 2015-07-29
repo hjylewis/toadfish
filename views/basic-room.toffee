@@ -35,10 +35,15 @@
         </li>
         <div ng-repeat="item in result.collections">
           <li class='result' ng-hide="!expandSearch && $index > 2">
-            <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>
-            <span>{{item.artist || ""}}</span>
-            <img ng-src='{{item.artwork_small || item.artwork_url}}' /><br />
-            <a class='add_button add_to_playlist'ng-click="add(item)">Add to Playlist</a>
+            <div class="art">
+              <img ng-src='{{item.artwork_small || item.artwork_url}}' />
+            </div>
+            <div class="details">
+              <h2><a ng-href='{{item.permalink_url}}' target='_blank'>{{item.title}}</a></h2>
+              <span>{{item.artist || ""}}</span>
+              <br />
+              <a class='add_button add_to_playlist'ng-click="add(item)">Add to Playlist</a>
+            </div>
           </li>
         </div>
       </div>
