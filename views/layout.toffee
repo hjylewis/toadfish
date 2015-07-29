@@ -67,6 +67,8 @@
 
     <script src="/script/tf-app.js"></script>
     <script src="/script/angular-drag-and-drop-lists.min.js"></script>
+    <script src="/script/ui-bootstrap-tpls-0.13.1.min.js"></script>
+    
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="/script/canvas.js"></script>-->
 

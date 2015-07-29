@@ -23,17 +23,20 @@
 </script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController" data-ng-keydown="shortcut($event)">
-
+<button class="btn btn-default" ng-click="open()">Small modal</button>
   <div ng-if="isLoading" id="loader">
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
     <h1>#{roomName}</h1>
-    <input ng-model="query" type="text" name="search"
-    placeholder = 'Type to search'
-    ng-keyup="triggerSearch($event.which == 13)"
-    ng-focus="triggerSearch()"
-    id = 'first_search' autofocus autocomplete="off"><i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
+    <div class="search-container">
+      <i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
+      <input ng-model="query" type="text" name="search"
+      placeholder = 'Type to search'
+      ng-keyup="triggerSearch($event.which == 13)"
+      ng-focus="triggerSearch()"
+      id = 'first_search' autofocus autocomplete="off">
+    </div>
 
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
@@ -100,3 +103,8 @@
 
 
 </body>
+<script type="text/ng-template" id="rdioModal.html">
+    <div>
+        HELLO
+    </div>
+</script>

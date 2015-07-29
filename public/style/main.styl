@@ -13,6 +13,8 @@ radius = 5px
   display: none !important;
 }
 
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
 transition()
   transition arguments
   -webkit-transition arguments
@@ -119,9 +121,10 @@ div.content
   color link-purple
   
 .search-loading
-  position relative
+  position absolute
   float right
-  top -65px
+  top 22px
+  right -5px
   margin-right 23px
   color rgba(0,0,0,.5)
   
@@ -130,6 +133,9 @@ div.content
   
 .fa-volume-up
   float right 
+  
+.search-container
+  position relative
 
 
 #first_search

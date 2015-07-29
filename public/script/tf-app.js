@@ -1,1 +1,1 @@
-var tfAppModule = angular.module('tfApp', ['dndLists']);
+var tfAppModule = angular.module('tfApp', ['dndLists', 'ui.bootstrap']);
