@@ -22,7 +22,7 @@
   }
 </script>
 <script src="/setup.js"></script>
-<body ng-controller="PlaylistController">
+<body ng-controller="PlaylistController" data-ng-keydown="shortcut($event)">
 
   <div ng-if="isLoading" id="loader">
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>

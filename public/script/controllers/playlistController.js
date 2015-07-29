@@ -116,6 +116,21 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
         return false;
     };
 
+    $scope.shortcut = function (e) {
+    	// if search bar is focused
+    	if (document.activeElement.id === 'first_search') {
+    		return
+    	}
+
+    	if (e.keyCode == 32) {
+    		$scope.play();
+    	} else if (e.keyCode == 39) {
+			$scope.next();
+    	} else if (e.keyCode == 37) {
+			$scope.prev();
+    	}
+    }
+
 	angular.element($window).bind("scroll", function() {
 	    var windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
 	    var body = document.body, html = document.documentElement;
