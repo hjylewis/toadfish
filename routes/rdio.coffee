@@ -47,7 +47,7 @@ router.get "/search", (req, res) ->
         res.send []
       else
         result = {
-          collection: JSON.parse(body).result.results,
+          collection: if JSON.parse(body).result then JSON.parse(body).result.results else [],
           next_page: page + 1
         }
         res.send result

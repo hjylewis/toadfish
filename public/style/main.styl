@@ -35,7 +35,7 @@ body
   font-size 20px
   padding-top 50px
   color white
-  background transparent
+  background grey
   font-family "Raleway", helvetica
   
 h1
@@ -62,7 +62,12 @@ input
 
   &:focus
     border 1px solid purple
-
+    
+input[type=range]
+  float right
+  padding 0px
+  margin 0px
+  
 nav
   text-align right
   background transblack
@@ -122,6 +127,9 @@ div.content
   
 .dndDraggingSource
   display none
+  
+.fa-volume-up
+  float right 
 
 
 #first_search
@@ -149,7 +157,6 @@ div.content
   &:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    input_grey;
   }
-  
 
 div#player
   background-color transblack
@@ -160,8 +167,10 @@ div#player
   padding 15px
   
   #top-line
-    display inline-block
-    vertical-align middle
+    // display inline-block
+    // vertical-align middle
+    height 23px
+    width 100% 
     #buttons
       float left
       margin-right 10px
@@ -170,8 +179,15 @@ div#player
         width 30px
         i
           padding auto
+
+    #volume
+      float right
     #details
-      float left
+      white-space nowrap
+      text-overflow ellipsis
+      display block
+      overflow hidden
+      
   .progress
     clear both
     margin-top 10px

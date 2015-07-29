@@ -6,6 +6,7 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	$scope.expandSearch = null;
 	$scope.mode = "playlist";
 	$scope.isLoading = true;
+	$scope.volumeShow = false;
 	$scope.rdio_user = null;
 	$scope.from = {
 		index: null

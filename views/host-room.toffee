@@ -23,6 +23,7 @@
 </script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController">
+
   <div ng-if="isLoading" id="loader">
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
   </div>
@@ -40,6 +41,11 @@
           <div><i ng-click="prev()" class="hover-purple clickable fa fa-fast-backward"></i></div>
           <div><i class="clickable hover-purple fa" ng-click="play()"ng-class="{'fa-play': playlist.state === 2 || playlist.state === 0, 'fa-pause': playlist.state === 1, 'fa-spinner fa-spin': playlist.state === 3}"></i></div>
           <div><i ng-click="next()" class="clickable hover-purple fa fa-fast-forward"></i></div>
+        </div>
+
+        <div id="volume" data-ng-mouseenter="volumeShow = true" data-ng-mouseleave="volumeShow = false" data-ng-mouseup="playlist.setVolume()">
+          <input data-ng-show="volumeShow" type="range" min="0" max="100" data-ng-model="playlist.volume" value="{{playlist.volume}}">
+          <i class="fa fa-volume-up"></i>
         </div>
         <div id="details">
           {{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span>

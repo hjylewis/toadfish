@@ -84,15 +84,15 @@ class Playlist
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_seek(song.song_details.duration * (percent / 100))
 
-	setVolume: (percent) ->
+	setVolume: () ->
+		console.log @volume
 		song = @playlist[@currentIndex]
 		if (song.song_details.type == "soundcloud")
-			song.obj.setVolume(percent)
+			song.obj.setVolume(@volume)
 		else if (song.song_details.type == "youtube")
-			yt_player.setVolume(percent)
+			yt_player.setVolume(@volume)
 		else if (song.song_details.type == "rdio")
-			rdio_player.rdio_setVolume(percent / 100)
-		@volume = percent;
+			rdio_player.rdio_setVolume(@volume / 100)
 
 
 	next: (update) ->
