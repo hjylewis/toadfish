@@ -124,7 +124,6 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
     };
 
     $scope.shortcut = function (e) {
-    	// if search bar is focused
 
   		if (e.keyCode == 27) {
 			if ($scope.viewModal){
@@ -137,6 +136,8 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 				return
 			}
 		}
+
+    	// if search bar is focused
     	if (document.activeElement.id === 'first_search') {
     		return
     	}
