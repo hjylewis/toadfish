@@ -131,14 +131,6 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
     	}
     }
 
-    $scope.open = function () {
-    	var modalInstance = $modal.open({
-		    animation: false,
-		    templateUrl: 'rdioModal.html',
-			size: 'sm'
-	    });
-    }
-
 	angular.element($window).bind("scroll", function() {
 	    var windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
 	    var body = document.body, html = document.documentElement;

@@ -23,7 +23,6 @@
 </script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController" data-ng-keydown="shortcut($event)">
-<button class="btn btn-default" ng-click="open()">Small modal</button>
   <div ng-if="isLoading" id="loader">
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
   </div>
@@ -103,8 +102,3 @@
 
 
 </body>
-<script type="text/ng-template" id="rdioModal.html">
-    <div>
-        HELLO
-    </div>
-</script>
