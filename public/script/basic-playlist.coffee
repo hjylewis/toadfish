@@ -41,9 +41,11 @@ class Playlist
 		@playlist.push({
 			song_details: song_details
 		})
+		@save('add', JSON.stringify(song_details)) if !update
 		if (@playlist.length == 1)
 			@loadSong()
-		@save('add', JSON.stringify(song_details)) if !update
+		if (@currentIndex + 2 == @playlist.length && @state == 0)
+			@next()
 
 	addFirst: (song_details) ->
 		if (@playlist.length == 0)
@@ -103,6 +105,8 @@ class Playlist
 			@state = 1
 		else if (update.type == "pause")
 			@state = 2
+		else if (update.type == "stop")
+			@state = 0
 		else if (update.type == "move")
 			data = JSON.parse(update.data)
 			@move data.from, data.to

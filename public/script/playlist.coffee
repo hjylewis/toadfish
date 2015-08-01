@@ -66,7 +66,7 @@ class Playlist
 			
 		# set state		
 
-	stop: () ->
+	stop: (update) ->
 		song = @playlist[@currentIndex]
 		if (song.song_details.type == "soundcloud")
 			song.obj.stop()
@@ -74,6 +74,7 @@ class Playlist
 			yt_player.stopVideo()
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_stop();
+		@save('stop') if !update
 
 	seek: (percent) ->
 		song = @playlist[@currentIndex]
@@ -131,16 +132,13 @@ class Playlist
 		@playlist.push({
 			song_details: song_details
 		})
+		@save('add', JSON.stringify(song_details)) if !update
 		if (@playlist.length == 1)
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
 		if (@currentIndex + 2 == @playlist.length && @state == 0)
-			@currentIndex++
-			@loadSong () =>
-				@setVolume @volume
-				@play() #auto play
-		@save('add', JSON.stringify(song_details)) if !update
+			@next()
 
 	addFirst: (song_details, update) ->
 		if (@playlist.length == 0)
@@ -292,9 +290,11 @@ class Playlist
 		else if (update.type == "remove")
 			@remove update.data, true
 		else if (update.type == "play")
-			@state = 0
+			@state = 1
 		else if (update.type == "pause")
 			@state = 2
+		else if (update.type == "stop")
+			@state = 0
 		else if (update.type == "move")
 			data = JSON.parse(update.data)
 			@move data.from, data.to, true
