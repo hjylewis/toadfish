@@ -68,6 +68,16 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 
 	}
 	$scope.playNow = function (item) {
+		var playlist = $scope.playlist.playlist
+
+		for (var i = 0; i < playlist.length; i++) {
+			if (playlist[i].song_details.id === item.id) {
+				$scope.playlist.goTo(i);
+				$scope.mode = "playlist";
+				return;
+			}
+		};
+
 		$scope.playlist.addFirst(item);
 		$scope.mode = "playlist";
 	}
