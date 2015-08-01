@@ -151,18 +151,21 @@ class Playlist
 			@save "addFirst", JSON.stringify(song_details)
 
 	remove: (index, update) ->
-		@playlist.splice(index, 1)
 		if (index < @currentIndex)
+			@playlist.splice(index, 1)
 			@currentIndex--
 		else if (index == @currentIndex)
 			@stop()
+			@playlist.splice(index, 1)
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
+		else
+			@playlist.splice(index, 1)
+
 		@save('remove', index.toString()) if !update
 
 	move: (from, to, update) ->
-		console.log from, to
 		song = @playlist.splice(from, 1)[0]
 		@playlist.splice(to, 0, song)
 		if (from < @currentIndex && to >= @currentIndex)
@@ -184,6 +187,13 @@ class Playlist
 		if (cb == undefined)
 			cb = () ->
 		song = @playlist[@currentIndex]
+		if (!song)
+			if (@currentIndex != 0)
+				@currentIndex--
+				song = @playlist[@currentIndex]
+			else
+				$("body").css "background-image", ""
+				return
 		song_details = song.song_details
 
 		$("body").css "background-image", "linear-gradient(rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.2)),url('#{song_details.artwork_url || ""}')"
@@ -286,9 +296,9 @@ class Playlist
 		else if (update.type == "prev")
 			@prev true
 		else if (update.type == "goTo")
-			@goTo update.data, true
+			@goTo parseInt(update.data), true
 		else if (update.type == "remove")
-			@remove update.data, true
+			@remove parseInt(update.data), true
 		else if (update.type == "play")
 			@state = 1
 		else if (update.type == "pause")
@@ -297,7 +307,7 @@ class Playlist
 			@state = 0
 		else if (update.type == "move")
 			data = JSON.parse(update.data)
-			@move data.from, data.to, true
+			@move parseInt(data.from), parseInt(data.to), true
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()

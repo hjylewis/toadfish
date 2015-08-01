@@ -2,7 +2,7 @@
 
 yt_player = null #for youtube, remember the player div
 YT_TIME_INTERVAL = 500
-
+test = null
 socket = io('http://localhost:8000')
 socket.on 'roomID', (msg) ->
 	socket.emit('roomID', roomID)
@@ -57,11 +57,16 @@ class Playlist
 			@next()
 
 	remove: (index) ->
-		@playlist.splice(index, 1)
+		test = index
 		if (index < @currentIndex)
+			@playlist.splice(index, 1)
 			@currentIndex--
 		else if (index == @currentIndex)
+			@playlist.splice(index, 1)
 			@loadSong()
+		else
+			@playlist.splice(index, 1)
+
 
 	move: (from, to) ->
 		@playlist.splice(to, 0, @playlist.splice(from, 1)[0])
@@ -74,6 +79,13 @@ class Playlist
 		
 	loadSong: () -> 
 		song = @playlist[@currentIndex]
+		if (!song)
+			if (@currentIndex != 0)
+				@currentIndex--
+				song = @playlist[@currentIndex]
+			else
+				$("body").css "background-image", ""
+				return
 		song_details = song.song_details
 
 		$("body").css "background-image", "linear-gradient(rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.2)),url('#{song_details.artwork_url || ""}')"
@@ -98,9 +110,9 @@ class Playlist
 		else if (update.type == "prev")
 			@prev()
 		else if (update.type == "goTo")
-			@goTo update.data
+			@goTo parseInt(update.data)
 		else if (update.type == "remove")
-			@remove update.data
+			@remove parseInt(update.data)
 		else if (update.type == "play")
 			@state = 1
 		else if (update.type == "pause")
@@ -109,7 +121,7 @@ class Playlist
 			@state = 0
 		else if (update.type == "move")
 			data = JSON.parse(update.data)
-			@move data.from, data.to
+			@move parseInt(data.from), parseInt(data.to)
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
