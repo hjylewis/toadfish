@@ -7,9 +7,9 @@
   var roomID = "#{roomID}";
   var roomName = "#{roomName}";
   var playlistSettings = #{playlistSettings};
-
   //this is hacky
   var loadPlaylist =  function () {
+    $('#share-link').val(window.location.host + '/' + roomID);
     if (googleLoaded && rdioLoaded) {
       var scope = angular.element($("body")).scope();
       var load = function (){
@@ -27,7 +27,6 @@
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
-    <h1>#{roomName}</h1>
     <div class="search-container">
       <form>
         <i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
@@ -102,7 +101,9 @@
       </ul>
     </div>
   </div>
-
+  <div class="share" ng-hide="isLoading">
+    <h3>Share this link to invite anyone:</h3><input id="share-link" onclick="this.select();" type="text">
+  </div>
   <div ng-cloak>
     <div class="overlay" data-ng-show="viewModal"></div>
     <div class="modal" data-ng-show="viewModal">
