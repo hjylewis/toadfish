@@ -69,13 +69,11 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	}
 	$scope.playNow = function (item) {
 		$scope.playlist.addFirst(item);
+		$scope.mode = "playlist";
 	}
 	$scope.add = function (item) {
 		$scope.playlist.add(item);
-		if (!host) {
-			$scope.mode = "playlist";
-			angular.element("#player").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100)
-		}
+		$scope.mode = "playlist";
 	}
 	$scope.play = function () {
 		if ($scope.playlist.state == 1) {
