@@ -5,6 +5,14 @@ PAGE_LENGTH = 10
 class Search
   constructor: () ->
     @storage = {}
+    @storageSupport = true
+    try 
+      sessionStorage.setItem('test', '1')
+      sessionStorage.removeItem('test')
+      @storageSupport = true
+    catch error
+      @storageSupport = false
+
   search: (str, options, done) ->
     _this = @
     if (!str)
@@ -23,7 +31,7 @@ class Search
     retTypes = options.types
     return done null if str == ""
 
-    if sessionStorage.getItem(str)
+    if @storageSupport && sessionStorage.getItem(str)
       storedResults = JSON.parse(sessionStorage.getItem(str))
     else if @storage[str]
       storedResults = JSON.parse(@storage[str])
@@ -90,7 +98,7 @@ class Search
 
         ret.query = str
         ret.results = storeResults
-        if sessionStorage
+        if _this.storageSupport
           sessionStorage.setItem(str, JSON.stringify(ret))
         else #safari
           _this.storage[str] = JSON.stringify(ret)

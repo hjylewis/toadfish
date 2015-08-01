@@ -54,7 +54,6 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 		}
 	}
 	$scope.expandResults = function (type) {
-		console.log(type);
 		if ($scope.expandSearch) {
 			$scope.expandSearch = null
 			$scope.Search();
