@@ -14,7 +14,6 @@
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
-    <h1>#{roomName}</h1>
     <div class="search-container">
       <form>
         <i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
