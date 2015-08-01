@@ -87,7 +87,7 @@
     <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">
       <ul dnd-list="playlist.playlist"
       dnd-drop="dropCallback(index, item)">
-        <li class="hover clickable" ng-repeat="song in playlist.playlist" ng-click="playlist.goTo($index)"
+        <li class="hover clickable" ng-repeat="song in playlist.playlist track by song.song_details.id" ng-click="playlist.goTo($index)"
         ng-mouseenter="songHover = true" ng-mouseleave="songHover = false"
         dnd-draggable="song" dnd-dragstart="from.index = $index" dnd-effect-allowed="move">
           <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
