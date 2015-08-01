@@ -322,7 +322,7 @@ class Playlist
 			currentIndex: @currentIndex,
 			playlist: stripped_playlist,
 			volume: @volume,
-			state: @state
+			state: if @state == 3 then 1 else @state # no buffering
 		}
 		$.post('/savePlaylist', { 
 			playlistSettings: JSON.stringify(playlistSettings),

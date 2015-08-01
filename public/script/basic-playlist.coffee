@@ -127,18 +127,6 @@ class Playlist
 			scope.$apply()
 	save: (type, data) ->
 		@sendUpdate type, data
-		if host
-			stripped_playlist = _.map @playlist, (song) ->
-				return _.omit(song, 'obj')
-			playlistSettings = {
-				currentIndex: @currentIndex,
-				playlist: stripped_playlist,
-				volume: @volume
-			}
-			$.post('/savePlaylist', { 
-				playlistSettings: JSON.stringify(playlistSettings),
-				roomID: roomID
-			})
 
 
 
