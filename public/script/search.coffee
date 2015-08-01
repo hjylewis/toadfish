@@ -105,7 +105,7 @@ class Search
         if result.artwork_url?
           retObj.artwork_small = result.artwork_url
           retObj.artwork_url = result.artwork_url.replace('large','t500x500')
-        else if result.user.avatar_url? && not result.user.avatar_url.includes('a1')
+        else if result.user.avatar_url? && result.user.avatar_url.indexOf('a1') == -1
           retObj.artwork_small = result.user.avatar_url
           retObj.artwork_url = result.user.avatar_url.replace('large','t500x500')
       else if type == 'rdio' 
