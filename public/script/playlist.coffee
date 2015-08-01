@@ -296,21 +296,23 @@ class Playlist
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
+		@saveToDB()
 	save: (type, data) ->
 		@sendUpdate type, data
-		if host
-			stripped_playlist = _.map @playlist, (song) ->
-				return _.omit(song, 'obj')
-			playlistSettings = {
-				currentIndex: @currentIndex,
-				playlist: stripped_playlist,
-				volume: @volume,
-				state: @state
-			}
-			$.post('/savePlaylist', { 
-				playlistSettings: JSON.stringify(playlistSettings),
-				roomID: roomID
-			})
+		@saveToDB()
+	saveToDB: () ->
+		stripped_playlist = _.map @playlist, (song) ->
+			return _.omit(song, 'obj')
+		playlistSettings = {
+			currentIndex: @currentIndex,
+			playlist: stripped_playlist,
+			volume: @volume,
+			state: @state
+		}
+		$.post('/savePlaylist', { 
+			playlistSettings: JSON.stringify(playlistSettings),
+			roomID: roomID
+		})
 
 
 
