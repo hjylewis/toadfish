@@ -135,6 +135,11 @@ class Playlist
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
+		if (@currentIndex + 2 == @playlist.length && @state == 0)
+			@currentIndex++
+			@loadSong () =>
+				@setVolume @volume
+				@play() #auto play
 		@save('add', JSON.stringify(song_details)) if !update
 
 	addFirst: (song_details, update) ->
