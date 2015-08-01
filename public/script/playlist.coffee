@@ -314,15 +314,25 @@ class Playlist
 		@saveToDB()
 	save: (type, data) ->
 		@sendUpdate type, data
-		@saveToDB()
-	saveToDB: () ->
+		@saveToDB(type)
+	saveToDB: (type) ->
 		stripped_playlist = _.map @playlist, (song) ->
 			return _.omit(song, 'obj')
+
+		if (type == "play")
+			state = 1
+		else if (type == "pause")
+			state = 2
+		else if (type == "stop")
+			state = 0
+		else
+
+			state = @state
 		playlistSettings = {
 			currentIndex: @currentIndex,
 			playlist: stripped_playlist,
 			volume: @volume,
-			state: if @state == 3 then 1 else @state # no buffering
+			state: state
 		}
 		$.post('/savePlaylist', { 
 			playlistSettings: JSON.stringify(playlistSettings),
