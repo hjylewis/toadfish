@@ -3,7 +3,10 @@
 PAGE_LENGTH = 10
 
 class Search
+  constructor: () ->
+    @storage = {}
   search: (str, options, done) ->
+    _this = @
     if (!str)
       return done {
         query: str,
@@ -20,7 +23,13 @@ class Search
     retTypes = options.types
     return done null if str == ""
 
-    storedResults = if sessionStorage.getItem(str) then JSON.parse(sessionStorage.getItem(str)) else { results: {} }
+    if sessionStorage.getItem(str)
+      storedResults = JSON.parse(sessionStorage.getItem(str))
+    else if @storage[str]
+      storedResults = JSON.parse(@storage[str])
+    else 
+      storedResults = { results: {} }
+
     if not options.next?
       ret = _.reduce options.types, ((memo, type) -> return storedResults.results[type] && memo), true
       return (done storedResults) if ret?
@@ -62,7 +71,7 @@ class Search
             success: (res) =>
                 callback null, @cleanUpResults(res, "rdio")
           }
-      }, (err, results) ->
+      }, (err, results) =>
         ret = {}
         storeResults = _.mapObject results, (obj, type) ->
           obj = {} if not obj
@@ -81,7 +90,10 @@ class Search
 
         ret.query = str
         ret.results = storeResults
-        sessionStorage.setItem(str, JSON.stringify(ret)) #if not DEBUG
+        if sessionStorage
+          sessionStorage.setItem(str, JSON.stringify(ret))
+        else #safari
+          _this.storage[str] = JSON.stringify(ret)
         ret.results = results
         done ret
 
