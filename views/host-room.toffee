@@ -41,9 +41,6 @@
         id = 'first_search' autofocus autocomplete="off">
       </form>
     </div>
-    <div data-ng-show="playlist.playlist[playlist.currentIndex].song_details.type == 'youtube'" >
-      <div id="yt_player"></div>
-    </div>
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
         <div id="buttons">
@@ -64,7 +61,9 @@
         <progress id="seekbar" class="clickable" value="0" max="100" ng-click="seek($event)"></progress>
       </div>
     </div>
-
+    <div data-ng-show="playlist.playlist[playlist.currentIndex].song_details.type == 'youtube' && mode == 'playlist' && playlist.state !== 0" >
+      <div id="yt_player"></div>
+    </div>
     <ul id = "result_list" ng-hide="results.length == 0 || mode !== 'search'">
       <div ng-repeat = "(type, result) in results">
         <li class = 'seperator' ng-show="result" >{{type}}
