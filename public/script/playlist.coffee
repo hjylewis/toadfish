@@ -326,7 +326,6 @@ class Playlist
 		else if (type == "stop")
 			state = 0
 		else
-
 			state = @state
 		playlistSettings = {
 			currentIndex: @currentIndex,
