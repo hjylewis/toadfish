@@ -132,13 +132,6 @@ div.content
   display none
   &:hover
     display inherit
-.search-loading
-  position absolute
-  float right
-  top 22px
-  right -5px
-  margin-right 23px
-  color rgba(0,0,0,.5)
   
 .dndDraggingSource
   display none !important
@@ -148,9 +141,6 @@ div.content
 
 .fa-exclamation-triangle
   color red
-  
-.search-container
-  position relative
   
 .warning
   color red
@@ -204,32 +194,45 @@ input#createRoomName
   width 100%
   height 400px 
 
-
-#first_search
-  font-size 40px
+div.search-container
   margin-top 20px
-  width 100% 
-  padding 20px 25px
   border 1px solid black
-  color black
   background rgba(255,255,255,0.8)
+  width 100%
+  overflow hidden
+  .search-loading
+    float right 
+    margin 23px 15px
+    color rgba(0,0,0,.5)
+  span
+    display block
+    overflow hidden
+    #first_search
+      font-size 40px
+      width 100% 
+      padding 20px 25px
+      padding-right 0px
+      color black
+      background rgba(255,255,255,0)
+      border none
+      margin-top 0px 
 
-  input_grey = #848484
+      input_grey = #848484
 
-  &::-webkit-input-placeholder { /* WebKit browsers */
-    color:    input_grey;
-  }
-  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color:    input_grey;
-    opacity:  1;
-  }
-  &::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color:    input_grey;
-    opacity:  1;
-  }
-  &:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color:    input_grey;
-  }
+      &::-webkit-input-placeholder { /* WebKit browsers */
+        color:    input_grey;
+      }
+      &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color:    input_grey;
+        opacity:  1;
+      }
+      &::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color:    input_grey;
+        opacity:  1;
+      }
+      &:-ms-input-placeholder { /* Internet Explorer 10+ */
+        color:    input_grey;
+      }
   
 div.share
   background-color transblack

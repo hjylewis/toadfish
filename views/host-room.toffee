@@ -31,15 +31,15 @@
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
     <div class="search-container">
-      <form>
-        <i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
+      <i class="search-loading fa fa-2x" ng-click="query = ''; mode = 'playlist'" ng-class="{'fa-times clickable': !isSearchLoading && query.length > 0, 'fa-spinner fa-spin': isSearchLoading}"></i>
+      <span>
         <input ng-model="query" type="text" name="search"
         placeholder = 'Type to search'
         ng-keyup="triggerSearch($event.which == 13)"
         ng-focus="triggerSearch()"
         ng-submit="triggerSearch()"
         id = 'first_search' autofocus autocomplete="off">
-      </form>
+      </span>
     </div>
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
