@@ -217,7 +217,8 @@ class Playlist
 						onload: (() ->
 							if (this.readyState == 2)
 								console.log "sc error"
-								# Handle error
+								song.song_details.error = true
+								_this.save("error", _this.currentIndex.toString())
 								song.obj = null
 								_this.next()
 						),
@@ -320,6 +321,8 @@ class Playlist
 		else if (update.type == "move")
 			data = JSON.parse(update.data)
 			@move parseInt(data.from), parseInt(data.to), true
+		else if (update.type == "error")
+			@playlist[parseInt(update.data)].song_details.error = true
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
@@ -328,7 +331,7 @@ class Playlist
 		@sendUpdate type, data
 		@saveToDB(type)
 	saveToDB: (type) ->
-		if (type == "add" || type == "addFirst" || type == "move" || type == "remove")
+		if (type == "add" || type == "addFirst" || type == "move" || type == "remove" || type == "error" || type == "playlist")
 			stripped_playlist = _.map @playlist, (song) ->
 				return _.omit(song, 'obj')
 
@@ -338,8 +341,10 @@ class Playlist
 			state = "2"
 		else if (type == "stop")
 			state = "0"
+		else if (type == "state")
+			state = JSON.stringify(@state)
 
-		if (type == "next" || type == "prev" || type == "goTo" || type == "move")
+		if (type == "next" || type == "prev" || type == "goTo" || type == "move" || type == "index")
 			currentIndex = JSON.stringify(@currentIndex)
 
 		playlistSettings = {

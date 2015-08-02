@@ -124,6 +124,8 @@ class Playlist
 		else if (update.type == "move")
 			data = JSON.parse(update.data)
 			@move parseInt(data.from), parseInt(data.to)
+		else if (update.type == "error")
+			@playlist[parseInt(update.data)].song_details.error = true
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()

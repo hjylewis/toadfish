@@ -54,6 +54,7 @@
         <li class="hover" ng-repeat="song in playlist.playlist track by $index"
         ng-mouseenter="songHover = true" ng-mouseleave="songHover = false">
           <i ng-show="$index == playlist.currentIndex" class="fa" ng-class="{'fa-pause': playlist.state === 2 || playlist.state === 0, 'fa-play': playlist.state === 1}"></i> 
+          <i ng-show="song.song_details.error" class="fa fa-exclamation-triangle"></i>
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
           <a ng-show="songHover" ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}"><i class="fa fa-long-arrow-right"></i></a>
         </li>
