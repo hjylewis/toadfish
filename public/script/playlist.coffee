@@ -96,7 +96,6 @@ class Playlist
 
 
 	next: (update) ->
-		@save('next', @currentIndex.toString()) if !update
 		if (@currentIndex + 1 < @playlist.length )
 			@stop(true)
 			@currentIndex++
@@ -107,6 +106,7 @@ class Playlist
 			@state = 0
 			@seek(100) # seek end of song
 			@stop()
+		@save('next', @currentIndex.toString()) if !update
 
 	prev: (update) ->
 		if (@currentIndex > 0)
