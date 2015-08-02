@@ -53,9 +53,6 @@ router.post "/savePlaylist", (req, res) ->
       console.error "No room " + req.body.roomID + " with sessionID " + req.sessionID + " exists"
       return res.status(500).end()
     playlistSettings = JSON.parse(req.body.playlistSettings)
-    console.log playlistSettings
-    console.log playlistSettings.currentIndex
-    console.log playlistSettings.currentIndex || room.playlistSettings.currentIndex
     room.playlistSettings.currentIndex = if playlistSettings.currentIndex then  JSON.parse(playlistSettings.currentIndex) else room.playlistSettings.currentIndex
     room.playlistSettings.playlist = if playlistSettings.playlist then JSON.stringify(playlistSettings.playlist) else room.playlistSettings.playlist
     room.playlistSettings.volume = if playlistSettings.volume then JSON.parse(playlistSettings.volume) else room.playlistSettings.volume
