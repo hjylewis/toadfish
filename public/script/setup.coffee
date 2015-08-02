@@ -28,7 +28,7 @@ if (host == true)
 		success: (res) ->
 			flashvars = {
 				'playbackToken': res,
-				'domain': 'localhost',            
+				'domain': window.location.hostname,            
 				'listener': 'callback_object'    # the global name of the object that will receive callbacks from the SWF
 			}
 			params = {

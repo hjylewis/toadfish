@@ -3,7 +3,7 @@
 yt_player = null #for youtube, remember the player div
 YT_TIME_INTERVAL = 500
 test = null
-socket = io('http://localhost:8000')
+socket = io(window.location.origin)
 socket.on 'roomID', (msg) ->
 	socket.emit('roomID', roomID)
 
