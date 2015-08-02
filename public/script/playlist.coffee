@@ -70,12 +70,13 @@ class Playlist
 
 	stop: (update) ->
 		song = @playlist[@currentIndex]
-		if (song.song_details.type == "soundcloud")
-			song.obj.stop()
-		else if (song.song_details.type == "youtube")
-			yt_player.stopVideo()
-		else if (song.song_details.type == "rdio")
-			rdio_player.rdio_stop();
+		try
+			if (song.song_details.type == "soundcloud")
+				song.obj.stop()
+			else if (song.song_details.type == "youtube")
+				yt_player.stopVideo()
+			else if (song.song_details.type == "rdio")
+				rdio_player.rdio_stop()
 		@state = 0
 		@save('stop') if !update
 
