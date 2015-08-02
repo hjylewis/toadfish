@@ -151,7 +151,7 @@ class Playlist
 			@playlist.splice(@currentIndex + 1, 0, {
 				song_details: song_details
 			})
-			@next(true)
+			@next()
 			@save "addFirst", JSON.stringify(song_details)
 
 	remove: (index, update) ->
@@ -331,7 +331,7 @@ class Playlist
 		else if (type == "stop")
 			state = "0"
 
-		if (type == "next" || type == "prev" || type == "goTo" || type == "addFirst" || type == "move")
+		if (type == "next" || type == "prev" || type == "goTo" || type == "move")
 			currentIndex = JSON.stringify(@currentIndex)
 
 		playlistSettings = {
