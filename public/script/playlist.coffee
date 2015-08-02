@@ -99,25 +99,25 @@ class Playlist
 		if (@currentIndex + 1 < @playlist.length )
 			@stop(true)
 			@currentIndex++
+			@save('next', @currentIndex.toString()) if !update
 			@loadSong () => #might wanna make is so it doesn't play if player is paused
 				@setVolume @volume
-				@play(true)
+				@play()
 		else 
 			@state = 0
 			@seek(100) # seek end of song
 			@stop()
-		@save('next', @currentIndex.toString()) if !update
 
 	prev: (update) ->
 		if (@currentIndex > 0)
 			@stop(true)
 			@currentIndex--
+			@save('prev', @currentIndex.toString()) if !update
 			@loadSong () =>
 				@setVolume @volume
-				@play(true)
+				@play()
 		else 
 			@seek(0)
-		@save('prev', @currentIndex.toString()) if !update
 
 	goTo: (index, update) ->
 		if (index >= 0 && index < @playlist.length)
