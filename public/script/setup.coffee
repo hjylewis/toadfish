@@ -68,6 +68,14 @@ callback_object.playStateChanged = (playState) ->
 			scope.playlist.state = 3
 	if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState)
 
+callback_object.playingTrackChanged = (playingTrack, sourcePosition) ->
+	scope = angular.element($("body")).scope()
+	playlist = scope.playlist
+	if (playlist.autoplay)
+		song_details = search.cleanUpResults({collection: [playingTrack]}, 'rdio').collections[0]
+		playlist.autoplay = song_details
+		if (!scope.$$phase && !scope.$root.$$phase)
+			scope.$apply()
 
 logError = (msg) ->
   $.post "/error", { "msg" : msg }

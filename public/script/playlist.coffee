@@ -22,6 +22,8 @@ class Playlist
 		@playlist = []
 		@state = 0
 		@volume = 100
+		@autoplay = false
+		@lastRdioStation = null
 		socket.on 'update', (update) =>
 			@readUpdate(update)
 
@@ -35,13 +37,19 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 
+	getCurrentSong: () ->
+		if @autoplay
+			return { song_details: @autoplay }
+		else
+			return @playlist[@currentIndex]
+
 	play: (update) ->
 		if (@playlist.length == 0)
 			console.log "nothing here"
 		else if @state == 1
 			console.log "Already playing"
 		else
-			song = @playlist[@currentIndex]
+			song = @getCurrentSong()
 			if (song.song_details.type == "soundcloud")
 				song.obj.play()
 			else if (song.song_details.type == "youtube")
@@ -56,7 +64,7 @@ class Playlist
 
 
 	pause: (update) ->
-		song = @playlist[@currentIndex]
+		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
 			song.obj.pause()
 		else if (song.song_details.type == "youtube")
@@ -69,7 +77,7 @@ class Playlist
 		# set state		
 
 	stop: (update) ->
-		song = @playlist[@currentIndex]
+		song = @getCurrentSong()
 		try
 			if (song.song_details.type == "soundcloud")
 				song.obj.stop()
@@ -81,7 +89,7 @@ class Playlist
 		@save('stop') if !update
 
 	seek: (percent) ->
-		song = @playlist[@currentIndex]
+		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
 			song.obj.setPosition(song.song_details.duration * (percent / 100))
 		else if (song.song_details.type == "youtube")
@@ -90,7 +98,7 @@ class Playlist
 			rdio_player.rdio_seek(song.song_details.duration * (percent / 100))
 
 	setVolume: () ->
-		song = @playlist[@currentIndex]
+		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
 			song.obj.setVolume(@volume)
 		else if (song.song_details.type == "youtube")
@@ -102,15 +110,14 @@ class Playlist
 	next: (update) ->
 		if (@currentIndex + 1 < @playlist.length )
 			@stop(true)
+			@autoplay = false
 			@currentIndex++
 			@save('next', @currentIndex.toString()) if !update
 			@loadSong () => #might wanna make is so it doesn't play if player is paused
 				@setVolume @volume
 				@play()
 		else 
-			@state = 0
-			@seek(100) # seek end of song
-			@stop()
+			@startAutoPlay()
 
 	prev: (update) ->
 		if (@currentIndex > 0)
@@ -126,6 +133,7 @@ class Playlist
 	goTo: (index, update) ->
 		if (index >= 0 && index < @playlist.length)
 			@stop(true)
+			@autoplay = false
 			@currentIndex = index
 			@save('goTo', @currentIndex.toString()) if !update
 			@loadSong () =>
@@ -142,7 +150,7 @@ class Playlist
 			@loadSong () =>
 				@setVolume @volume
 				@play() #auto play
-		if (@currentIndex + 2 == @playlist.length && @state == 0)
+		if (@currentIndex + 2 == @playlist.length && (@state == 0 || @autoplay))
 			@next()
 
 	addFirst: (song_details, update) ->
@@ -160,11 +168,14 @@ class Playlist
 			@playlist.splice(index, 1)
 			@currentIndex--
 		else if (index == @currentIndex)
-			@stop(true)
+			@stop(true) if not @autoplay
 			@playlist.splice(index, 1)
-			@loadSong () =>
-				@setVolume @volume
-				@play() #auto play
+			if (@currentIndex == @playlist.length)
+				@currentIndex--
+			if not @autoplay
+				@loadSong () =>
+					@setVolume @volume
+					@play() #auto play
 		else
 			@playlist.splice(index, 1)
 
@@ -188,14 +199,26 @@ class Playlist
 		else
 			scope.$apply(scope.playlist.state = state)
 
+	startAutoPlay: () ->
+		console.log "autoplay"
+		if @lastRdioStation
+			@stop()
+			@autoplay = true
+			rdio_player.rdio_play(@lastRdioStation)
+			@setVolume @volume
+		else
+			@state = 0
+			@seek(100) # seek end of song
+			@stop()
+
 	loadSong: (cb) -> 
 		if (cb == undefined)
 			cb = () ->
-		song = @playlist[@currentIndex]
+		song = @getCurrentSong()
 		if (!song)
 			if (@currentIndex != 0)
 				@currentIndex--
-				song = @playlist[@currentIndex]
+				song = @getCurrentSong()
 			else
 				$("body").css "background-image", ""
 				return
@@ -264,11 +287,12 @@ class Playlist
 				cb()
 		else if (song_details.type == "rdio")
 			rdio_player.rdio_play(song_details.id)
+			@lastRdioStation = song_details.radioKey
 			rdio_player.rdio_pause()
 			cb()
 
 	positionChanged: (type, position) ->
-		if (type == @playlist[@currentIndex].song_details.type && @state != 0)
+		if (type == @getCurrentSong().song_details.type && @state != 0)
 			# update graphics
 			percent = null;
 			if (type == "youtube")
@@ -280,7 +304,7 @@ class Playlist
 					), YT_TIME_INTERVAL)
 				percent = (position / yt_player.getDuration()) * 100
 			else 
-				percent = (position / @playlist[@currentIndex].song_details.duration) * 100
+				percent = (position / @getCurrentSong().song_details.duration) * 100
 			$('#seekbar').attr("value",  percent)
 			if (type == "rdio" && !rdio_user && position > 29)
 				scope = angular.element($("body")).scope()

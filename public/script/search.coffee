@@ -122,6 +122,7 @@ class Search
       retObj.duration = result.duration if result.duration?
       retObj.user = result.user.username if result.user?
       retObj.type = type
+      retObj.radioKey = result.radioKey
 
       if type == 'soundcloud'
         if result.artwork_url?
