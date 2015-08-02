@@ -344,7 +344,7 @@ class Playlist
 		else if (type == "state")
 			state = JSON.stringify(@state)
 
-		if (type == "next" || type == "prev" || type == "goTo" || type == "move" || type == "index")
+		if (type == "next" || type == "prev" || type == "goTo" || type == "move" || type == "remove" || type == "index")
 			currentIndex = JSON.stringify(@currentIndex)
 
 		playlistSettings = {
