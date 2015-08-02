@@ -106,6 +106,8 @@ class Search
         done ret
 
   cleanUpResults: (results, type) ->
+    console.log type
+    console.log(results)
     resultObj = {}
     resultObj.next = results.next_href || results.nextPageToken || results.next_page
 

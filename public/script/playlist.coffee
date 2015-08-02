@@ -214,6 +214,13 @@ class Playlist
 				SC.stream "/tracks/" + song_details.id, {
 						whileplaying: (() ->
 							_this.positionChanged "soundcloud", this.position),
+						onload: (() ->
+							if (this.readyState == 2)
+								console.log "sc error"
+								# Handle error
+								song.obj = null
+								_this.next()
+						),
 						onplay: (() ->
 							_this.setPlayState 1),
 						onstop: (() ->
