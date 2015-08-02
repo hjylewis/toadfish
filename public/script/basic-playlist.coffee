@@ -26,11 +26,13 @@ class Playlist
 		if (@currentIndex + 1 < @playlist.length )
 			@currentIndex++
 			@loadSong()
+			@state = 1
 
 	prev: () ->
 		if (@currentIndex > 0)
 			@currentIndex--
 			@loadSong()
+			@state = 1
 
 	goTo: (index) ->
 		if (index >= 0 && index < @playlist.length)
