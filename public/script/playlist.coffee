@@ -10,6 +10,14 @@ socket = io(window.location.origin)
 socket.on 'roomID', (msg) ->
 	socket.emit('roomID', roomID)
 
+generateUUID  = () ->
+    d = new Date().getTime()
+    uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
+        r = (d + Math.random()*16)%16 | 0
+        d = Math.floor(d/16)
+        return (if c=='x' then r else (r&0x3|0x8)).toString(16)
+    return uuid
+
 # TODO: state
 # 0: stop
 # 1: play
@@ -142,6 +150,7 @@ class Playlist
 		return false
 
 	add: (song_details, update) ->
+		song_details.uuid = generateUUID()
 		@playlist.push({
 			song_details: song_details
 		})
@@ -157,6 +166,7 @@ class Playlist
 		if (@playlist.length == 0)
 			@add(song_details, update)
 		else
+			song_details.uuid = generateUUID()
 			@playlist.splice(@currentIndex + 1, 0, {
 				song_details: song_details
 			})
