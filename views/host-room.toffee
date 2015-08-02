@@ -9,7 +9,10 @@
   var playlistSettings = #{playlistSettings};
   //this is hacky
   var loadPlaylist =  function () {
-    $('#share-link').val(window.location.host + '/' + roomID);
+    var url = window.location.host + '/' + roomID
+    $('#share-link').val(url);
+    $('.fb-share-button').attr('href','https://www.facebook.com/sharer/sharer.php?u=https://' + url);
+    $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our toadfish room and jam out!');
     if (googleLoaded && rdioLoaded) {
       var scope = angular.element($("body")).scope();
       var load = function (){
@@ -103,6 +106,8 @@
   </div>
   <div class="share" ng-hide="isLoading">
     <h3>Share this link to invite anyone:</h3><input id="share-link" onclick="this.select();" type="text">
+    <a href="" target="_blank" class="fb-share-button"><i class="fa fa-facebook-square fa-lg"></i></a>
+    <a href="" target="_blank" class="twitter-share-button"><i class="fa fa-twitter-square fa-lg"></i></a>
   </div>
   <div ng-cloak>
     <div class="overlay" data-ng-show="viewModal"></div>
@@ -119,5 +124,3 @@
 
 
 </body>
-
-
