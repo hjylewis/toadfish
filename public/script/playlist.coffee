@@ -51,6 +51,7 @@ class Playlist
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_play()
 			@save('play') if !update
+		@state = 1
 			# set state
 
 
@@ -62,6 +63,7 @@ class Playlist
 			yt_player.pauseVideo()
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_pause()
+		@state = 2
 		@save('pause') if !update
 			
 		# set state		
@@ -74,6 +76,7 @@ class Playlist
 			yt_player.stopVideo()
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_stop();
+		@state = 0
 		@save('stop') if !update
 
 	seek: (percent) ->
@@ -121,12 +124,13 @@ class Playlist
 
 	goTo: (index, update) ->
 		if (index >= 0 && index < @playlist.length)
-			@stop()
+			@stop(true)
 			@currentIndex = index
+			@save('goTo', @currentIndex.toString()) if !update
 			@loadSong () =>
 				@setVolume @volume
 				@play()
-			@save('goTo', @currentIndex.toString()) if !update
+		return false
 
 	add: (song_details, update) ->
 		@playlist.push({
@@ -155,7 +159,7 @@ class Playlist
 			@playlist.splice(index, 1)
 			@currentIndex--
 		else if (index == @currentIndex)
-			@stop()
+			@stop(true)
 			@playlist.splice(index, 1)
 			@loadSong () =>
 				@setVolume @volume
@@ -311,26 +315,29 @@ class Playlist
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
-		@saveToDB()
+		@saveToDB(update.type)
 	save: (type, data) ->
 		@sendUpdate type, data
 		@saveToDB(type)
 	saveToDB: (type) ->
-		stripped_playlist = _.map @playlist, (song) ->
-			return _.omit(song, 'obj')
+		if (type == "add" || type == "addFirst" || type == "move" || type == "remove")
+			stripped_playlist = _.map @playlist, (song) ->
+				return _.omit(song, 'obj')
 
 		if (type == "play")
-			state = 1
+			state = "1"
 		else if (type == "pause")
-			state = 2
+			state = "2"
 		else if (type == "stop")
-			state = 0
-		else
-			state = @state
+			state = "0"
+
+		if (type == "next" || type == "prev" || type == "goTo" || type == "addFirst" || type == "move")
+			currentIndex = JSON.stringify(@currentIndex)
+
 		playlistSettings = {
-			currentIndex: @currentIndex,
+			currentIndex: currentIndex,
 			playlist: stripped_playlist,
-			volume: @volume,
+			volume: JSON.stringify(@volume),
 			state: state
 		}
 		$.post('/savePlaylist', { 
