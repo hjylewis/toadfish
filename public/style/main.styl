@@ -271,8 +271,13 @@ div#player
         i
           padding auto
 
-    #volume
+    .right-buttons
       float right
+      .fa-plus
+        float right
+        margin-right 10px
+      #volume
+        float right 
     #details
       white-space nowrap
       text-overflow ellipsis
@@ -340,6 +345,15 @@ div#autoplay
   text-overflow ellipsis
   overflow hidden
   white-space nowrap
+  &:hover
+    background-color transblacker
+  span.over-container
+    display block
+    overflow hidden
+  div
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
    
 
 

@@ -84,6 +84,11 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 		$scope.playlist.add(item);
 		$scope.mode = "playlist";
 	}
+
+	$scope.addAutoplay = function () {
+		$scope.playlist.add($scope.playlist.autoplay);
+	}
+
 	$scope.play = function () {
 		if ($scope.playlist.state == 1) {
 			$scope.playlist.pause();

@@ -49,9 +49,12 @@
           <div><i ng-click="next()" class="clickable hover-purple fa fa-fast-forward"></i></div>
         </div>
 
-        <div id="volume" data-ng-mouseenter="volumeShow = true" data-ng-mouseleave="volumeShow = false" data-ng-mouseup="playlist.setVolume()">
-          <input data-ng-show="volumeShow" type="range" min="0" max="100" data-ng-model="playlist.volume" value="{{playlist.volume}}">
-          <i class="fa fa-volume-up"></i>
+        <div class="right-buttons">
+          <div id="volume" data-ng-mouseenter="volumeShow = true" data-ng-mouseleave="volumeShow = false" data-ng-mouseup="playlist.setVolume()">
+            <input data-ng-show="volumeShow" type="range" min="0" max="100" data-ng-model="playlist.volume" value="{{playlist.volume}}">
+            <i class="fa fa-volume-up"></i>
+          </div>
+          <i ng-show="playlist.autoplay" ng-click="addAutoplay()" class="fa fa-plus clickable hover-purple"></i>
         </div>
         <div id="details">
           <span ng-hide="playlist.autoplay">{{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span></span>
@@ -92,7 +95,7 @@
     <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">
       <ul dnd-list="playlist.playlist"
       dnd-drop="dropCallback(index, item)">
-        <li class="hover clickable" ng-repeat="song in playlist.playlist track by song.song_details.$$hashKey" ng-click="playlist.goTo($index)"
+        <li class="hover clickable" ng-repeat="song in playlist.playlist" ng-click="playlist.goTo($index)"
         ng-mouseenter="songHover = true" ng-mouseleave="songHover = false"
         dnd-draggable="song" dnd-dragstart="from.index = $index" dnd-effect-allowed="move">
           <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa fa-play"></i> 
@@ -107,8 +110,13 @@
       </ul>
     </div>
 
-    <div id="autoplay" ng-show="playlist.autoplay && mode == 'playlist'">
-      <i class="fa fa-random"></i> <i class="fa fa-play"></i> {{playlist.autoplay.title}}<span ng-if="playlist.autoplay.artist"> - {{playlist.autoplay.artist}}</span>
+    <div id="autoplay" ng-show="playlist.autoplay && mode == 'playlist'" ng-mouseenter="autoplayHover = true" ng-mouseleave="autoplayHover = false">
+      <i style="float:right" ng-show="autoplayHover" ng-click="addAutoplay()" class="fa fa-plus clickable hover-purple"></i>
+      <span class="over-container">
+        <div>
+          <i class="fa fa-random"></i> <i class="fa fa-play"></i> {{playlist.autoplay.title}}<span ng-if="playlist.autoplay.artist"> - {{playlist.autoplay.artist}}</span>
+        </div>
+      </span>
     </div>
   </div>
   <div class="share" ng-hide="isLoading">
