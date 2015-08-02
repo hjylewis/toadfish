@@ -243,6 +243,7 @@ class Playlist
 					height: '0',
 					width: '0',
 					videoId: song_details.id,
+					playerVars: {'autoplay': 0, 'controls': 0, rel: 0},
 					events: {
 						'onReady': (() ->
 							yt_player.unMute()

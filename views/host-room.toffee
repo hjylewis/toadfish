@@ -41,7 +41,9 @@
         id = 'first_search' autofocus autocomplete="off">
       </form>
     </div>
-
+    <div data-ng-show="playlist.playlist[playlist.currentIndex].song_details.type == 'youtube'" >
+      <div id="yt_player"></div>
+    </div>
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
         <div id="buttons">
@@ -118,8 +120,6 @@
       <p>You need to log into a <a href="http://www.rdio.com/" target="_blank">Rdio Account</a> to hear full Rdio tracks.  Once you log in, just <a href="javascript:window.location.href=window.location.href">refresh</a> this page.</p>
     </div>
   <div>
-  <!-- This is needed for youtube -->
-  <div id="yt_player"></div>
   <!-- For Rdio -->
   <div id="rdio_player"></div>
 
