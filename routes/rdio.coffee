@@ -2,7 +2,6 @@ log = console.log
 express = require('express')
 router = express.Router()
 request = require('request')
-config = require('../config')
 
 rdio_access_token = null
 
