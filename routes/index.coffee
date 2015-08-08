@@ -70,6 +70,8 @@ router.post "/sendUpdate", (req, res) ->
   payload = req.body
   roomID = payload.roomID
 
+  console.log(payload)
+  
   Room.findOne {roomID: roomID}, (err, room) ->
     if (err)
       console.error "Error finding room: " + JSON.stringify(err)

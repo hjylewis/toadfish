@@ -213,7 +213,6 @@ class Playlist
 
 	startAutoPlay: () ->
 		return if !host
-		console.log "autoplay"
 		if @lastRdioStation
 			@stop()
 			@autoplay = true
