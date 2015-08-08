@@ -34,7 +34,7 @@ if (host == true)
 			params = {
 				'allowScriptAccess': 'always'
 			}
-			swfobject.embedSWF('http://www.rdio.com/api/swf/', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
+			swfobject.embedSWF('https://www.rdio.com/api/swf/', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
 	}
 
 
