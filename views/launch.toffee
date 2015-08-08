@@ -7,7 +7,7 @@
         <div style='overflow:hidden'>
             <form action="javascript:submit()" autocomplete="off">
                 <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20" autofocus>
-                <span class="warning" id="createWarning" hidden>That room name alrady exists</span>
+                <span class="warning" id="createWarning" hidden>That room name already exists</span>
                 <input type="submit" id="createRoom" class="clickable" value="Create">
             </form>
         </div>
