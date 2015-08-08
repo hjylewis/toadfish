@@ -67,12 +67,21 @@ router.post "/savePlaylist", (req, res) ->
       res.status(200).end()
 
 router.post "/sendUpdate", (req, res) ->
-  Update.create { roomID: req.body.roomID, type:  req.body.type, data: req.body.data, host: req.body.host}, (err, newUpdate) ->
+  io = req.io
+  payload = req.body
+  roomID = payload.roomID
+
+  Room.findOne {roomID: roomID}, (err, room) ->
     if (err)
-      console.error "Error creating update: " + JSON.stringify(err)
-      res.status(500).send err
-    else
-      return res.status(200).end()
+      console.error "Error finding room: " + JSON.stringify(err)
+      return res.status(500).end()
+    if (!room)
+      return res.status(404).end()
+    if (room.hostSessionID != req.sessionID) # basic user
+      if (payload.type != 'add')
+        return res.status(401).end()
+    io.sockets.to(roomID).emit('update', payload)
+    return res.status(200).end()
 
 router.get "/host/:roomID", (req, res) ->
   roomID = req.param("roomID")

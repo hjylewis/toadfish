@@ -33,7 +33,8 @@ class Playlist
 		@autoplay = false
 		@lastRdioStation = null
 		socket.on 'update', (update) =>
-			@readUpdate(update)
+			if update.socketID != socket.id
+				@readUpdate(update)
 
 	load: (playlistSettings) ->
 		@currentIndex = playlistSettings.currentIndex || 0
@@ -327,13 +328,16 @@ class Playlist
 			else if percent > 99.5
 				@next()
 	sendUpdate: (type, data) ->
-		socket.emit 'update', {
+		$.post('/sendUpdate', {
 			type: type,
 			roomID: roomID,
 			host: host,
-			data: data
-		}
+			data: data,
+			socketID: socket.id
+		})
+
 	readUpdate: (update) ->
+		console.log update
 		if (update.type == "addFirst")
 			@addFirst JSON.parse(update.data), true
 		else if (update.type == "add")
@@ -395,7 +399,6 @@ class Playlist
 			autoplay: JSON.stringify(autoplay),
 			lastRdioStation: lastRdioStation
 		}
-		console.log(playlistSettings);
 		$.post('/savePlaylist', { 
 			playlistSettings: JSON.stringify(playlistSettings),
 			roomID: roomID

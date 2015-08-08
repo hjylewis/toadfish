@@ -19,7 +19,8 @@ class Playlist
 		@state = playlistSettings.state || 0
 		@autoplay = JSON.parse(playlistSettings.autoplay) || false
 		socket.on 'update', (update) =>
-			@readUpdate(update)
+			if update.socketID != socket.id
+				@readUpdate(update)
 		if @playlist.length > 0
 			@loadSong()
 
@@ -96,12 +97,13 @@ class Playlist
 		$("body").css "background-attachment", "fixed"
 
 	sendUpdate: (type, data) ->
-		socket.emit 'update', {
+		$.post('/sendUpdate', {
 			type: type,
 			roomID: roomID,
 			host: host,
-			data: data
-		}
+			data: data,
+			socketID: socket.id
+		})
 	readUpdate: (update) ->
 		if (ENV == 'dev')
 			console.log update
