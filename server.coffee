@@ -22,7 +22,7 @@ rdio_routes = require('./routes/rdio')
 
 app.use(cookieParser())
 
-mongoose.connect('mongodb://localhost/toadfish')
+mongoose.connect(process.env.MONGOLAB_URI)
 db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once 'open', (callback) ->
@@ -30,7 +30,7 @@ db.once 'open', (callback) ->
 
 
 app.use session({
-  secret: 'keyboard cat',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   store: new MongoStore({ mongooseConnection: db })

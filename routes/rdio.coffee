@@ -11,8 +11,8 @@ getAccess = () ->
       url: 'https://services.rdio.com/oauth2/token',
       method: 'POST',
       auth: {
-        user: config.rdio_cred.client_id,
-        pass: config.rdio_cred.client_secret
+        user: process.env.RDIO_ID,
+        pass: process.env.RDIO_SECRET
       },
       json: true,
       body: {
