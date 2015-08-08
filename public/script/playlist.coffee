@@ -246,27 +246,26 @@ class Playlist
 			_this = @
 			if (song_details.type == "soundcloud")
 				SC.stream "/tracks/" + song_details.id, {
-						whileplaying: (() ->
-							_this.positionChanged "soundcloud", this.position),
-						onload: (() ->
+						whileplaying: () ->
+							_this.positionChanged "soundcloud", this.position
+						onload: () ->
 							if (this.readyState == 2)
 								console.log "sc error"
 								song.song_details.error = true
 								_this.save("error", _this.currentIndex.toString())
 								song.obj = null
 								_this.next()
-						),
-						onplay: (() ->
-							_this.setPlayState 1),
-						onstop: (() ->
-							_this.setPlayState 0),
-						onpause: (() ->
-							_this.setPlayState 2),
-						onbufferchange: (() ->
+						onplay: () ->
+							_this.setPlayState 1
+						onstop: () ->
+							_this.setPlayState 0
+						onpause: () ->
+							_this.setPlayState 2
+						onbufferchange: () ->
 							if (this.isBuffering) 
 								_this.setPlayState 3
 							else
-								_this.setPlayState 1)
+								_this.setPlayState 1
 					}, (sound) ->
 						song.obj = sound
 						SC.sound = sound
@@ -279,9 +278,9 @@ class Playlist
 						videoId: song_details.id,
 						playerVars: {'autoplay': 0, 'controls': 0, rel: 0},
 						events: {
-							'onReady': (() ->
+							'onReady': () ->
 								yt_player.unMute()
-								cb()),
+								cb()
 							'onStateChange': (event) =>
 								if (event.data == YT.PlayerState.PLAYING)
 									@setPlayState 1
@@ -341,31 +340,33 @@ class Playlist
 	readUpdate: (update) ->
 		if (ENV == 'dev')
 			console.log update
-		if (update.type == "addFirst")
-			@addFirst JSON.parse(update.data), true
-		else if (update.type == "add")
-			@add JSON.parse(update.data), true
-		else if (update.type == "next")
-			@next true
-		else if (update.type == "prev")
-			@prev true
-		else if (update.type == "goTo")
-			@goTo parseInt(update.data), true
-		else if (update.type == "remove")
-			@remove parseInt(update.data), true
-		else if (update.type == "play")
-			@state = 1
-		else if (update.type == "pause")
-			@state = 2
-		else if (update.type == "stop")
-			@state = 0
-		else if (update.type == "move")
-			data = JSON.parse(update.data)
-			@move parseInt(data.from), parseInt(data.to), true
-		else if (update.type == "error")
-			@playlist[parseInt(update.data)].song_details.error = true
-		else if (update.type == "autoplay")
-			@autoplay = JSON.parse(update.data)
+
+		switch (update.type)
+			when "addFirst"
+				@addFirst JSON.parse(update.data), true
+			when "add"
+				@add JSON.parse(update.data), true
+			when "next"
+				@next true
+			when "prev"
+				@prev true
+			when "goTo"
+				@goTo parseInt(update.data), true
+			when "remove"
+				@remove parseInt(update.data), true
+			when "play"
+				@state = 1
+			when "pause"
+				@state = 2
+			when "stop"
+				@state = 0
+			when "move"
+				data = JSON.parse(update.data)
+				@move parseInt(data.from), parseInt(data.to), true
+			when "error"
+				@playlist[parseInt(update.data)].song_details.error = true
+			when "autoplay"
+				@autoplay = JSON.parse(update.data)
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
@@ -374,26 +375,32 @@ class Playlist
 		@sendUpdate type, data
 		@saveToDB(type) if host
 	saveToDB: (type) ->
-		if (type == "add" || type == "addFirst" || type == "move" || type == "remove" || type == "error" || type == "playlist")
+		playlistArray = ["add", "addFirst", "move", "remove", "error", "playlist"]
+		indexArray = ["next", "prev", "goTo", "move", "remove", "index"]
+		rdioStationArray = ["lastRdioStation"]
+		autoplayArray = ["autoplay", "next", "goTo"]
+
+		switch (type)
+			when "play"
+				state = "1"
+			when "pause"
+				state = "2"
+			when "stop"
+				state = "0"
+			when "state"
+				state = JSON.stringify(@state)
+
+		if (playlistArray.indexOf(type) != -1)
 			stripped_playlist = _.map @playlist, (song) ->
 				return _.omit(song, 'obj')
 
-		if (type == "play")
-			state = "1"
-		else if (type == "pause")
-			state = "2"
-		else if (type == "stop")
-			state = "0"
-		else if (type == "state")
-			state = JSON.stringify(@state)
-
-		if (type == "next" || type == "prev" || type == "goTo" || type == "move" || type == "remove" || type == "index")
+		if (indexArray.indexOf(type) != -1)
 			currentIndex = JSON.stringify(@currentIndex)
 
-		if (type == "lastRdioStation")
+		if (rdioStationArray.indexOf(type) != -1)
 			lastRdioStation = @lastRdioStation
 
-		if (type == "autoplay" || type == "next" || type == "goTo")
+		if (autoplayArray.indexOf(type) != -1)
 			autoplay = @autoplay
 
 		playlistSettings = {
