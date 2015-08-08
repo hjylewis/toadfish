@@ -41,6 +41,7 @@ class Playlist
 		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
 		@volume = playlistSettings.volume || 100
 		@lastRdioStation = playlistSettings.lastRdioStation || null
+		@save "autoplay", false
 		if @playlist.length > 0
 			@loadSong () =>
 				@setVolume @volume
@@ -217,6 +218,7 @@ class Playlist
 			@autoplay = true
 			rdio_player.rdio_play(@lastRdioStation)
 			@setVolume @volume
+			@play()
 		else
 			@state = 0
 			@seek(100) # seek end of song
@@ -386,7 +388,7 @@ class Playlist
 		if (type == "lastRdioStation")
 			lastRdioStation = @lastRdioStation
 
-		if (type == "autoplay")
+		if (type == "autoplay" || type == "next" || type == "goTo")
 			autoplay = @autoplay
 
 		playlistSettings = {
@@ -394,7 +396,7 @@ class Playlist
 			playlist: stripped_playlist,
 			volume: JSON.stringify(@volume),
 			state: state,
-			autoplay: autoplay,
+			autoplay: JSON.stringify(autoplay),
 			lastRdioStation: lastRdioStation
 		}
 		console.log(playlistSettings);

@@ -13,10 +13,11 @@ socket.on 'roomID', (msg) ->
 # 3: buffer
 
 class Playlist
-	constructor: (currentIndex, playlist, volume, state) ->
-		@currentIndex = currentIndex || 0
-		@playlist = if playlist then JSON.parse(playlist) else []
-		@state = state || 0
+	constructor: (playlistSettings) ->
+		@currentIndex = playlistSettings.currentIndex || 0
+		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
+		@state = playlistSettings.state || 0
+		@autoplay = JSON.parse(playlistSettings.autoplay) || null
 		socket.on 'update', (update) =>
 			@readUpdate(update)
 		if @playlist.length > 0
@@ -108,10 +109,14 @@ class Playlist
 		else if (update.type == "add")
 			@add JSON.parse(update.data), true
 		else if (update.type == "next")
+			if (@autoplay)
+				@autoplay = false
 			@next()
 		else if (update.type == "prev")
 			@prev()
 		else if (update.type == "goTo")
+			if (@autoplay)
+				@autoplay = false
 			@goTo parseInt(update.data)
 		else if (update.type == "remove")
 			@remove parseInt(update.data)
@@ -126,6 +131,8 @@ class Playlist
 			@move parseInt(data.from), parseInt(data.to)
 		else if (update.type == "error")
 			@playlist[parseInt(update.data)].song_details.error = true
+		else if (update.type == "autoplay")
+			@autoplay = update.data
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
