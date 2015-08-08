@@ -1,7 +1,18 @@
-DEBUG = true
 rdioLoaded = false
 googleLoaded = false
 rdio_user = null
+
+environment = {
+  getEnv : () ->
+    switch (window.location.hostname)
+      when "localhost", "127.0.0.1"
+        return "dev"
+      when "toadfish.herokuapp.com"
+        return "production"
+      else
+        throw('Unknown environment: ' + window.location.hostname );
+}
+
 
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
@@ -34,7 +45,7 @@ if (host == true)
 			params = {
 				'allowScriptAccess': 'always'
 			}
-			if (window.location.hostname == 'toadfish.herokuapp.com')
+			if (environment.getEnv() === "production")
 				swf = 'https://www.rdio.com/api/swf/'
 			else
 				swf = 'http://www.rdio.com/api/swf/'
