@@ -103,7 +103,8 @@ class Playlist
 			data: data
 		}
 	readUpdate: (update) ->
-		console.log update
+		if (ENV == 'dev')
+			console.log update
 		if (update.type == "addFirst")
 			@addFirst JSON.parse(update.data)
 		else if (update.type == "add")
