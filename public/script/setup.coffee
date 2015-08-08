@@ -96,4 +96,4 @@ logError = (msg) ->
 window.onerror = (msg, url, line) ->
     message = "clientError: "+url+"["+line+"] : "+msg
     logError message
-    not DEBUG
+    false

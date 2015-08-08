@@ -243,36 +243,32 @@ class Playlist
 		
 		_this = @
 		if (song_details.type == "soundcloud")
-			if (song.obj)
-				SC.sound = song.obj
-				cb()
-			else
-				SC.stream "/tracks/" + song_details.id, {
-						whileplaying: (() ->
-							_this.positionChanged "soundcloud", this.position),
-						onload: (() ->
-							if (this.readyState == 2)
-								console.log "sc error"
-								song.song_details.error = true
-								_this.save("error", _this.currentIndex.toString())
-								song.obj = null
-								_this.next()
-						),
-						onplay: (() ->
-							_this.setPlayState 1),
-						onstop: (() ->
-							_this.setPlayState 0),
-						onpause: (() ->
-							_this.setPlayState 2),
-						onbufferchange: (() ->
-							if (this.isBuffering) 
-								_this.setPlayState 3
-							else
-								_this.setPlayState 1)
-					}, (sound) ->
-						song.obj = sound
-						SC.sound = sound
-						cb()
+			SC.stream "/tracks/" + song_details.id, {
+					whileplaying: (() ->
+						_this.positionChanged "soundcloud", this.position),
+					onload: (() ->
+						if (this.readyState == 2)
+							console.log "sc error"
+							song.song_details.error = true
+							_this.save("error", _this.currentIndex.toString())
+							song.obj = null
+							_this.next()
+					),
+					onplay: (() ->
+						_this.setPlayState 1),
+					onstop: (() ->
+						_this.setPlayState 0),
+					onpause: (() ->
+						_this.setPlayState 2),
+					onbufferchange: (() ->
+						if (this.isBuffering) 
+							_this.setPlayState 3
+						else
+							_this.setPlayState 1)
+				}, (sound) ->
+					song.obj = sound
+					SC.sound = sound
+					cb()
 		else if (song_details.type == "youtube")
 			if (yt_player == null)
 				yt_player = new YT.Player('yt_player', {
