@@ -8,9 +8,11 @@ roomSchema = new mongoose.Schema({
 		currentIndex: Number,
 		playlist: String,
 		volume: Number,
-		state: Number
+		state: Number,
+		autoplay: String,
+		lastRdioStation: String
 	},
-	update: Date
+	update: Date,
 })
 
 Room = mongoose.model('Room', roomSchema)

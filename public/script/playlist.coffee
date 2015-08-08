@@ -35,11 +35,12 @@ class Playlist
 		socket.on 'update', (update) =>
 			@readUpdate(update)
 
-	load: (currentIndex, playlist, volume, state) ->
-		@currentIndex = currentIndex || 0
+	load: (playlistSettings) ->
+		@currentIndex = playlistSettings.currentIndex || 0
 		@state = 0
-		@playlist = if playlist then JSON.parse(playlist) else []
-		@volume = volume || 100
+		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
+		@volume = playlistSettings.volume || 100
+		@lastRdioStation = playlistSettings.lastRdioStation || null
 		if @playlist.length > 0
 			@loadSong () =>
 				@setVolume @volume
@@ -298,6 +299,7 @@ class Playlist
 		else if (song_details.type == "rdio")
 			rdio_player.rdio_play(song_details.id)
 			@lastRdioStation = song_details.radioKey
+			@saveToDB("lastRdioStation")
 			rdio_player.rdio_pause()
 			cb()
 
@@ -381,12 +383,21 @@ class Playlist
 		if (type == "next" || type == "prev" || type == "goTo" || type == "move" || type == "remove" || type == "index")
 			currentIndex = JSON.stringify(@currentIndex)
 
+		if (type == "lastRdioStation")
+			lastRdioStation = @lastRdioStation
+
+		if (type == "autoplay")
+			autoplay = @autoplay
+
 		playlistSettings = {
 			currentIndex: currentIndex,
 			playlist: stripped_playlist,
 			volume: JSON.stringify(@volume),
-			state: state
+			state: state,
+			autoplay: autoplay,
+			lastRdioStation: lastRdioStation
 		}
+		console.log(playlistSettings);
 		$.post('/savePlaylist', { 
 			playlistSettings: JSON.stringify(playlistSettings),
 			roomID: roomID

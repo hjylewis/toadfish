@@ -17,7 +17,7 @@
       var scope = angular.element($("body")).scope();
       var load = function (){
           scope.rdio_user = rdio_user;
-          scope.playlist.load(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume, playlistSettings.state);
+          scope.playlist.load(playlistSettings);
           scope.isLoading = false;
       };
       (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);
