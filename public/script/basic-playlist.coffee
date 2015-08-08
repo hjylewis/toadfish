@@ -135,7 +135,7 @@ class Playlist
 		else if (update.type == "error")
 			@playlist[parseInt(update.data)].song_details.error = true
 		else if (update.type == "autoplay")
-			@autoplay = update.data
+			@autoplay = JSON.parse(update.data)
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()

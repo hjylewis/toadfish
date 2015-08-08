@@ -42,7 +42,7 @@ class Playlist
 		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
 		@volume = playlistSettings.volume || 100
 		@lastRdioStation = playlistSettings.lastRdioStation || null
-		@save "autoplay", false
+		@save "autoplay", "false"
 		if @playlist.length > 0
 			@loadSong () =>
 				@setVolume @volume
@@ -328,6 +328,13 @@ class Playlist
 			else if percent > 99.5
 				@next()
 	sendUpdate: (type, data) ->
+		# socket.emit 'update', {
+		# 	type: type,
+		# 	roomID: roomID,
+		# 	host: host,
+		# 	data: data,
+		# 	socketID: socket.id
+		# }
 		$.post('/sendUpdate', {
 			type: type,
 			roomID: roomID,

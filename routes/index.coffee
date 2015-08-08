@@ -3,7 +3,6 @@ express = require('express')
 util = require('../lib/util')
 mongoose = require('mongoose')
 Room = require('../models/room')
-Update = require('../models/update')
 router = express.Router()
 
 router.get "/", (req, res) ->
