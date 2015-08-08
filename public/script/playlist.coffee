@@ -415,6 +415,7 @@ class Playlist
 			roomID: roomID
 		})
 
+# TODO move to utilities eventually
 generateUUID  = () ->
     d = new Date().getTime()
     uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
