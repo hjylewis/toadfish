@@ -17,7 +17,8 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	if (host) {
 		$scope.playlist = new Playlist();
 	} else {
-		$scope.playlist = new Playlist(playlistSettings);
+		$scope.playlist = new Playlist();
+		$scope.playlist.load(playlistSettings);
 		$scope.isLoading = false;
 	}
 	$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}

@@ -2,21 +2,10 @@
 
 yt_player = null #for youtube, remember the player div
 YT_TIME_INTERVAL = 500
-yt_obj = {artwork_url: "https://i.ytimg.com/vi/ih2xubMaZWI/hqdefault.jpg", id: "ih2xubMaZWI", permalink_url: "https://www.youtube.com/watch?v=ih2xubMaZWI", title: "OMFG - Hello",type: "youtube"}
-sc_obj = {artwork_url: "https://i1.sndcdn.com/artworks-000110807035-1bxk4l-t500x500.jpg", duration: 226371, id: 178220277, permalink_url: "https://soundcloud.com/alexomfg/omfg-hello", title: "OMFG - Hello", type: "soundcloud", user: "OMFG"}
-rd_obj = {artist: "OMFG", artwork_url: "http://img02.cdn2-rdio.com/album/8/3/5/000000000050f538/2/square-600.jpg", duration: 226, id: "t60862619", permalink_url: "http://rd.io/x/QitB__PE/", title: "Hello", type: "rdio"}
 
 socket = io(window.location.origin)
 socket.on 'roomID', (msg) ->
 	socket.emit('roomID', roomID)
-
-generateUUID  = () ->
-    d = new Date().getTime()
-    uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
-        r = (d + Math.random()*16)%16 | 0
-        d = Math.floor(d/16)
-        return (if c=='x' then r else (r&0x3|0x8)).toString(16)
-    return uuid
 
 # TODO: state
 # 0: stop
@@ -38,11 +27,16 @@ class Playlist
 
 	load: (playlistSettings) ->
 		@currentIndex = playlistSettings.currentIndex || 0
-		@state = 0
 		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
 		@volume = playlistSettings.volume || 100
 		@lastRdioStation = playlistSettings.lastRdioStation || null
-		@save "autoplay", "false"
+
+		if host
+			@save "autoplay", "false"
+		else
+			@autoplay = JSON.parse(playlistSettings.autoplay) || false
+			@state = playlistSettings.state || 0
+
 		if @playlist.length > 0
 			@loadSong () =>
 				@setVolume @volume
@@ -55,6 +49,7 @@ class Playlist
 			return @playlist[@currentIndex]
 
 	play: (update) ->
+		return if !host
 		if (@playlist.length == 0)
 			console.log "nothing here"
 		else if @state == 1
@@ -75,6 +70,7 @@ class Playlist
 
 
 	pause: (update) ->
+		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
 			song.obj.pause()
@@ -88,6 +84,7 @@ class Playlist
 		# set state		
 
 	stop: (update) ->
+		return if !host
 		song = @getCurrentSong()
 		try
 			if (song.song_details.type == "soundcloud")
@@ -100,6 +97,7 @@ class Playlist
 		@save('stop') if !update
 
 	seek: (percent) ->
+		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
 			song.obj.setPosition(song.song_details.duration * (percent / 100))
@@ -109,6 +107,7 @@ class Playlist
 			rdio_player.rdio_seek(song.song_details.duration * (percent / 100))
 
 	setVolume: () ->
+		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
 			song.obj.setVolume(@volume)
@@ -174,7 +173,7 @@ class Playlist
 				song_details: song_details
 			})
 			@next()
-			@save "addFirst", JSON.stringify(song_details)
+			@save "addFirst", JSON.stringify(song_details) if !update
 
 	remove: (index, update) ->
 		if (index < @currentIndex)
@@ -213,6 +212,7 @@ class Playlist
 			scope.$apply(scope.playlist.state = state)
 
 	startAutoPlay: () ->
+		return if !host
 		console.log "autoplay"
 		if @lastRdioStation
 			@stop()
@@ -242,67 +242,69 @@ class Playlist
 		$("body").css "background-size", "cover"
 		$("body").css "background-attachment", "fixed"
 		
-		_this = @
-		if (song_details.type == "soundcloud")
-			SC.stream "/tracks/" + song_details.id, {
-					whileplaying: (() ->
-						_this.positionChanged "soundcloud", this.position),
-					onload: (() ->
-						if (this.readyState == 2)
-							console.log "sc error"
-							song.song_details.error = true
-							_this.save("error", _this.currentIndex.toString())
-							song.obj = null
-							_this.next()
-					),
-					onplay: (() ->
-						_this.setPlayState 1),
-					onstop: (() ->
-						_this.setPlayState 0),
-					onpause: (() ->
-						_this.setPlayState 2),
-					onbufferchange: (() ->
-						if (this.isBuffering) 
-							_this.setPlayState 3
-						else
-							_this.setPlayState 1)
-				}, (sound) ->
-					song.obj = sound
-					SC.sound = sound
+		if host
+			_this = @
+			if (song_details.type == "soundcloud")
+				SC.stream "/tracks/" + song_details.id, {
+						whileplaying: (() ->
+							_this.positionChanged "soundcloud", this.position),
+						onload: (() ->
+							if (this.readyState == 2)
+								console.log "sc error"
+								song.song_details.error = true
+								_this.save("error", _this.currentIndex.toString())
+								song.obj = null
+								_this.next()
+						),
+						onplay: (() ->
+							_this.setPlayState 1),
+						onstop: (() ->
+							_this.setPlayState 0),
+						onpause: (() ->
+							_this.setPlayState 2),
+						onbufferchange: (() ->
+							if (this.isBuffering) 
+								_this.setPlayState 3
+							else
+								_this.setPlayState 1)
+					}, (sound) ->
+						song.obj = sound
+						SC.sound = sound
+						cb()
+			else if (song_details.type == "youtube")
+				if (yt_player == null)
+					yt_player = new YT.Player('yt_player', {
+						height: '0',
+						width: '0',
+						videoId: song_details.id,
+						playerVars: {'autoplay': 0, 'controls': 0, rel: 0},
+						events: {
+							'onReady': (() ->
+								yt_player.unMute()
+								cb()),
+							'onStateChange': (event) =>
+								if (event.data == YT.PlayerState.PLAYING)
+									@setPlayState 1
+								else if (event.data == YT.PlayerState.PAUSED)
+									@setPlayState 2
+								else if (event.data == YT.PlayerState.BUFFERING)
+									@setPlayState 3
+								else if (event.data == -1)
+									@setPlayState 0
+						}
+			        })
+				else
+					yt_player.loadVideoById(song_details.id)
 					cb()
-		else if (song_details.type == "youtube")
-			if (yt_player == null)
-				yt_player = new YT.Player('yt_player', {
-					height: '0',
-					width: '0',
-					videoId: song_details.id,
-					playerVars: {'autoplay': 0, 'controls': 0, rel: 0},
-					events: {
-						'onReady': (() ->
-							yt_player.unMute()
-							cb()),
-						'onStateChange': (event) =>
-							if (event.data == YT.PlayerState.PLAYING)
-								@setPlayState 1
-							else if (event.data == YT.PlayerState.PAUSED)
-								@setPlayState 2
-							else if (event.data == YT.PlayerState.BUFFERING)
-								@setPlayState 3
-							else if (event.data == -1)
-								@setPlayState 0
-					}
-		        })
-			else
-				yt_player.loadVideoById(song_details.id)
+			else if (song_details.type == "rdio")
+				rdio_player.rdio_play(song_details.id)
+				@lastRdioStation = song_details.radioKey
+				@saveToDB("lastRdioStation")
+				rdio_player.rdio_pause()
 				cb()
-		else if (song_details.type == "rdio")
-			rdio_player.rdio_play(song_details.id)
-			@lastRdioStation = song_details.radioKey
-			@saveToDB("lastRdioStation")
-			rdio_player.rdio_pause()
-			cb()
 
 	positionChanged: (type, position) ->
+		return if !host
 		if (type == @getCurrentSong().song_details.type && @state != 0)
 			# update graphics
 			percent = null;
@@ -328,13 +330,6 @@ class Playlist
 			else if percent > 99.5
 				@next()
 	sendUpdate: (type, data) ->
-		# socket.emit 'update', {
-		# 	type: type,
-		# 	roomID: roomID,
-		# 	host: host,
-		# 	data: data,
-		# 	socketID: socket.id
-		# }
 		$.post('/sendUpdate', {
 			type: type,
 			roomID: roomID,
@@ -344,7 +339,8 @@ class Playlist
 		})
 
 	readUpdate: (update) ->
-		console.log update
+		if (ENV == 'dev')
+			console.log update
 		if (update.type == "addFirst")
 			@addFirst JSON.parse(update.data), true
 		else if (update.type == "add")
@@ -368,13 +364,15 @@ class Playlist
 			@move parseInt(data.from), parseInt(data.to), true
 		else if (update.type == "error")
 			@playlist[parseInt(update.data)].song_details.error = true
+		else if (update.type == "autoplay")
+			@autoplay = JSON.parse(update.data)
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
-		@saveToDB(update.type)
+		@saveToDB(update.type) if host
 	save: (type, data) ->
 		@sendUpdate type, data
-		@saveToDB(type)
+		@saveToDB(type) if host
 	saveToDB: (type) ->
 		if (type == "add" || type == "addFirst" || type == "move" || type == "remove" || type == "error" || type == "playlist")
 			stripped_playlist = _.map @playlist, (song) ->
@@ -411,6 +409,13 @@ class Playlist
 			roomID: roomID
 		})
 
+generateUUID  = () ->
+    d = new Date().getTime()
+    uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
+        r = (d + Math.random()*16)%16 | 0
+        d = Math.floor(d/16)
+        return (if c=='x' then r else (r&0x3|0x8)).toString(16)
+    return uuid
 
 
 
