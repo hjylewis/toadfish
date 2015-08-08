@@ -17,7 +17,7 @@ class Playlist
 		@currentIndex = playlistSettings.currentIndex || 0
 		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
 		@state = playlistSettings.state || 0
-		@autoplay = JSON.parse(playlistSettings.autoplay) || null
+		@autoplay = JSON.parse(playlistSettings.autoplay) || false
 		socket.on 'update', (update) =>
 			@readUpdate(update)
 		if @playlist.length > 0
