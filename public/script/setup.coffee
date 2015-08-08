@@ -38,7 +38,7 @@ if (host == true)
 			flashvars = {
 				'playbackToken': res,
 				'domain': window.location.hostname,            
-				'listener': 'callback_object'    # the global name of the object that will receive callbacks from the SWF
+				'listener': 'rdioCallback'    # the global name of the object that will receive callbacks from the SWF
 			}
 			params = {
 				'allowScriptAccess': 'always'
@@ -51,44 +51,42 @@ if (host == true)
 	}
 
 
-callback_object = {}
-# Called once the API SWF has loaded and is ready to accept method calls.
-callback_object.ready = (user) ->
-	rdio_player = $('#rdio_player').get(0)
-	rdio_player.rdio_startFrequencyAnalyzer({
-		frequencies: '10-band',
-		period: 100
-	})
-	rdioLoaded = true
-	rdio_user = user
-	loadPlaylist()
-callback_object.positionChanged = (position) ->
-	scope = angular.element($("body")).scope()
-	setPostion = () -> scope.playlist.positionChanged "rdio", position
-	if (scope.$$phase || scope.$root.$$phase) then setPostion() else scope.$apply(setPostion);
-
-callback_object.playStateChanged = (playState) ->
-	scope = angular.element($("body")).scope()
-	setPlayState = ()->
-		if (playState == 2)
-			scope.playlist.state = 0
-		else if (playState == 1)
-			scope.playlist.state = 1
-		else if (playState == 0 || playState == 4)
-			scope.playlist.state = 2
-		else if (playState == 3)
-			scope.playlist.state = 3
-	if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState)
-
-callback_object.playingTrackChanged = (playingTrack, sourcePosition) ->
-	scope = angular.element($("body")).scope()
-	playlist = scope.playlist
-	if (playlist.autoplay)
-		song_details = search.cleanUpResults({collection: [playingTrack]}, 'rdio').collections[0]
-		playlist.autoplay = song_details
-		playlist.save 'autoplay', song_details
-		if (!scope.$$phase && !scope.$root.$$phase)
-			scope.$apply()
+rdioCallback = {
+	ready: (user) ->
+		rdio_player = $('#rdio_player').get(0)
+		rdio_player.rdio_startFrequencyAnalyzer({
+			frequencies: '10-band',
+			period: 100
+		})
+		rdioLoaded = true
+		rdio_user = user
+		loadPlaylist()
+	positionChanged: (position) ->
+		scope = angular.element($("body")).scope()
+		setPostion = () -> scope.playlist.positionChanged "rdio", position
+		if (scope.$$phase || scope.$root.$$phase) then setPostion() else scope.$apply(setPostion)
+	playStateChanged: (playState) ->
+		scope = angular.element($("body")).scope()
+		setPlayState = ()->
+			if (playState == 2)
+				scope.playlist.state = 0
+			else if (playState == 1)
+				scope.playlist.state = 1
+			else if (playState == 0 || playState == 4)
+				scope.playlist.state = 2
+			else if (playState == 3)
+				scope.playlist.state = 3
+		if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState)
+	playingTrackChanged: (playingTrack, sourcePosition) ->
+		scope = angular.element($("body")).scope()
+		playlist = scope.playlist
+		if (playlist.autoplay)
+			song_details = search.cleanUpResults({collection: [playingTrack]}, 'rdio').collections[0]
+			playlist.autoplay = song_details
+			playlist.save 'autoplay', JSON.stringify(song_details)
+			if (!scope.$$phase && !scope.$root.$$phase)
+				scope.$apply()
+}
 
 logError = (msg) ->
   $.post "/error", { "msg" : msg }

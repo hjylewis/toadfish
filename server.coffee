@@ -5,7 +5,6 @@ session = require('express-session')
 cookieParser = require('cookie-parser')
 mongoose = require('mongoose')
 MongoStore = require('connect-mongo')(session)
-Update = require('./models/update')
 Room = require('./models/room')
 stylus = require('stylus')
 body_parser = require("body-parser")
@@ -58,9 +57,12 @@ app.use express.static 'public'
 app.set 'view engine', 'toffee'
 app.set('views', __dirname + '/views')
 
-# Make db accessible to the router
+server = http.Server(app)
+io = require('socket.io')(server)
+
+# Make sockets accessible to the router
 app.use (req, res, next) ->
-    req.db = db
+    req.io = io
     next()
 
 # Routers
@@ -89,31 +91,15 @@ app.use (error, request, result, next) ->
 port = process.env.PORT || 8000
 
 # For socket.io
-server = http.Server(app);
-io = require('socket.io')(server);
 
 io.on 'connection', (socket) ->
 	console.log("user connected " + socket.id)
 	socket.emit('roomID')
 	socket.on 'roomID', (roomID) ->
 		socket.join(roomID)
-	socket.on 'update', (obj) ->
-		console.log(obj)
-		socket.broadcast.to(obj.roomID).emit('update', obj)
-	# Update.find().sort({'_id': -1}).limit(1).find (err, doc) ->
-	# 	lastUpdate = doc[0]
-	# 	stream = Update.find().where('_id').gt(lastUpdate._id).tailable(true, { awaitdata: true, numberOfRetries: Number.MAX_VALUE }).stream()
-	# 	stream.on 'data', (doc) ->
-	# 		console.log "SOCKET"
-	# 		socket.broadcast.to(doc.roomID).emit('update', doc);
-	# 	stream.on 'error', (val) ->
-	# 	    console.log('Error: %j', val)
-	# 	stream.on 'end', () ->
-	# 	    console.log('End of stream')
 
 	socket.on 'disconnect', () ->
 		console.log('user disconnected ' + socket.id)
-		# stream.destroy()
 
 
 server.listen port, ->

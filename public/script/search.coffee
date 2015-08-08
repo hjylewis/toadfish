@@ -107,9 +107,6 @@ class Search
         done ret
 
   cleanUpResults: (results, type) ->
-    if (ENV == "dev")
-      console.log type
-      console.log results
     resultObj = {}
     resultObj.next = results.next_href || results.nextPageToken || results.next_page
 
