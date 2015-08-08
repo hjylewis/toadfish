@@ -106,8 +106,6 @@ class Search
         done ret
 
   cleanUpResults: (results, type) ->
-    console.log type
-    console.log(results)
     resultObj = {}
     resultObj.next = results.next_href || results.nextPageToken || results.next_page
 
@@ -139,6 +137,9 @@ class Search
         retObj.artwork_url = result.snippet.thumbnails.high.url
       if (!retObj.artwork_url)
         retObj.artwork_url = "/images/no_image.jpg"
+      else
+        retObj.artwork_url = retObj.artwork_url.replace('http:','https:')
+        retObj.artwork_small = retObj.artwork_small.replace('http:','https:')
       return retObj
 
     return resultObj

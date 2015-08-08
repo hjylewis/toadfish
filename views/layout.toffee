@@ -9,7 +9,7 @@
 
     <!-- Google Fonts -->
 
-    <link href='http://fonts.googleapis.com/css?family=Roboto:100|Open+Sans:300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100|Open+Sans:300' rel='stylesheet' type='text/css'>
 
     <!-- JQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

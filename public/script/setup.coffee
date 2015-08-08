@@ -34,7 +34,11 @@ if (host == true)
 			params = {
 				'allowScriptAccess': 'always'
 			}
-			swfobject.embedSWF('http://www.rdio.com/api/swf/', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
+			if (window.location.hostname == 'toadfish.herokuapp.com')
+				swf = 'https://www.rdio.com/api/swf/'
+			else
+				swf = 'http://www.rdio.com/api/swf/'
+			swfobject.embedSWF(swf, 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
 	}
 
 
@@ -49,7 +53,6 @@ callback_object.ready = (user) ->
 	rdioLoaded = true
 	rdio_user = user
 	loadPlaylist()
-	console.log(user)
 callback_object.positionChanged = (position) ->
 	scope = angular.element($("body")).scope()
 	setPostion = () -> scope.playlist.positionChanged "rdio", position

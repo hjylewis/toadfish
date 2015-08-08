@@ -22,7 +22,7 @@ rdio_routes = require('./routes/rdio')
 
 app.use(cookieParser())
 
-mongoose.connect('mongodb://localhost/toadfish')
+mongoose.connect(process.env.MONGOLAB_URI)
 db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once 'open', (callback) ->
@@ -30,7 +30,7 @@ db.once 'open', (callback) ->
 
 
 app.use session({
-  secret: 'keyboard cat',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   store: new MongoStore({ mongooseConnection: db })
@@ -86,18 +86,19 @@ app.use (error, request, result, next) ->
 	console.error error.stack
 	result.status(500).type('txt').send 'Oops, it looks like something went'
 
-port = 8000
+port = process.env.PORT || 8000
 
 # For socket.io
 server = http.Server(app);
 io = require('socket.io')(server);
 
 io.on 'connection', (socket) ->
-	console.log("user connected")
+	console.log("user connected " + socket.id)
 	socket.emit('roomID')
 	socket.on 'roomID', (roomID) ->
 		socket.join(roomID)
 	socket.on 'update', (obj) ->
+		console.log(obj)
 		socket.broadcast.to(obj.roomID).emit('update', obj)
 	# Update.find().sort({'_id': -1}).limit(1).find (err, doc) ->
 	# 	lastUpdate = doc[0]
@@ -111,7 +112,7 @@ io.on 'connection', (socket) ->
 	# 	    console.log('End of stream')
 
 	socket.on 'disconnect', () ->
-		console.log('user disconnected')
+		console.log('user disconnected ' + socket.id)
 		# stream.destroy()
 
 

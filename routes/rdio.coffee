@@ -2,7 +2,6 @@ log = console.log
 express = require('express')
 router = express.Router()
 request = require('request')
-config = require('../config')
 
 rdio_access_token = null
 
@@ -11,8 +10,8 @@ getAccess = () ->
       url: 'https://services.rdio.com/oauth2/token',
       method: 'POST',
       auth: {
-        user: config.rdio_cred.client_id,
-        pass: config.rdio_cred.client_secret
+        user: process.env.RDIO_ID,
+        pass: process.env.RDIO_SECRET
       },
       json: true,
       body: {
@@ -54,7 +53,6 @@ router.get "/search", (req, res) ->
 
 
 router.get "/playbackToken", (req, res) ->
-  console.log process.env.DOMAIN
   rdioRequest {'method': 'getPlaybackToken', 'domain': process.env.DOMAIN}, (err, response, body) ->
     if err?
       console.error "rdio error getting playbackToken: " + JSON.stringify(err)
