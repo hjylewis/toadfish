@@ -139,8 +139,8 @@ class Search
       if (!retObj.artwork_url)
         retObj.artwork_url = "/images/no_image.jpg"
       else
-        retObj.artwork_url.replace('http','https')
-        retObj.artwork_small.replace('http','https')
+        retObj.artwork_url = retObj.artwork_url.replace('http','https')
+        retObj.artwork_small = retObj.artwork_small.replace('http','https')
       return retObj
 
     return resultObj
