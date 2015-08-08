@@ -93,11 +93,12 @@ server = http.Server(app);
 io = require('socket.io')(server);
 
 io.on 'connection', (socket) ->
-	console.log("user connected")
+	console.log("user connected " + socket.id)
 	socket.emit('roomID')
 	socket.on 'roomID', (roomID) ->
 		socket.join(roomID)
 	socket.on 'update', (obj) ->
+		console.log(obj)
 		socket.broadcast.to(obj.roomID).emit('update', obj)
 	# Update.find().sort({'_id': -1}).limit(1).find (err, doc) ->
 	# 	lastUpdate = doc[0]
@@ -111,7 +112,7 @@ io.on 'connection', (socket) ->
 	# 	    console.log('End of stream')
 
 	socket.on 'disconnect', () ->
-		console.log('user disconnected')
+		console.log('user disconnected ' + socket.id)
 		# stream.destroy()
 
 

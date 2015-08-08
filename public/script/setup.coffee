@@ -53,7 +53,6 @@ callback_object.ready = (user) ->
 	rdioLoaded = true
 	rdio_user = user
 	loadPlaylist()
-	console.log(user)
 callback_object.positionChanged = (position) ->
 	scope = angular.element($("body")).scope()
 	setPostion = () -> scope.playlist.positionChanged "rdio", position

@@ -53,7 +53,6 @@ router.get "/search", (req, res) ->
 
 
 router.get "/playbackToken", (req, res) ->
-  console.log process.env.DOMAIN
   rdioRequest {'method': 'getPlaybackToken', 'domain': process.env.DOMAIN}, (err, response, body) ->
     if err?
       console.error "rdio error getting playbackToken: " + JSON.stringify(err)
