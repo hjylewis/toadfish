@@ -86,7 +86,7 @@ app.use (error, request, result, next) ->
 	console.error error.stack
 	result.status(500).type('txt').send 'Oops, it looks like something went'
 
-port = 8000
+port = process.env.PORT || 8000
 
 # For socket.io
 server = http.Server(app);
