@@ -1,7 +1,16 @@
-DEBUG = true
 rdioLoaded = false
 googleLoaded = false
 rdio_user = null
+
+
+switch (window.location.hostname)
+  when "localhost", "127.0.0.1"
+    ENV = "dev"
+  when "toadfish.herokuapp.com"
+    ENV = "production"
+  else
+    throw('Unknown environment: ' + window.location.hostname );
+
 
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
@@ -34,7 +43,7 @@ if (host == true)
 			params = {
 				'allowScriptAccess': 'always'
 			}
-			if (window.location.hostname == 'toadfish.herokuapp.com')
+			if (ENV == "production")
 				swf = 'https://www.rdio.com/api/swf/'
 			else
 				swf = 'http://www.rdio.com/api/swf/'
@@ -71,6 +80,15 @@ callback_object.playStateChanged = (playState) ->
 			scope.playlist.state = 3
 	if (scope.$$phase || scope.$root.$$phase) then setPlayState() else scope.$apply(setPlayState)
 
+callback_object.playingTrackChanged = (playingTrack, sourcePosition) ->
+	scope = angular.element($("body")).scope()
+	playlist = scope.playlist
+	if (playlist.autoplay)
+		song_details = search.cleanUpResults({collection: [playingTrack]}, 'rdio').collections[0]
+		playlist.autoplay = song_details
+		playlist.save 'autoplay', song_details
+		if (!scope.$$phase && !scope.$root.$$phase)
+			scope.$apply()
 
 logError = (msg) ->
   $.post "/error", { "msg" : msg }

@@ -17,7 +17,7 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	if (host) {
 		$scope.playlist = new Playlist();
 	} else {
-		$scope.playlist = new Playlist(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume, playlistSettings.state)
+		$scope.playlist = new Playlist(playlistSettings);
 		$scope.isLoading = false;
 	}
 	$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
@@ -84,6 +84,11 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 		$scope.playlist.add(item);
 		$scope.mode = "playlist";
 	}
+
+	$scope.addAutoplay = function () {
+		$scope.playlist.add($scope.playlist.autoplay);
+	}
+
 	$scope.play = function () {
 		if ($scope.playlist.state == 1) {
 			$scope.playlist.pause();

@@ -17,7 +17,7 @@
       var scope = angular.element($("body")).scope();
       var load = function (){
           scope.rdio_user = rdio_user;
-          scope.playlist.load(playlistSettings.currentIndex, playlistSettings.playlist, playlistSettings.volume, playlistSettings.state);
+          scope.playlist.load(playlistSettings);
           scope.isLoading = false;
       };
       (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);
@@ -44,24 +44,28 @@
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
         <div id="buttons">
-          <div><i ng-click="prev()" class="hover-purple clickable fa fa-fast-backward"></i></div>
+          <div ng-hide="playlist.autoplay"><i ng-click="prev()" class="hover-purple clickable fa fa-fast-backward"></i></div>
           <div><i class="clickable hover-purple fa" ng-click="play()"ng-class="{'fa-play': playlist.state === 2 || playlist.state === 0, 'fa-pause': playlist.state === 1, 'fa-spinner fa-spin': playlist.state === 3}"></i></div>
           <div><i ng-click="next()" class="clickable hover-purple fa fa-fast-forward"></i></div>
         </div>
 
-        <div id="volume" data-ng-mouseenter="volumeShow = true" data-ng-mouseleave="volumeShow = false" data-ng-mouseup="playlist.setVolume()">
-          <input data-ng-show="volumeShow" type="range" min="0" max="100" data-ng-model="playlist.volume" value="{{playlist.volume}}">
-          <i class="fa fa-volume-up"></i>
+        <div class="right-buttons">
+          <div id="volume" data-ng-mouseenter="volumeShow = true" data-ng-mouseleave="volumeShow = false" data-ng-mouseup="playlist.setVolume()">
+            <input data-ng-show="volumeShow" type="range" min="0" max="100" data-ng-model="playlist.volume" value="{{playlist.volume}}">
+            <i class="fa fa-volume-up"></i>
+          </div>
+          <i ng-show="playlist.autoplay" ng-click="addAutoplay()" class="fa fa-plus clickable hover-purple"></i>
         </div>
         <div id="details">
-          {{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span>
+          <span ng-hide="playlist.autoplay">{{playlist.playlist[playlist.currentIndex].song_details.title}}<span ng-if="playlist.playlist[playlist.currentIndex].song_details.artist"> - {{playlist.playlist[playlist.currentIndex].song_details.artist}}</span></span>
+          <span ng-show="playlist.autoplay">{{playlist.autoplay.title}}<span ng-if="playlist.autoplay.artist"> - {{playlist.autoplay.artist}}</span></span>
         </div>
       </div>
-      <div class="progress">
+      <div class="progress" ng-hide="playlist.autoplay">
         <progress id="seekbar" class="clickable" value="0" max="100" ng-click="seek($event)"></progress>
       </div>
     </div>
-    <div data-ng-show="playlist.playlist[playlist.currentIndex].song_details.type == 'youtube' && mode == 'playlist' && playlist.state !== 0" >
+    <div data-ng-show="playlist.playlist[playlist.currentIndex].song_details.type == 'youtube' && mode == 'playlist' && playlist.state !== 0 && !playlist.autoplay" >
       <div id="yt_player"></div>
     </div>
     <ul id = "result_list" ng-hide="results.length == 0 || mode !== 'search'">
@@ -91,10 +95,10 @@
     <div id="playlist" ng-hide="playlist.playlist.length == 0 || mode !== 'playlist'">
       <ul dnd-list="playlist.playlist"
       dnd-drop="dropCallback(index, item)">
-        <li class="hover clickable" ng-repeat="song in playlist.playlist track by song.song_details.$$hashKey" ng-click="playlist.goTo($index)"
+        <li class="hover clickable" ng-repeat="song in playlist.playlist track by song.song_details.uuid" ng-click="playlist.goTo($index)"
         ng-mouseenter="songHover = true" ng-mouseleave="songHover = false"
         dnd-draggable="song" dnd-dragstart="from.index = $index" dnd-effect-allowed="move">
-          <i ng-show="$index == playlist.currentIndex" class="fa fa-play"></i> 
+          <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa fa-play"></i> 
           <i ng-show="song.song_details.error" class="fa fa-exclamation-triangle"></i>
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
           <span style="font-size:15px" class="hover-purple" ng-if="song.song_details.type =='rdio' && !rdio_user" data-ng-click="openModal($event)">(30s)</span>
@@ -104,6 +108,15 @@
           </span>
         </li>
       </ul>
+    </div>
+
+    <div id="autoplay" ng-show="playlist.autoplay && mode == 'playlist'" ng-mouseenter="autoplayHover = true" ng-mouseleave="autoplayHover = false">
+      <i style="float:right" ng-show="autoplayHover" ng-click="addAutoplay()" class="fa fa-plus clickable hover-purple"></i>
+      <span class="over-container">
+        <div>
+          <i class="fa fa-random"></i> <i class="fa fa-play"></i> {{playlist.autoplay.title}}<span ng-if="playlist.autoplay.artist"> - {{playlist.autoplay.artist}}</span>
+        </div>
+      </span>
     </div>
   </div>
   <div class="share" ng-hide="isLoading">

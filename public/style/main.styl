@@ -197,6 +197,7 @@ input#createRoomName
 div.search-container
   margin-top 20px
   border 1px solid black
+  border-radius radius
   background rgba(255,255,255,0.8)
   width 100%
   overflow hidden
@@ -271,8 +272,13 @@ div#player
         i
           padding auto
 
-    #volume
+    .right-buttons
       float right
+      .fa-plus
+        float right
+        margin-right 10px
+      #volume
+        float right 
     #details
       white-space nowrap
       text-overflow ellipsis
@@ -331,6 +337,24 @@ div#playlist
     &:only-child
       border-radius radius radius radius radius
       
+div#autoplay
+  margin-top 20px
+  padding 10px
+  background-color transblack
+  border 1px solid black
+  border-radius radius radius radius radius
+  text-overflow ellipsis
+  overflow hidden
+  white-space nowrap
+  &:hover
+    background-color transblacker
+  span.over-container
+    display block
+    overflow hidden
+  div
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
    
 
 

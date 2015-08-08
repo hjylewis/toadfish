@@ -61,6 +61,7 @@ class Search
           return callback null, null if _.indexOf(options.types,'youtube') == -1
           ytOptions = {
             q: str,
+            videoEmbeddable: true,
             type: 'video',
             maxResults: PAGE_LENGTH,
             part: 'snippet'
@@ -106,6 +107,9 @@ class Search
         done ret
 
   cleanUpResults: (results, type) ->
+    if (ENV == "dev")
+      console.log type
+      console.log results
     resultObj = {}
     resultObj.next = results.next_href || results.nextPageToken || results.next_page
 
@@ -120,6 +124,7 @@ class Search
       retObj.duration = result.duration if result.duration?
       retObj.user = result.user.username if result.user?
       retObj.type = type
+      retObj.radioKey = result.radioKey
 
       if type == 'soundcloud'
         if result.artwork_url?
