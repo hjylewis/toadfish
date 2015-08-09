@@ -43,10 +43,11 @@ if (host == true)
 			params = {
 				'allowScriptAccess': 'always'
 			}
-			# if (ENV == "production")
-			# 	swf = 'https://www.rdio.com/api/swf/'
-			# else
-			swf = 'http://www.rdio.com/api/swf/'
+			if (ENV == "production")
+				swf = 'https://www.rdio.com/api/swf/'
+			else
+				swf = 'http://www.rdio.com/api/swf/'
+			console.log swf
 			swfobject.embedSWF(swf, 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
 	}
 
