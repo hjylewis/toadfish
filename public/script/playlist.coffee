@@ -34,7 +34,7 @@ class Playlist
 		if host
 			@save "autoplay", "false"
 		else
-			@autoplay = JSON.parse(playlistSettings.autoplay) || false
+			@autoplay = if playlistSettings.autoplay then JSON.parse(playlistSettings.autoplay) else false
 			@state = playlistSettings.state || 0
 
 		if @playlist.length > 0
