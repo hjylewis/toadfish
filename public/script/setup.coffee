@@ -49,11 +49,13 @@ if (host == true)
 				swf = 'http://www.rdio.com/api/swf/'
 			console.log swf
 			swfobject.embedSWF(swf, 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
+			console.log "after embed"
 	}
 
 
 rdioCallback = {
 	ready: (user) ->
+		console.log("rdio ready");
 		rdio_player = $('#rdio_player').get(0)
 		rdio_player.rdio_startFrequencyAnalyzer({
 			frequencies: '10-band',
