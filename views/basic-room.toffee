@@ -53,10 +53,20 @@
       <ul>
         <li class="hover" ng-repeat="song in playlist.playlist track by $index"
         ng-mouseenter="songHover = true" ng-mouseleave="songHover = false">
-          <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa" ng-class="{'fa-pause': playlist.state === 2 || playlist.state === 0, 'fa-play': playlist.state === 1}"></i> 
-          <i ng-show="song.song_details.error" class="fa fa-exclamation-triangle"></i>
-          {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
-          <a ng-show="songHover" ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}"><i class="fa fa-long-arrow-right"></i></a>
+          <span class="song-icons" style="float:right" ng-show="songHover">
+            <a ng-show="songHover" ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}">
+              <i data-ng-class="{
+                'fa fa-youtube-play': song.song_details.type === 'youtube', 
+                'fa fa-soundcloud': song.song_details.type === 'soundcloud', 
+                'icon-rdio': song.song_details.type === 'rdio'
+              }"></i>
+            </a>
+          </span>
+          <span class="song-details">
+            <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa" ng-class="{'fa-pause': playlist.state === 2 || playlist.state === 0, 'fa-play': playlist.state === 1}"></i> 
+            <i ng-show="song.song_details.error" class="fa fa-exclamation-triangle"></i>
+            {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
+          </span>
         </li>
       </ul>
     </div>

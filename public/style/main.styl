@@ -317,9 +317,7 @@ div#playlist
   margin-top 20px
   li
     display block
-    text-overflow ellipsis
     overflow hidden
-    white-space nowrap
     list-style none
     border 1px solid black
     font-size 20px
@@ -336,6 +334,11 @@ div#playlist
       border-radius 0 0 radius radius
     &:only-child
       border-radius radius radius radius radius
+    .song-details
+      display block
+      overflow hidden
+      text-overflow ellipsis
+      white-space nowrap
       
 div#autoplay
   margin-top 20px

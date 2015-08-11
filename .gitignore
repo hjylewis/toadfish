@@ -5,3 +5,4 @@ node_modules/
 config.js
 .DS_Store
 .env
+/public/style/*.css

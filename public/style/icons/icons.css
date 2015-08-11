@@ -1,0 +1,37 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('fonts/icomoon.eot?-8mghr9');
+	src:url('fonts/icomoon.eot?#iefix-8mghr9') format('embedded-opentype'),
+		url('fonts/icomoon.ttf?-8mghr9') format('truetype'),
+		url('fonts/icomoon.woff?-8mghr9') format('woff'),
+		url('fonts/icomoon.svg?-8mghr9#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-30:before {
+	content: "\e600";
+	position: relative;
+	top: 1px;
+}
+
+/*https://dribbble.com/shots/29158-Rdio-Vector-Icon by Ismael Burciaga*/
+.icon-rdio:before {
+	content: "\e601";
+	position: relative;
+	top: 1px;
+}
