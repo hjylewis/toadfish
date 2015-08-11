@@ -100,11 +100,18 @@
         dnd-draggable="song" dnd-dragstart="from.index = $index" dnd-effect-allowed="move">
           <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa fa-play"></i> 
           <i ng-show="song.song_details.error" class="fa fa-exclamation-triangle"></i>
+          <span class="hover-purple icon-30" ng-if="song.song_details.type =='rdio' && !rdio_user" data-ng-click="openModal($event)"></span>
           {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
-          <span style="font-size:15px" class="hover-purple" ng-if="song.song_details.type =='rdio' && !rdio_user" data-ng-click="openModal($event)">(30s)</span>
-          <a ng-show="songHover" ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}"><i class="fa fa-long-arrow-right"></i></a>
-          <span style="float:right">
-          <i ng-click="remove($index, $event)" ng-show="songHover" class="hover-purple clickable fa fa-times"></i>
+          
+          <span style="float:right" ng-show="songHover">
+            <a ng-show="songHover" ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}">
+              <i data-ng-class="{
+                'fa fa-youtube-play': song.song_details.type === 'youtube', 
+                'fa fa-soundcloud': song.song_details.type === 'soundcloud', 
+                'icon-rdio': song.song_details.type === 'rdio'
+              }"></i>
+            </a>
+            <i ng-click="remove($index, $event)" class="hover-purple clickable fa fa-times"></i>
           </span>
         </li>
       </ul>
@@ -119,7 +126,7 @@
       </span>
     </div>
   </div>
-  <div class="share" ng-hide="isLoading">
+  <div class="share" ng-hide="isLoading" ng-cloak>
     <h3>Share this link to invite anyone:</h3><input id="share-link" onclick="this.select();" type="text">
     <a href="" target="_blank" class="fb-share-button"><i class="fa fa-facebook-square fa-lg"></i></a>
     <a href="" target="_blank" class="twitter-share-button"><i class="fa fa-twitter-square fa-lg"></i></a>
