@@ -98,13 +98,8 @@
         <li class="hover clickable" ng-repeat="song in playlist.playlist track by song.song_details.uuid" ng-click="playlist.goTo($index)"
         ng-mouseenter="songHover = true" ng-mouseleave="songHover = false"
         dnd-draggable="song" dnd-dragstart="from.index = $index" dnd-effect-allowed="move">
-          <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa fa-play"></i> 
-          <i ng-show="song.song_details.error" class="fa fa-exclamation-triangle"></i>
-          <span class="hover-purple icon-30" ng-if="song.song_details.type =='rdio' && !rdio_user" data-ng-click="openModal($event)"></span>
-          {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
-          
-          <span style="float:right" ng-show="songHover">
-            <a ng-show="songHover" ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}">
+          <span class="song-icons" style="float:right" ng-show="songHover">
+            <a ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}">
               <i data-ng-class="{
                 'fa fa-youtube-play': song.song_details.type === 'youtube', 
                 'fa fa-soundcloud': song.song_details.type === 'soundcloud', 
@@ -112,6 +107,12 @@
               }"></i>
             </a>
             <i ng-click="remove($index, $event)" class="hover-purple clickable fa fa-times"></i>
+          </span>
+          <span class="song-details">
+            <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa fa-play"></i> 
+            <i ng-show="song.song_details.error" class="fa fa-exclamation-triangle"></i>
+            <span class="hover-purple icon-30" ng-if="song.song_details.type =='rdio' && !rdio_user" data-ng-click="openModal($event)"></span>
+            {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
           </span>
         </li>
       </ul>

@@ -25,9 +25,13 @@
 
 .icon-30:before {
 	content: "\e600";
+	position: relative;
+	top: 1px;
 }
 
 /*https://dribbble.com/shots/29158-Rdio-Vector-Icon by Ismael Burciaga*/
 .icon-rdio:before {
 	content: "\e601";
+	position: relative;
+	top: 1px;
 }
