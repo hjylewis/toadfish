@@ -57,10 +57,6 @@ rdioCallback = {
 	ready: (user) ->
 		console.log("rdio ready");
 		rdio_player = $('#rdio_player').get(0)
-		rdio_player.rdio_startFrequencyAnalyzer({
-			frequencies: '10-band',
-			period: 100
-		})
 		rdioLoaded = true
 		rdio_user = user
 		loadPlaylist()
