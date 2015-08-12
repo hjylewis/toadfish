@@ -43,12 +43,7 @@ if (host == true)
 			params = {
 				'allowScriptAccess': 'always'
 			}
-			# if (ENV == "production")
-			# 	swf = 'https://www.rdio.com/api/swf/'
-			# else
-			# 	swf = 'http://www.rdio.com/api/swf/'
-			# console.log swf
-			swfobject.embedSWF('/api.swf', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
+			swfobject.embedSWF('/rdio-api.swf', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
 			console.log "after embed"
 	}
 
@@ -57,10 +52,6 @@ rdioCallback = {
 	ready: (user) ->
 		console.log("rdio ready");
 		rdio_player = $('#rdio_player').get(0)
-		# rdio_player.rdio_startFrequencyAnalyzer({
-		# 	frequencies: '10-band',
-		# 	period: 100
-		# })
 		rdioLoaded = true
 		rdio_user = user
 		loadPlaylist()
