@@ -37,9 +37,8 @@ a
 
 body
   font-size 20px
-  padding-top 50px
+  // padding-top 50px
   color white
-  background grey
   font-family "Raleway", helvetica
   position relative
   
@@ -116,7 +115,7 @@ div.content
   max-width 700px
   margin auto
   margin-bottom 100px
-  margin-top 60px
+  margin-top 110px
   @media screen and (max-width: 450px)
     width 100%
     box-sizing border-box
@@ -135,9 +134,6 @@ div.content
   
 .dndDraggingSource
   display none !important
-  
-.fa-volume-up
-  float right 
 
 .fa-exclamation-triangle
   color red
@@ -148,17 +144,42 @@ div.content
 .no-margin
   margin 0px !important 
 
+//////////////
+//Launch page
+//////////////
+
 .launch-container
   text-align center
   width 660px
   margin auto
 input#createRoomName
-  border-radius 15px
-  
   margin auto
   font-size 55px
   margin-top 20%
-  padding 30px
+  border 0px
+  border-bottom 3px solid white
+  border-radius 0px
+  color white
+  background-color transparent
+  
+  input_grey = white
+
+  &::-webkit-input-placeholder { /* WebKit browsers */
+    color:    input_grey;
+  }
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    input_grey;
+    opacity:  1;
+  }
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    input_grey;
+    opacity:  1;
+  }
+  &:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    input_grey;
+  }
+  
+  
   
 #createWarning
   margin-top 10px
@@ -172,7 +193,8 @@ input#createRoomName
   padding 10px 
   padding-right 20px
   padding-left 20px  
-  float right
+  margin auto
+  margin-top 20px
   &:hover
     background-color #654782
 #list-rooms
@@ -180,11 +202,12 @@ input#createRoomName
   font-size 25px
   color black
   border-radius 15px
-  border 1px solid black
+  background-color rgba(255,255,255,.7)
   width 250px
   padding 20px
   margin auto
   margin-top 100px
+  margin-bottom 100px  
   
   ul
     list-style-type none
@@ -197,7 +220,55 @@ input#createRoomName
   margin-top 20px
   width 100%
   height 400px 
+  
+section
+  background-size cover 
+  overflow:hidden
+  min-height 100vh
+  &.top
+    background-image url("../images/unsplash_52c319226cefb_1.jpeg")
+  &.middle
+    background-image url("../images/unsplash-kitsune-4.jpg")
+    h1
+      margin-top 80px
+      color black
+    div.info
+      width 950px 
+      text-align center 
+      font-family 'Roboto'
+      margin auto
+      margin-top 30px
+      margin-bottom 50px   
+      font-size 40px
+      color white
+      background-color rgba(0,0,0,.5)
+      padding 10px
+      border-radius 5px
+      div
+        position relative 
+        width 438px
+        margin auto
+        .fa-volume-up
+          position absolute
+          top 45px
+          left 70px
+        .fa-wifi
+          -ms-transform rotate(270deg) /* IE 9 */
+          -webkit-transform rotate(270deg) /* Chrome, Safari, Opera */
+          transform rotate(270deg)
+          position relative
+          top -28px
+          right -15px
+  &.bottom
+    background-image url('../images/photo-1429962714451-bb934ecdc4ec.jpeg')
+      
+    
+    
 
+
+//////////////
+//Player page
+//////////////
 div.search-container
   margin-top 20px
   border 1px solid black
@@ -283,6 +354,8 @@ div#player
         margin-right 10px
       #volume
         float right 
+        .fa-volume-up
+          float right 
     #details
       white-space nowrap
       text-overflow ellipsis

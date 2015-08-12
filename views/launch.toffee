@@ -3,20 +3,37 @@
 	var rooms = #{rooms}
 </script>
 <body>
-    <div class="launch-container">
-        <div style='overflow:hidden'>
-            <form action="javascript:submit()" autocomplete="off">
-                <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20" autofocus>
-                <span class="warning" id="createWarning" hidden>That room name already exists</span>
-                <input type="submit" id="createRoom" class="clickable" value="Create">
-            </form>
+    <section class="top">
+        <div class="launch-container">
+            <div style='overflow:hidden'>
+                <form action="javascript:submit()" autocomplete="off">
+                    <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20" autofocus>
+                    <span class="warning" id="createWarning" hidden>That room name already exists</span>
+                    <input type="submit" id="createRoom" class="clickable" value="Create">
+                </form>
+            </div>
+            <div id="list-rooms" hidden>
+            	<h4>Your open rooms:</h4>
+            	<ul id="list_open_rooms">
+            	</ul>
+            </div>
+        <div>
+    </section>
+    <section class="middle">
+        <h1>Music, Together.</h1>
+        <div class="info">
+            <p>Host a playlist on Toadfish that guests can join and add songs just by clicking a link!</p>
+            <div>
+                <i class="fa fa-laptop fa-5x"></i><i class="fa fa-volume-up fa-2x"></i><i class="fa fa-wifi fa-3x"></i><i class="fa fa-mobile fa-5x"></i>
+            </div>
+            <p>Guest are happy that they contribute to the musical experience and you can enjoy the party!</p>
+            <br />
+            <p>Build playlist with songs from <a href="https://soundcloud.com" target="_blank">Soundcloud</a>, <a href="https://rdio.com" target="_blank">Rdio</a>, and <a href="https://youtube.com" target="_blank">Youtube</a> so no more jumping between applications!</p>
         </div>
-        <div id="list-rooms" hidden>
-        	<h4>Your open rooms:</h4>
-        	<ul id="list_open_rooms">
-        	</ul>
-        </div>
-    <div>
+    </section>
+    <section class="bottom">
+    </section>
 
-    <script src="/launch.js"></script>
 </body>
+<script src="/launch.js"></script>
+
