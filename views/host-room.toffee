@@ -50,6 +50,7 @@
         </div>
 
         <div class="right-buttons">
+          <i class="clickable hover-purple no-margin fa fa-arrows-alt" data-ng-click="toggleFullScreen()"></i>
           <div id="volume" data-ng-mouseenter="volumeShow = true" data-ng-mouseleave="volumeShow = false" data-ng-mouseup="playlist.setVolume()">
             <input data-ng-show="volumeShow" type="range" min="0" max="100" data-ng-model="playlist.volume" value="{{playlist.volume}}">
             <i class="fa fa-volume-up"></i>
