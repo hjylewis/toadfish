@@ -152,15 +152,28 @@ div.content
   text-align center
   width 660px
   margin auto
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  @media screen and (max-width: 550px)
+    width 100% 
+
+  .create-room-container
+    overflow:hidden
+    
 input#createRoomName
   margin auto
   font-size 55px
-  margin-top 20%
   border 0px
   border-bottom 3px solid white
   border-radius 0px
   color white
   background-color transparent
+  text-overflow ellipsis
+  @media screen and (max-width: 550px)
+    width 90%
+    
   
   input_grey = white
 
@@ -184,19 +197,19 @@ input#createRoomName
 #createWarning
   margin-top 10px
 #createRoom
-  background-color darkpurple
-  border-radius 15px
+  background-color #6547D8
+  border-radius 40px
   border none
   margin 10px
   color white
-  font-size 50px
+  font-size 40px
   padding 10px 
-  padding-right 20px
-  padding-left 20px  
+  padding-right 35px
+  padding-left 35px  
   margin auto
   margin-top 20px
   &:hover
-    background-color #654782
+    background-color darkpurple
 #list-rooms
   clear both
   font-size 25px
@@ -226,6 +239,7 @@ section
   overflow:hidden
   min-height 100vh
   &.top
+    position relative
     background-image url("../images/unsplash_52c319226cefb_1.jpeg")
   &.middle
     background-image url("../images/unsplash-kitsune-4.jpg")
@@ -241,9 +255,11 @@ section
       margin-bottom 50px   
       font-size 40px
       color white
-      background-color rgba(0,0,0,.5)
+      background-color rgba(0,0,0,.3)
       padding 10px
       border-radius 5px
+      @media screen and (max-width: 980px)
+        width 90%
       div
         position relative 
         width 438px

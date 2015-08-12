@@ -5,7 +5,7 @@
 <body>
     <section class="top">
         <div class="launch-container">
-            <div style='overflow:hidden'>
+            <div class="create-room-container">
                 <form action="javascript:submit()" autocomplete="off">
                     <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20" autofocus>
                     <span class="warning" id="createWarning" hidden>That room name already exists</span>
