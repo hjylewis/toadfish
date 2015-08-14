@@ -49,8 +49,6 @@ h1
   margin-top 25px
   color: white;
   padding: 14px;
-  @media screen and (max-width: 450px)
-    font-size 50px
     
 h4
   font-family: 'Roboto';
@@ -104,10 +102,6 @@ nav
   li:first-child
     padding-left 20px
     float left
-  
-  li#register
-    @media screen and (max-width: 500px)
-      display none
     
 div.content
   min-width 300px
@@ -116,10 +110,6 @@ div.content
   margin auto
   margin-bottom 100px
   padding-top 110px
-  @media screen and (max-width: 450px)
-    width 100%
-    box-sizing border-box
-    padding 5px
 
 .clickable
   cursor pointer
@@ -172,8 +162,7 @@ input.launch-button
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  @media screen and (max-width: 550px)
-    width 100% 
+
 
   .create-room-container
     overflow:hidden
@@ -187,9 +176,6 @@ input#createRoomName
   color white
   background-color transparent
   text-overflow ellipsis
-  @media screen and (max-width: 550px)
-    width 90%
-    
   
   input_grey = white
 
@@ -261,8 +247,6 @@ section
       background-color rgba(0,0,0,.3)
       padding 10px
       border-radius 5px
-      @media screen and (max-width: 980px)
-        width 90%
       div
         position relative 
         width 438px
@@ -624,6 +608,34 @@ div.overlay
   position absolute
   top 0px    
   z-index 5
+  
+
+//////////////
+//Mobile
+//////////////
+@media screen and (max-width: 450px)
+  h1
+    font-size 50px
+  div.content
+    width 100%
+    box-sizing border-box
+    padding 5px
+
+  
+@media screen and (max-width: 500px)
+  li#register
+    display none
+    
+@media screen and (max-width: 550px)
+  .launch-container
+    width 100% 
+  input#createRoomName
+    width 90%
+
+@media screen and (max-width: 980px)
+  section#about
+    div.info
+      width 90%
 
 //Loader
 //http://codepen.io/boris-graeff/pen/bdBXmj
