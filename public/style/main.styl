@@ -148,6 +148,22 @@ div.content
 //Launch page
 //////////////
 
+input.launch-button
+  background-color #6547D8
+  border-radius 40px
+  border none
+  margin 10px
+  color white
+  font-size 40px
+  padding 10px 
+  padding-right 35px
+  padding-left 35px  
+  margin auto
+  margin-top 20px
+  cursor pointer
+  &:hover
+    background-color darkpurple
+
 .launch-container
   text-align center
   width 660px
@@ -196,20 +212,7 @@ input#createRoomName
   
 #createWarning
   margin-top 10px
-#createRoom
-  background-color #6547D8
-  border-radius 40px
-  border none
-  margin 10px
-  color white
-  font-size 40px
-  padding 10px 
-  padding-right 35px
-  padding-left 35px  
-  margin auto
-  margin-top 20px
-  &:hover
-    background-color darkpurple
+
 #list-rooms
   clear both
   font-size 25px
@@ -238,10 +241,10 @@ section
   background-size cover 
   overflow:hidden
   min-height 100vh
-  &.top
+  &#create
     position relative
     background-image url("../images/unsplash_52c319226cefb_1.jpeg")
-  &.middle
+  &#about
     background-image url("../images/unsplash-kitsune-4.jpg")
     h1
       margin-top 80px
@@ -275,7 +278,33 @@ section
           position relative
           top -28px
           right -15px
-  &.bottom
+  &#accounts
+    position relative 
+    background-image url('../images/9a2d8cf6.jpeg')
+    div.info
+      text-align left
+      margin 20px
+      margin-top 80px
+      font-family 'Roboto'
+      font-size 22px
+      h1
+        text-align left
+        padding 0px 
+        font-size 80px
+      h2
+        padding 20px 0px 
+        font-size 38px  
+      div
+        margin-left 10px
+        ul
+          padding 25px 42px
+          padding-top 10px
+    .launch-button
+      position absolute
+      bottom 80px
+      left 50%
+      margin-left -82.5px
+  &#contact
     background-image url('../images/photo-1429962714451-bb934ecdc4ec.jpeg')
       
     
