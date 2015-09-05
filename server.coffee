@@ -106,6 +106,7 @@ server.listen port, ->
 	console.log "Listening on #{port}..."
 
 cleanUpDB = () ->
+	console.log "Running room clean up..."
 	oneWeekAgo = new Date()
 	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
 	Room.find({update: {"$lt": oneWeekAgo}}).remove().exec()
