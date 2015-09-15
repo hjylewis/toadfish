@@ -48,8 +48,9 @@ class Playlist
 		else
 			return @playlist[@currentIndex]
 
-	play: (update) ->
-		return if !host
+	play: (update, index) ->
+		console.log index + ", " + @currentIndex
+		return if !host || (index && index == @currentIndex)
 		if (@playlist.length == 0)
 			console.log "nothing here"
 		else if @state == 1
@@ -121,22 +122,22 @@ class Playlist
 		if (@currentIndex + 1 < @playlist.length )
 			@stop(true)
 			@autoplay = false
-			@currentIndex++
+			index = ++@currentIndex
 			@save('next', @currentIndex.toString()) if !update
 			@loadSong () => #might wanna make is so it doesn't play if player is paused
 				@setVolume @volume
-				@play()
+				@play(false, index)
 		else 
 			@startAutoPlay()
 
 	prev: (update) ->
 		if (@currentIndex > 0)
 			@stop(true)
-			@currentIndex--
+			index = --@currentIndex
 			@save('prev', @currentIndex.toString()) if !update
 			@loadSong () =>
 				@setVolume @volume
-				@play()
+				@play(false, index)
 		else 
 			@seek(0)
 
@@ -148,7 +149,7 @@ class Playlist
 			@save('goTo', @currentIndex.toString()) if !update
 			@loadSong () =>
 				@setVolume @volume
-				@play()
+				@play(false, index)
 		return false
 
 	add: (song_details, update) ->
