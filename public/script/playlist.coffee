@@ -244,7 +244,6 @@ class Playlist
 							@play() #auto play
 						@save 'autoplay', JSON.stringify(song_details)
 			when "youtube"
-				console.log "youtube"
 				ytOptions = {
 					relatedToVideoId: song.song_details.id,
 					videoEmbeddable: true,
@@ -259,7 +258,6 @@ class Playlist
 					else
 						track = response.items[Math.floor(Math.random() * 5)]
 						song_details = search.cleanUpResults({items: [track]}, 'youtube').collections[0]
-						console.log song_details
 						@autoplay = song_details
 						@loadSong () =>
 							@setVolume @volume
