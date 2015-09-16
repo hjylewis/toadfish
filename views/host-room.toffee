@@ -12,7 +12,7 @@
     var url = window.location.host + '/' + roomID
     $('#share-link').val(url);
     $('.fb-share-button').attr('href','https://www.facebook.com/sharer/sharer.php?u=https://' + url);
-    $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our toadfish room and jam out!');
+    $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our Toadfish room and jam out!');
     if (googleLoaded && rdioLoaded) {
       var scope = angular.element($("body")).scope();
       var load = function (){
