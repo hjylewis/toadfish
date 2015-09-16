@@ -232,19 +232,19 @@ class Playlist
 				@play()
 				return
 			when "soundcloud"
-				_this = @
 				SC.get '/tracks/' + song.song_details.id + '/related', {limit: 5}, (tracks, err) =>
 					if (err)
 						seekEnd()
 					else
 						track = tracks[Math.floor(Math.random() * 5)]
 						song_details = search.cleanUpResults({collection: [track]}, 'soundcloud').collections[0]
-						console.log(song_details)
 						@autoplay = song_details
 						@loadSong () =>
-							_this.setVolume _this.volume
-							_this.play() #auto play
+							@setVolume @volume
+							@play() #auto play
 						@save 'autoplay', JSON.stringify(song_details)
+			when "youtube"
+				console.log "youtube"
 
 	loadArt: () ->
 		song = @getCurrentSong()
@@ -357,7 +357,6 @@ class Playlist
 				if (scope.$$phase || scope.$root.$$phase) then openModal() else scope.$apply(openModal())
 				@next()
 			else if percent > 99.5
-				console.log "END"
 				@next()
 	sendUpdate: (type, data) ->
 		$.post('/sendUpdate', {
