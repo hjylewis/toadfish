@@ -163,7 +163,7 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 		if (@currentIndex + 2 == @playlist.length && (@state == 0 || @autoplay))
-			@next(true, @autoplay && (@autoplay.id == song_details.id))
+			@next(update || !host, @autoplay && (@autoplay.id == song_details.id))
 
 	addFirst: (song_details, update) ->
 		if (@playlist.length == 0)
@@ -245,6 +245,19 @@ class Playlist
 						@save 'autoplay', JSON.stringify(song_details)
 			when "youtube"
 				console.log "youtube"
+				ytOptions = {
+					relatedToVideoId: song.song_details.id,
+					videoEmbeddable: true,
+					type: 'video',
+					maxResults: 5,
+					part: 'snippet'
+				}
+				request = gapi.client.youtube.search.list ytOptions
+				request.execute (response) =>
+					if (response.error)
+						seekEnd()
+					else
+			            console.log response
 
 	loadArt: () ->
 		song = @getCurrentSong()
