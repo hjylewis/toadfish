@@ -47,6 +47,7 @@
         <input type="button" class="launch-button" value="Sign up">
     </section>
     <section id="contact">
+        <div class="info"><h2>Follow <a href="https://twitter.com/toadfish_music">@toadfish_music</a> for updates</h2></div>
     </section>
 
 </body>
