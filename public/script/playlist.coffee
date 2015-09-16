@@ -163,7 +163,7 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 		if (@currentIndex + 2 == @playlist.length && (@state == 0 || @autoplay))
-			@next(update, @autoplay && (@autoplay.id == song_details.id))
+			@next(true, @autoplay && (@autoplay.id == song_details.id))
 
 	addFirst: (song_details, update) ->
 		if (@playlist.length == 0)
@@ -173,7 +173,7 @@ class Playlist
 			@playlist.splice(@currentIndex + 1, 0, {
 				song_details: song_details
 			})
-			@next()
+			@next(true)
 			@save "addFirst", JSON.stringify(song_details) if !update
 
 	remove: (index, update) ->
