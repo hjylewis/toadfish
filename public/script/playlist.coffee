@@ -373,6 +373,7 @@ class Playlist
 	save: (type, data) ->
 		@sendUpdate type, data
 		@saveToDB(type) if host
+		# @reload() if !host && type == "add"
 	saveToDB: (type) ->
 		playlistArray = ["add", "addFirst", "move", "remove", "error", "playlist"]
 		indexArray = ["next", "prev", "goTo", "move", "remove", "index"]
@@ -414,6 +415,9 @@ class Playlist
 			playlistSettings: JSON.stringify(playlistSettings),
 			roomID: roomID
 		})
+	reload: () ->
+		$.get '/playlistSettings/' + roomID, (settings) =>
+			@load settings
 
 # TODO move to utilities eventually
 generateUUID  = () ->
