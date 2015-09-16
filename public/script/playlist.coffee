@@ -163,7 +163,7 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 		if (@currentIndex + 2 == @playlist.length && (@state == 0 || @autoplay))
-			@next(false, @autoplay && (@autoplay.id == song_details.id))
+			@next(update, @autoplay && (@autoplay.id == song_details.id))
 
 	addFirst: (song_details, update) ->
 		if (@playlist.length == 0)
@@ -377,6 +377,7 @@ class Playlist
 				@playlist[parseInt(update.data)].song_details.error = true
 			when "autoplay"
 				@autoplay = JSON.parse(update.data)
+				@loadArt()
 		scope = angular.element($("body")).scope()
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
