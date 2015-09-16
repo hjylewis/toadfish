@@ -10,7 +10,6 @@ roomSchema = new mongoose.Schema({
 		volume: Number,
 		state: Number,
 		autoplay: String,
-		lastRdioStation: String
 	},
 	update: Date,
 })

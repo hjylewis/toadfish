@@ -20,7 +20,6 @@ class Playlist
 		@state = 0
 		@volume = 100
 		@autoplay = false
-		@lastRdioStation = null
 		socket.on 'update', (update) =>
 			if update.socketID != socket.id
 				@readUpdate(update)
@@ -29,7 +28,6 @@ class Playlist
 		@currentIndex = playlistSettings.currentIndex || 0
 		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
 		@volume = playlistSettings.volume || 100
-		@lastRdioStation = playlistSettings.lastRdioStation || null
 
 		if host
 			@save "autoplay", "false"
@@ -345,8 +343,6 @@ class Playlist
 					cb()
 			else if (song_details.type == "rdio")
 				rdio_player.rdio_play(song_details.id)
-				@lastRdioStation = song_details.radioKey
-				@saveToDB("lastRdioStation")
 				rdio_player.rdio_pause()
 				cb()
 
@@ -427,7 +423,6 @@ class Playlist
 	saveToDB: (type) ->
 		playlistArray = ["add", "addFirst", "move", "remove", "error", "playlist"]
 		indexArray = ["next", "prev", "goTo", "move", "remove", "index"]
-		rdioStationArray = ["lastRdioStation"]
 		autoplayArray = ["autoplay", "next", "goTo"]
 
 		switch (type)
@@ -447,9 +442,6 @@ class Playlist
 		if (indexArray.indexOf(type) != -1)
 			currentIndex = JSON.stringify(@currentIndex)
 
-		if (rdioStationArray.indexOf(type) != -1)
-			lastRdioStation = @lastRdioStation
-
 		if (autoplayArray.indexOf(type) != -1)
 			autoplay = @autoplay
 
@@ -459,7 +451,6 @@ class Playlist
 			volume: JSON.stringify(@volume),
 			state: state,
 			autoplay: JSON.stringify(autoplay),
-			lastRdioStation: lastRdioStation
 		}
 		$.post('/savePlaylist', { 
 			playlistSettings: JSON.stringify(playlistSettings),

@@ -57,7 +57,6 @@ router.post "/savePlaylist", (req, res) ->
     room.playlistSettings.volume = JSON.parse(playlistSettings.volume) if playlistSettings.volume
     room.playlistSettings.state = JSON.parse(playlistSettings.state) if playlistSettings.state
     room.playlistSettings.autoplay = playlistSettings.autoplay if  playlistSettings.autoplay
-    room.playlistSettings.lastRdioStation = playlistSettings.lastRdioStation if playlistSettings.lastRdioStation
     room.update = new Date()
     room.save (err) ->
       if (err)
