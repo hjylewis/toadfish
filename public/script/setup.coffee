@@ -44,13 +44,11 @@ if (host == true)
 				'allowScriptAccess': 'always'
 			}
 			swfobject.embedSWF('/rdio-api.swf', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
-			console.log "after embed"
 	}
 
 
 rdioCallback = {
 	ready: (user) ->
-		console.log("rdio ready");
 		rdio_player = $('#rdio_player').get(0)
 		rdioLoaded = true
 		rdio_user = user
