@@ -116,7 +116,7 @@ class Playlist
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_setVolume(@volume / 100)
 
-
+	# add_autoplay: just added the autoplay song, so don't stop or reload the song
 	next: (update, add_autoplay) ->
 		if (@currentIndex + 1 < @playlist.length )
 			@stop(true) if !add_autoplay
