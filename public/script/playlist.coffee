@@ -20,7 +20,6 @@ class Playlist
 		@state = 0
 		@volume = 100
 		@autoplay = false
-		@lastRdioStation = null
 		socket.on 'update', (update) =>
 			if update.socketID != socket.id
 				@readUpdate(update)
@@ -29,7 +28,6 @@ class Playlist
 		@currentIndex = playlistSettings.currentIndex || 0
 		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
 		@volume = playlistSettings.volume || 100
-		@lastRdioStation = playlistSettings.lastRdioStation || null
 
 		if host
 			@save "autoplay", "false"
@@ -57,7 +55,7 @@ class Playlist
 		else
 			song = @getCurrentSong()
 			if (song.song_details.type == "soundcloud")
-				song.obj.play()
+				SC.sound.play()
 			else if (song.song_details.type == "youtube")
 				yt_player.playVideo()
 				@state = 1
@@ -73,7 +71,7 @@ class Playlist
 		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
-			song.obj.pause()
+			SC.sound.pause()
 		else if (song.song_details.type == "youtube")
 			yt_player.pauseVideo()
 		else if (song.song_details.type == "rdio")
@@ -88,7 +86,7 @@ class Playlist
 		song = @getCurrentSong()
 		try
 			if (song.song_details.type == "soundcloud")
-				song.obj.stop()
+				SC.sound.stop()
 			else if (song.song_details.type == "youtube")
 				yt_player.stopVideo()
 			else if (song.song_details.type == "rdio")
@@ -100,7 +98,7 @@ class Playlist
 		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
-			song.obj.setPosition(song.song_details.duration * (percent / 100))
+			SC.sound.setPosition(song.song_details.duration * (percent / 100))
 		else if (song.song_details.type == "youtube")
 			yt_player.seekTo(yt_player.getDuration() * (percent / 100))
 		else if (song.song_details.type == "rdio")
@@ -110,7 +108,7 @@ class Playlist
 		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
-			song.obj.setVolume(@volume)
+			SC.sound.setVolume(@volume)
 		else if (song.song_details.type == "youtube")
 			yt_player.setVolume(@volume)
 		else if (song.song_details.type == "rdio")
@@ -163,7 +161,7 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 		if (@currentIndex + 2 == @playlist.length && (@state == 0 || @autoplay))
-			@next(update, @autoplay && (@autoplay.id == song_details.id))
+			@next(update || !host, @autoplay && (@autoplay.id == song_details.id))
 
 	addFirst: (song_details, update) ->
 		if (@playlist.length == 0)
@@ -173,7 +171,7 @@ class Playlist
 			@playlist.splice(@currentIndex + 1, 0, {
 				song_details: song_details
 			})
-			@next()
+			@next(update || !host)
 			@save "addFirst", JSON.stringify(song_details) if !update
 
 	remove: (index, update) ->
@@ -214,16 +212,55 @@ class Playlist
 
 	startAutoPlay: () ->
 		return if !host
-		if @lastRdioStation
-			@stop()
-			@autoplay = true
-			rdio_player.rdio_play(@lastRdioStation)
-			@setVolume @volume
-			@play()
-		else
+		song = @getCurrentSong()
+		@stop()
+		@autoplay = true
+
+		# In case of error
+		seekEnd = () =>
+			@autoplay = false
 			@state = 0
 			@seek(100) # seek end of song
 			@stop()
+
+		switch (song.song_details.type)
+			when "rdio"
+				rdio_player.rdio_play(song.song_details.radioKey)
+				@setVolume @volume
+				@play()
+				return
+			when "soundcloud"
+				SC.get '/tracks/' + song.song_details.id + '/related', {limit: 5}, (tracks, err) =>
+					if (err)
+						seekEnd()
+					else
+						track = tracks[Math.floor(Math.random() * 5)]
+						song_details = search.cleanUpResults({collection: [track]}, 'soundcloud').collections[0]
+						@autoplay = song_details
+						@loadSong () =>
+							@setVolume @volume
+							@play() #auto play
+						@save 'autoplay', JSON.stringify(song_details)
+			when "youtube"
+				ytOptions = {
+					relatedToVideoId: song.song_details.id,
+					videoEmbeddable: true,
+					type: 'video',
+					maxResults: 5,
+					part: 'snippet'
+				}
+				request = gapi.client.youtube.search.list ytOptions
+				request.execute (response) =>
+					if (response.error)
+						seekEnd()
+					else
+						track = response.items[Math.floor(Math.random() * 5)]
+						song_details = search.cleanUpResults({items: [track]}, 'youtube').collections[0]
+						@autoplay = song_details
+						@loadSong () =>
+							@setVolume @volume
+							@play() #auto play
+						@save 'autoplay', JSON.stringify(song_details)
 
 	loadArt: () ->
 		song = @getCurrentSong()
@@ -277,7 +314,6 @@ class Playlist
 							else
 								_this.setPlayState 1
 					}, (sound) ->
-						song.obj = sound
 						SC.sound = sound
 						cb()
 			else if (song_details.type == "youtube")
@@ -307,8 +343,6 @@ class Playlist
 					cb()
 			else if (song_details.type == "rdio")
 				rdio_player.rdio_play(song_details.id)
-				@lastRdioStation = song_details.radioKey
-				@saveToDB("lastRdioStation")
 				rdio_player.rdio_pause()
 				cb()
 
@@ -389,7 +423,6 @@ class Playlist
 	saveToDB: (type) ->
 		playlistArray = ["add", "addFirst", "move", "remove", "error", "playlist"]
 		indexArray = ["next", "prev", "goTo", "move", "remove", "index"]
-		rdioStationArray = ["lastRdioStation"]
 		autoplayArray = ["autoplay", "next", "goTo"]
 
 		switch (type)
@@ -409,9 +442,6 @@ class Playlist
 		if (indexArray.indexOf(type) != -1)
 			currentIndex = JSON.stringify(@currentIndex)
 
-		if (rdioStationArray.indexOf(type) != -1)
-			lastRdioStation = @lastRdioStation
-
 		if (autoplayArray.indexOf(type) != -1)
 			autoplay = @autoplay
 
@@ -421,7 +451,6 @@ class Playlist
 			volume: JSON.stringify(@volume),
 			state: state,
 			autoplay: JSON.stringify(autoplay),
-			lastRdioStation: lastRdioStation
 		}
 		$.post('/savePlaylist', { 
 			playlistSettings: JSON.stringify(playlistSettings),
