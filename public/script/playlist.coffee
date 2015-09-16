@@ -57,7 +57,7 @@ class Playlist
 		else
 			song = @getCurrentSong()
 			if (song.song_details.type == "soundcloud")
-				song.obj.play()
+				SC.sound.play()
 			else if (song.song_details.type == "youtube")
 				yt_player.playVideo()
 				@state = 1
@@ -73,7 +73,7 @@ class Playlist
 		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
-			song.obj.pause()
+			SC.sound.pause()
 		else if (song.song_details.type == "youtube")
 			yt_player.pauseVideo()
 		else if (song.song_details.type == "rdio")
@@ -88,7 +88,7 @@ class Playlist
 		song = @getCurrentSong()
 		try
 			if (song.song_details.type == "soundcloud")
-				song.obj.stop()
+				SC.sound.stop()
 			else if (song.song_details.type == "youtube")
 				yt_player.stopVideo()
 			else if (song.song_details.type == "rdio")
@@ -100,7 +100,7 @@ class Playlist
 		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
-			song.obj.setPosition(song.song_details.duration * (percent / 100))
+			SC.sound.setPosition(song.song_details.duration * (percent / 100))
 		else if (song.song_details.type == "youtube")
 			yt_player.seekTo(yt_player.getDuration() * (percent / 100))
 		else if (song.song_details.type == "rdio")
@@ -110,7 +110,7 @@ class Playlist
 		return if !host
 		song = @getCurrentSong()
 		if (song.song_details.type == "soundcloud")
-			song.obj.setVolume(@volume)
+			SC.sound.setVolume(@volume)
 		else if (song.song_details.type == "youtube")
 			yt_player.setVolume(@volume)
 		else if (song.song_details.type == "rdio")
@@ -214,16 +214,36 @@ class Playlist
 
 	startAutoPlay: () ->
 		return if !host
-		if @lastRdioStation
-			@stop()
-			@autoplay = true
-			rdio_player.rdio_play(@lastRdioStation)
-			@setVolume @volume
-			@play()
-		else
+		song = @getCurrentSong()
+		@stop()
+		@autoplay = true
+
+		# In case of error
+		seekEnd = () =>
+			@autoplay = false
 			@state = 0
 			@seek(100) # seek end of song
 			@stop()
+
+		switch (song.song_details.type)
+			when "rdio"
+				rdio_player.rdio_play(song.song_details.radioKey)
+				@setVolume @volume
+				@play()
+				return
+			when "soundcloud"
+				_this = @
+				SC.get '/tracks/' + song.song_details.id + '/related', {limit: 1}, (tracks, err) =>
+					if (err)
+						seekEnd()
+					else
+						song_details = search.cleanUpResults({collection: tracks}, 'soundcloud').collections[0]
+						console.log(song_details)
+						@autoplay = song_details
+						@loadSong () =>
+							_this.setVolume _this.volume
+							_this.play() #auto play
+						@save 'autoplay', JSON.stringify(song_details)
 
 	loadArt: () ->
 		song = @getCurrentSong()
@@ -277,7 +297,6 @@ class Playlist
 							else
 								_this.setPlayState 1
 					}, (sound) ->
-						song.obj = sound
 						SC.sound = sound
 						cb()
 			else if (song_details.type == "youtube")
@@ -337,6 +356,7 @@ class Playlist
 				if (scope.$$phase || scope.$root.$$phase) then openModal() else scope.$apply(openModal())
 				@next()
 			else if percent > 99.5
+				console.log "END"
 				@next()
 	sendUpdate: (type, data) ->
 		$.post('/sendUpdate', {
