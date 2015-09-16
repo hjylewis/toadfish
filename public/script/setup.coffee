@@ -75,6 +75,7 @@ rdioCallback = {
 		if (playlist.autoplay)
 			song_details = search.cleanUpResults({collection: [playingTrack]}, 'rdio').collections[0]
 			playlist.autoplay = song_details
+			playlist.loadArt()
 			playlist.save 'autoplay', JSON.stringify(song_details)
 			if (!scope.$$phase && !scope.$root.$$phase)
 				scope.$apply()

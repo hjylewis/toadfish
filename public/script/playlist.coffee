@@ -117,15 +117,16 @@ class Playlist
 			rdio_player.rdio_setVolume(@volume / 100)
 
 
-	next: (update) ->
+	next: (update, add_autoplay) ->
 		if (@currentIndex + 1 < @playlist.length )
-			@stop(true)
+			@stop(true) if !add_autoplay
 			@autoplay = false
 			@currentIndex++
 			@save('next', @currentIndex.toString()) if !update
-			@loadSong () => #might wanna make is so it doesn't play if player is paused
-				@setVolume @volume
-				@play()
+			if !add_autoplay
+				@loadSong () => #might wanna make is so it doesn't play if player is paused
+					@setVolume @volume
+					@play()
 		else 
 			@startAutoPlay()
 
@@ -162,7 +163,7 @@ class Playlist
 				@setVolume @volume
 				@play() #auto play
 		if (@currentIndex + 2 == @playlist.length && (@state == 0 || @autoplay))
-			@next()
+			@next(false, @autoplay && (@autoplay.id == song_details.id))
 
 	addFirst: (song_details, update) ->
 		if (@playlist.length == 0)
@@ -182,7 +183,7 @@ class Playlist
 		else if (index == @currentIndex)
 			@stop(true) if not @autoplay
 			@playlist.splice(index, 1)
-			if (@currentIndex == @playlist.length)
+			if (@currentIndex == @playlist.length && @playlist.length != 0)
 				@currentIndex--
 			if not @autoplay
 				@loadSong () =>
@@ -224,22 +225,32 @@ class Playlist
 			@seek(100) # seek end of song
 			@stop()
 
-	loadSong: (cb) -> 
-		if (cb == undefined)
-			cb = () ->
+	loadArt: () ->
 		song = @getCurrentSong()
-		if (!song)
-			if (@currentIndex != 0)
-				@currentIndex--
-				song = @getCurrentSong()
-			else
-				$("body").css "background-image", ""
-				return
+		if !song
+			$("body").css "background-image", ""
+			return
 		song_details = song.song_details
 
 		$("body").css "background-image", "linear-gradient(rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.2)),url('#{song_details.artwork_url || ""}')"
 		$("body").css "background-size", "cover"
 		$("body").css "background-attachment", "fixed"
+
+	loadSong: (cb) -> 
+		if (cb == undefined)
+			cb = () ->
+
+		song = @getCurrentSong()
+		if (!song && @currentIndex > 0)
+			@currentIndex--
+			song = @getCurrentSong()
+
+		@loadArt()
+
+		return if !song
+
+		song_details = song.song_details
+		
 		
 		if host
 			_this = @
