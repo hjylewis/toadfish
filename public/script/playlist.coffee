@@ -173,7 +173,7 @@ class Playlist
 			@playlist.splice(@currentIndex + 1, 0, {
 				song_details: song_details
 			})
-			@next(true)
+			@next(update || !host)
 			@save "addFirst", JSON.stringify(song_details) if !update
 
 	remove: (index, update) ->
@@ -257,7 +257,14 @@ class Playlist
 					if (response.error)
 						seekEnd()
 					else
-			            console.log response
+						track = response.items[Math.floor(Math.random() * 5)]
+						song_details = search.cleanUpResults({items: [track]}, 'youtube').collections[0]
+						console.log song_details
+						@autoplay = song_details
+						@loadSong () =>
+							@setVolume @volume
+							@play() #auto play
+						@save 'autoplay', JSON.stringify(song_details)
 
 	loadArt: () ->
 		song = @getCurrentSong()

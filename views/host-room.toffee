@@ -66,7 +66,7 @@
         <progress id="seekbar" class="clickable" value="0" max="100" ng-click="seek($event)"></progress>
       </div>
     </div>
-    <div data-ng-show="playlist.playlist[playlist.currentIndex].song_details.type == 'youtube' && mode == 'playlist' && playlist.state !== 0 && !playlist.autoplay" >
+    <div data-ng-show="((playlist.playlist[playlist.currentIndex].song_details.type == 'youtube' && !playlist.autoplay) || playlist.autoplay.type == 'youtube') && mode == 'playlist' && playlist.state !== 0" >
       <div id="yt_player"></div>
     </div>
     <ul id = "result_list" ng-hide="results.length == 0 || mode !== 'search'">
