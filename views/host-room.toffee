@@ -120,7 +120,16 @@
     </div>
 
     <div id="autoplay" ng-show="playlist.autoplay && mode == 'playlist'" ng-mouseenter="autoplayHover = true" ng-mouseleave="autoplayHover = false">
-      <i style="float:right" ng-show="autoplayHover" ng-click="addAutoplay()" class="fa fa-plus clickable hover-purple"></i>
+      <span class="song-icons" style="float:right" ng-show="autoplayHover">
+        <a ng-click="stopPropagation($event)" href="{{playlist.autoplay.permalink_url}}" target="_blank" title="Go to song on {{playlist.autoplay.type}}">
+          <i data-ng-class="{
+            'fa fa-youtube-play': playlist.autoplay.type === 'youtube', 
+            'fa fa-soundcloud': playlist.autoplay.type === 'soundcloud', 
+            'icon-rdio': playlist.autoplay.type === 'rdio'
+          }"></i>
+        </a>
+        <i ng-click="addAutoplay()" class="fa fa-plus clickable hover-purple"></i>
+      </span>
       <span class="over-container">
         <div>
           <i class="fa fa-random"></i> <i class="fa fa-play"></i> {{playlist.autoplay.title}}<span ng-if="playlist.autoplay.artist"> - {{playlist.autoplay.artist}}</span>
