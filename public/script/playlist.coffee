@@ -233,11 +233,12 @@ class Playlist
 				return
 			when "soundcloud"
 				_this = @
-				SC.get '/tracks/' + song.song_details.id + '/related', {limit: 1}, (tracks, err) =>
+				SC.get '/tracks/' + song.song_details.id + '/related', {limit: 5}, (tracks, err) =>
 					if (err)
 						seekEnd()
 					else
-						song_details = search.cleanUpResults({collection: tracks}, 'soundcloud').collections[0]
+						track = tracks[Math.floor(Math.random() * 5)]
+						song_details = search.cleanUpResults({collection: [track]}, 'soundcloud').collections[0]
 						console.log(song_details)
 						@autoplay = song_details
 						@loadSong () =>
