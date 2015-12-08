@@ -15,13 +15,20 @@ switch (window.location.hostname)
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
 }
+$.post('/enableRoom', { 
+	type: 'soundcloud',
+	roomID: roomID
+})
 
 googleApiClientReady = ->
-  gapi.client.setApiKey 'AIzaSyDxetqce82LNsSBK4aSQ_7sSFDelsRtwSM'
-  gapi.client.load 'youtube', 'v3'
-  googleLoaded = true
-  if (host == true)
-	  loadPlaylist()
+	gapi.client.setApiKey 'AIzaSyDxetqce82LNsSBK4aSQ_7sSFDelsRtwSM'
+	gapi.client.load 'youtube', 'v3'
+	if (host == true)
+		$.post('/enableRoom', { 
+			type: 'google',
+			roomID: roomID
+		})
+		loadPlaylist()
 
 if (host == true)
 	#youtube stuff
@@ -50,7 +57,10 @@ if (host == true)
 rdioCallback = {
 	ready: (user) ->
 		rdio_player = $('#rdio_player').get(0)
-		rdioLoaded = true
+		$.post('/enableRoom', { 
+			type: 'rdio',
+			roomID: roomID
+		})
 		rdio_user = user
 		loadPlaylist()
 	positionChanged: (position) ->

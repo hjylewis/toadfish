@@ -11,6 +11,11 @@ roomSchema = new mongoose.Schema({
 		state: Number,
 		autoplay: String,
 	},
+	enabled: {
+		soundcloud: Boolean,
+		google: Boolean,
+		rdio: Boolean
+	},
 	update: Date,
 })
 

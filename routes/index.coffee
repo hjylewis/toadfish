@@ -43,6 +43,22 @@ router.post "/createRoom", (req, res) ->
           }
   checkAndCreate()
 
+router.post "/enableRoom", (req, res) ->
+  Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
+    if (err)
+      console.error "Error finding room to enable: " + JSON.stringify(err)
+      return res.status(500).end()
+    if (!room)
+      console.error "No room " + req.body.roomID + " with sessionID " + req.sessionID + "exists"
+      return res.status(500).end()
+    room.enabled[req.body.type] = true
+    console.log room.enabled
+    room.save (err) ->
+      if (err)
+        console.error "Error saving room: " + JSON.stringify(err)
+        return res.status(500).end()
+      res.status(200).end()
+
 router.post "/savePlaylist", (req, res) ->
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
     if (err)
@@ -93,9 +109,12 @@ router.get "/host/:roomID", (req, res) ->
       return res.status(404).end()
     if (room.hostSessionID != req.sessionID)
       return res.redirect '/' + roomID
-
+    room.enabled = {soundcloud: false, google: false, rdio: false} # reset enables
+    console.log room
     room.update = new Date()
-    room.save 
+    room.save (err) ->
+      if (err)
+        console.error "Error saving playlist: " + JSON.stringify(err)
     
     res.render "host-room", {
       title: "Toadfish - " + roomID, 
