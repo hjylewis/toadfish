@@ -13,15 +13,18 @@
     $('#share-link').val(url);
     $('.fb-share-button').attr('href','https://www.facebook.com/sharer/sharer.php?u=https://' + url);
     $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our Toadfish room and jam out!');
-    if (googleLoaded && rdioLoaded) {
-      var scope = angular.element($("body")).scope();
-      var load = function (){
-          scope.rdio_user = rdio_user;
-          scope.playlist.load(playlistSettings);
-          scope.isLoading = false;
-      };
-      (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);
-    }
+    $.get('/' + roomID + '/enabled', function (data) {
+      console.log(data);
+      if (data.google && data.soundcloud) {
+        var scope = angular.element($("body")).scope();
+        var load = function (){
+            scope.rdio_user = rdio_user;
+            scope.playlist.load(playlistSettings);
+            scope.isLoading = false;
+        };
+        (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);
+      }
+    })
   }
 </script>
 <script src="/setup.js"></script>

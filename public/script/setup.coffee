@@ -27,8 +27,8 @@ googleApiClientReady = ->
 		$.post('/enableRoom', { 
 			type: 'google',
 			roomID: roomID
-		})
-		loadPlaylist()
+		}, (err) ->
+			loadPlaylist() if !err)
 
 if (host == true)
 	#youtube stuff
