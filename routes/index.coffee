@@ -163,6 +163,8 @@ router.get "/:roomID", (req, res) ->
       return res.status(404).end() #render lost page
     if (room.hostSessionID == req.sessionID)
       return res.redirect '/host/' + roomID
+    if (!room.socketID)
+      return res.send "There is no longer a host of this room."
 
     room.update = new Date()
     room.save 
