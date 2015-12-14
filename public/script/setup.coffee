@@ -16,7 +16,7 @@ SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
 }
 if (host == true)
-	$.post('/enableRoom', { 
+	$.post('/' + roomID + '/enabled', { 
 		type: 'soundcloud',
 		roomID: roomID
 	})
@@ -25,7 +25,7 @@ googleApiClientReady = ->
 	gapi.client.setApiKey 'AIzaSyDxetqce82LNsSBK4aSQ_7sSFDelsRtwSM'
 	gapi.client.load 'youtube', 'v3'
 	if (host == true)
-		$.post('/enableRoom', { 
+		$.post('/' + roomID+ '/enabled', { 
 			type: 'google',
 			roomID: roomID
 		}, (err) ->

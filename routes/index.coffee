@@ -43,7 +43,7 @@ router.post "/createRoom", (req, res) ->
           }
   checkAndCreate()
 
-router.post "/enableRoom", (req, res) ->
+router.post "/:roomID/enabled", (req, res) ->
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
     if (err)
       console.error "Error finding room to enable: " + JSON.stringify(err)
