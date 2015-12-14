@@ -134,6 +134,24 @@ router.get "/host/:roomID", (req, res) ->
       layout: "views/layout.toffee"
     }
 
+router.post "/host/:roomID/login", (req, res) ->
+  roomID = req.param("roomID")
+  Room.findOne {roomID: roomID}, (err, room) ->
+      if (err)
+        console.error "Error finding room: " + JSON.stringify(err)
+        return res.status(500).end()
+      if (!room)
+        return res.status(404).end()
+      if (room.hostSessionID != req.sessionID)
+        return res.status(403).end()
+      console.log "SOCKET" + JSON.stringify(req.body)
+      room.socketID = req.body.socketID
+      room.save (err) ->
+        if (err)
+          console.error "Error saving logging in host: " + JSON.stringify(err)
+        else
+          res.status(200).end()
+
 router.get "/:roomID", (req, res) ->
   roomID = req.param("roomID")
   Room.findOne {roomID: roomID}, (err, room) ->
