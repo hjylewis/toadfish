@@ -144,7 +144,6 @@ router.post "/host/:roomID/login", (req, res) ->
         return res.status(404).end()
       if (room.hostSessionID != req.sessionID)
         return res.status(403).end()
-      console.log "SOCKET" + JSON.stringify(req.body)
       room.socketID = req.body.socketID
       room.save (err) ->
         if (err)
