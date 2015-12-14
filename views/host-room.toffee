@@ -15,7 +15,7 @@
     $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our Toadfish room and jam out!');
     $.get('/' + roomID + '/enabled', function (data) {
       console.log(data);
-      if (data.google && data.soundcloud) {
+      if (data.youtube && data.soundcloud) {
         var scope = angular.element($("body")).scope();
         var load = function (){
             scope.rdio_user = rdio_user;

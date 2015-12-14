@@ -26,7 +26,7 @@ googleApiClientReady = ->
 	gapi.client.load 'youtube', 'v3'
 	if (host == true)
 		$.post('/' + roomID+ '/enabled', { 
-			type: 'google',
+			type: 'youtube',
 			roomID: roomID
 		}, (err) ->
 			loadPlaylist() if !err)

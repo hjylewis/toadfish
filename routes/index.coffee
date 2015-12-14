@@ -121,7 +121,7 @@ router.get "/host/:roomID", (req, res) ->
       return res.redirect '/' + roomID
     if (room.socketID)
       return res.send "Host is already logged in somewhere else. Check your other tabs."
-    room.enabled = {soundcloud: false, google: false, rdio: false} # reset enables
+    room.enabled = {soundcloud: false, youtube: false, rdio: false} # reset enables
     room.update = new Date()
     room.save (err) ->
       if (err)

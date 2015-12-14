@@ -14,7 +14,7 @@ roomSchema = new mongoose.Schema({
 	},
 	enabled: {
 		soundcloud: Boolean,
-		google: Boolean,
+		youtube: Boolean,
 		rdio: Boolean
 	},
 	update: Date,
