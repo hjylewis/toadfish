@@ -28,6 +28,8 @@ class Playlist
 		socket.on 'update', (update) =>
 			if update.socketID != socket.id
 				@readUpdate(update)
+		socket.on 'no host', () =>
+			window.location.reload()
 
 	load: (playlistSettings) ->
 		@currentIndex = playlistSettings.currentIndex || 0

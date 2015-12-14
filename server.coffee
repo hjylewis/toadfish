@@ -102,6 +102,7 @@ io.on 'connection', (socket) ->
 		# Log out host
 		Room.findOne {socketID: socket.id}, (err, room) ->
 			if (!err && room)
+				io.sockets.to(room.roomID).emit('no host')
 				room.socketID = null
 				room.save (err) ->
 					if (err)
