@@ -58,7 +58,7 @@ if (host == true)
 rdioCallback = {
 	ready: (user) ->
 		rdio_player = $('#rdio_player').get(0)
-		$.post('/enableRoom', { 
+		$.post('/' + roomID+ '/enabled', { 
 			type: 'rdio',
 			roomID: roomID
 		})
