@@ -13,6 +13,11 @@ class Search
     catch error
       @storageSupport = false
 
+  getEnabled: (cb) ->
+    $.get '/' + roomID + '/enabled', (obj) -> 
+      types = _.keys(_.pick(obj, (val, key, obj) -> return val))
+      cb types
+
   search: (str, options, done) ->
     _this = @
     if (!str)
@@ -27,9 +32,17 @@ class Search
     if _.isFunction(options)
       done = options
       options = {}
-    options.types = ['soundcloud','youtube','rdio'] if not options.types?
-    retTypes = options.types
     return done null if str == ""
+
+    if options.types
+      @_search(str, options, done)
+    else
+      @getEnabled (types) =>
+        options.types = types
+        @_search(str, options, done)
+
+  _search: (str, options, done) ->
+    retTypes = options.types
 
     if @storageSupport && sessionStorage.getItem(str)
       storedResults = JSON.parse(sessionStorage.getItem(str))

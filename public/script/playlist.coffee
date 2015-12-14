@@ -6,6 +6,11 @@ YT_TIME_INTERVAL = 500
 socket = io(window.location.origin)
 socket.on 'roomID', (msg) ->
 	socket.emit('roomID', roomID)
+	if host
+		$.post('/host/'+roomID+'/login', {
+			roomID: roomID,
+			socketID: socket.id
+		})
 
 # TODO: state
 # 0: stop
@@ -23,6 +28,8 @@ class Playlist
 		socket.on 'update', (update) =>
 			if update.socketID != socket.id
 				@readUpdate(update)
+		socket.on 'no host', () =>
+			window.location.reload()
 
 	load: (playlistSettings) ->
 		@currentIndex = playlistSettings.currentIndex || 0
