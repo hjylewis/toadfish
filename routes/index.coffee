@@ -119,8 +119,6 @@ router.get "/host/:roomID", (req, res) ->
       return res.status(404).end()
     if (room.hostSessionID != req.sessionID)
       return res.redirect '/' + roomID
-    if (room.socketID)
-      return res.send "Host is already logged in somewhere else. Check your other tabs."
     room.enabled = {soundcloud: false, youtube: false, rdio: false} # reset enables
     room.update = new Date()
     room.save (err) ->
@@ -146,7 +144,7 @@ router.post "/host/:roomID/login", (req, res) ->
         return res.status(404).end()
       if (room.hostSessionID != req.sessionID)
         return res.status(403).end()
-      room.socketID = req.body.socketID
+      room.socketID = req.body.socketID if !room.socketID # if null
       room.save (err) ->
         if (err)
           console.error "Error saving logging in host: " + JSON.stringify(err)
