@@ -4,6 +4,7 @@ roomSchema = new mongoose.Schema({
 	roomName: String,
 	roomID: String,
 	hostSessionID: String,
+	socketID: String,
 	playlistSettings: {
 		currentIndex: Number,
 		playlist: String,

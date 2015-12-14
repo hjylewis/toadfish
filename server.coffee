@@ -97,9 +97,16 @@ io.on 'connection', (socket) ->
 	socket.emit('roomID')
 	socket.on 'roomID', (roomID) ->
 		socket.join(roomID)
-
+		Room.findOne {roomID: roomID}, (err, room) ->
+			if (err || !room)
+				console.error "Error finding room to add socket id"
+			else
+				room.socketID = socket.id
+				room.save (err) ->
+					console.error "Error saving playlist: " + JSON.stringify(err) if err?
 	socket.on 'disconnect', () ->
 		console.log('user disconnected ' + socket.id)
+		
 
 
 server.listen port, ->

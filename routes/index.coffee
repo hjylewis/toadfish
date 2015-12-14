@@ -49,7 +49,7 @@ router.post "/enableRoom", (req, res) ->
       console.error "Error finding room to enable: " + JSON.stringify(err)
       return res.status(500).end()
     if (!room)
-      console.error "No room " + req.body.roomID + " with sessionID " + req.sessionID + "exists"
+      console.error "No room " + req.body.roomID + " with sessionID " + req.sessionID + " exists"
       return res.status(500).end()
     room.enabled[req.body.type] = true
     console.log room.enabled
@@ -120,7 +120,6 @@ router.get "/host/:roomID", (req, res) ->
     if (room.hostSessionID != req.sessionID)
       return res.redirect '/' + roomID
     room.enabled = {soundcloud: false, google: false, rdio: false} # reset enables
-    console.log room
     room.update = new Date()
     room.save (err) ->
       if (err)
