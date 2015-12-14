@@ -15,10 +15,11 @@ switch (window.location.hostname)
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
 }
-$.post('/enableRoom', { 
-	type: 'soundcloud',
-	roomID: roomID
-})
+if (host == true)
+	$.post('/enableRoom', { 
+		type: 'soundcloud',
+		roomID: roomID
+	})
 
 googleApiClientReady = ->
 	gapi.client.setApiKey 'AIzaSyDxetqce82LNsSBK4aSQ_7sSFDelsRtwSM'
