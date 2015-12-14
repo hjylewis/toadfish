@@ -99,6 +99,13 @@ io.on 'connection', (socket) ->
 		socket.join(roomID)
 	socket.on 'disconnect', () ->
 		console.log('user disconnected ' + socket.id)
+		# Log out host
+		Room.findOne {socketID: socket.id}, (err, room) ->
+			if (!err && room)
+				room.socketID = null
+				room.save (err) ->
+					if (err)
+						console.error "Error saving logging out host: " + JSON.stringify(err)
 
 
 
