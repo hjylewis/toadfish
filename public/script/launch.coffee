@@ -10,3 +10,7 @@ submit = () ->
 			else
 				window.location = '/host/' + res.roomID
 	}
+
+$('#createRoomName').keyup (event) ->
+    if(event.keyCode == 13)
+        submit()
