@@ -6,11 +6,9 @@
     <section id="create">
         <div class="launch-container">
             <div class="create-room-container">
-                <form action="javascript:submit()" autocomplete="off">
-                    <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20" autofocus>
-                    <span class="warning" id="createWarning" hidden>That room name already exists</span>
-                    <input type="submit" class="launch-button" value="Create">
-                </form>
+                <input id="createRoomName" type="text" placeholder="Room Name (optional)" maxlength="20" autofocus>
+                <span class="warning" id="createWarning" hidden>That room name already exists</span>
+                <input type="button" class="launch-button" value="Create" onclick="submit()">
             </div>
         <div>
     </section>
