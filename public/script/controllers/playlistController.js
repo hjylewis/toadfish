@@ -1,6 +1,6 @@
 
 
-function PlaylistController($scope, $timeout, $q, $window, $document){
+var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', function($scope, $timeout, $q, $window, $document){
 	$scope.results = [];
 	$scope.query = "";
 	$scope.expandSearch = null;
@@ -206,4 +206,4 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 		  	});
 	    }
 	});
-}
+}];

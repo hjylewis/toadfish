@@ -1,5 +1,7 @@
 #!/usr/bin/env coffee
-express = require("express")
+express = require('express')
+compression = require('compression')
+minify = require('express-minify');
 params = require('express-params')
 session = require('express-session')
 cookieParser = require('cookie-parser')
@@ -7,9 +9,9 @@ mongoose = require('mongoose')
 MongoStore = require('connect-mongo')(session)
 Room = require('./models/room')
 stylus = require('stylus')
-body_parser = require("body-parser")
-coffee = require("coffee-middleware")
-path = require("path")
+body_parser = require('body-parser')
+coffee = require('coffee-middleware')
+path = require('path')
 http = require('http')
 logger = require('morgan')
 
@@ -20,6 +22,10 @@ routes = require('./routes/index')
 rdio_routes = require('./routes/rdio')
 
 app.use(cookieParser())
+
+# compress all requests
+app.use(compression())
+app.use(minify())
 
 mongoose.connect(process.env.MONGOLAB_URI)
 db = mongoose.connection
