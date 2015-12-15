@@ -7,30 +7,32 @@
   var roomID = "#{roomID}";
   var roomName = "#{roomName}";
   var playlistSettings = #{playlistSettings};
-  //this is hacky
   var loadPlaylist =  function () {
+    var scope = angular.element($("body")).scope();
     var url = window.location.host + '/' + roomID
     $('#share-link').val(url);
     $('.fb-share-button').attr('href','https://www.facebook.com/sharer/sharer.php?u=https://' + url);
     $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our Toadfish room and jam out!');
     $.get('/' + roomID + '/enabled', function (data) {
       console.log(data);
-      if (data.youtube && data.soundcloud) {
-        var scope = angular.element($("body")).scope();
-        var load = function (){
-            scope.rdio_user = rdio_user;
-            scope.playlist.load(playlistSettings);
-            scope.isLoading = false;
-        };
-        (scope.$$phase || scope.$root.$$phase) ? load() : scope.$apply(load);
+      if (data.youtube && data.soundcloud && data.rdio) {
+        scope.startApp();
       }
+      (scope.$$phase || scope.$root.$$phase) ? (scope.apis_loaded = data) : scope.$apply(scope.apis_loaded = data);
     })
   }
 </script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController" data-ng-keydown="shortcut($event)">
-  <div ng-if="isLoading" id="loader">
+  <div ng-if="isLoading" id="loader" ng-cloak>
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    <p>Soundcloud <i ng-if="apis_loaded.soundcloud" class="fa fa-check"></i>
+      <i ng-if="!apis_loaded.soundcloud" class="fa fa-spinner fa-pulse"></i></p>
+    <p>Rdio <i ng-if="apis_loaded.rdio" class="fa fa-check"></i>
+      <i ng-if="!apis_loaded.rdio" class="fa fa-spinner fa-pulse"></i></p>
+    <p>Youtube <i ng-if="apis_loaded.youtube" class="fa fa-check"></i>
+      <i ng-if="!apis_loaded.youtube" class="fa fa-spinner fa-pulse"></i></p>
+    <input type="button" class="clickable" value="Continue..." ng-show= "showContinue" ng-click="startApp()"/>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
     <div class="search-container">

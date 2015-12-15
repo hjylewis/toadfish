@@ -309,6 +309,19 @@ section
 //////////////
 //Player page
 //////////////
+
+#loader
+  .fa-check
+    color #49E20E
+  input
+    padding 5px 10px
+    margin-top 20px
+    border 0px
+    &:hover
+      color grey
+      background purple
+    
+
 div.search-container
   margin-top 20px
   border 1px solid black
@@ -654,7 +667,9 @@ div.overlay
   left:0;
   right:0;
   top:50%;
-  width : 90px;
+  width: 90px;
+  color: black;
+  white-space: nowrap;
   
   ul {
     margin : 0;
@@ -663,6 +678,7 @@ div.overlay
     position : relative;
     padding : 0;
     height:10px;
+    margin-bottom: 10px;
     
     li {
       position : absolute;
