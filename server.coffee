@@ -1,6 +1,7 @@
 #!/usr/bin/env coffee
-compression = require('compression')
 express = require('express')
+compression = require('compression')
+minify = require('express-minify');
 params = require('express-params')
 session = require('express-session')
 cookieParser = require('cookie-parser')
@@ -24,6 +25,7 @@ app.use(cookieParser())
 
 # compress all requests
 app.use(compression())
+app.use(minify())
 
 mongoose.connect(process.env.MONGOLAB_URI)
 db = mongoose.connection
