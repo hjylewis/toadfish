@@ -10,19 +10,27 @@ function PlaylistController($scope, $timeout, $q, $window, $document){
 	$scope.viewModal = false;
 	$scope.firstModal = true;
 	$scope.rdio_user = null;
+	$scope.apis_loaded = {};
+	$scope.showContinue = false;
 	$scope.from = {
 		index: null
 	};
 
-	if (host) {
-		$scope.playlist = new Playlist();
-	} else {
-		$scope.playlist = new Playlist();
+  	$timeout(function() { $scope.showContinue = true }, 5000);
+
+	$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
+	var timeoutPromise;
+
+	$scope.startApp = function() {
+		$scope.rdio_user = rdio_user;
 		$scope.playlist.load(playlistSettings);
 		$scope.isLoading = false;
 	}
-	$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
-	var timeoutPromise;
+
+	$scope.playlist = new Playlist();
+	if (!host) {
+		$scope.startApp();
+	}
 
 	$scope.Search = function(options) {
 		$scope.isSearchLoading = true;

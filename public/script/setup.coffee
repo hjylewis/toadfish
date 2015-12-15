@@ -61,9 +61,10 @@ rdioCallback = {
 		$.post('/' + roomID+ '/enabled', { 
 			type: 'rdio',
 			roomID: roomID
-		})
-		rdio_user = user
-		loadPlaylist()
+		}, (err) ->
+			if !err
+				rdio_user = user
+				loadPlaylist())
 	positionChanged: (position) ->
 		scope = angular.element($("body")).scope()
 		setPostion = () -> scope.playlist.positionChanged "rdio", position
