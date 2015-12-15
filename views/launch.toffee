@@ -12,11 +12,6 @@
                     <input type="submit" class="launch-button" value="Create">
                 </form>
             </div>
-            <div id="list-rooms" hidden>
-            	<h4>Your open rooms:</h4>
-            	<ul id="list_open_rooms">
-            	</ul>
-            </div>
         <div>
     </section>
     <section id="about">
