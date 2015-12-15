@@ -2,7 +2,7 @@
 <script>
 	var rooms = #{rooms}
 </script>
-<body>
+<div class="black-background">
     <section id="create">
         <div class="launch-container">
             <div class="create-room-container">
@@ -45,6 +45,6 @@
         <div class="info"><h2>Follow <a href="https://twitter.com/toadfish_music">@toadfish_music</a> for updates</h2></div>
     </section>
 
-</body>
+</div>
 <script src="/launch.js"></script>
 
