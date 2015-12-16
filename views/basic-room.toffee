@@ -1,12 +1,5 @@
 <!-- room.toffee -->
 
-<meta property="fb:app_id" content="911101582335475" />
-<meta property="og:url" content="https://toadfish.herokuapp.com/#{roomID}" />
-<meta property="og:description" content="Crowd source your party playlists with a share of a link." />
-<meta property="og:title" content="#{roomName}" />
-<meta property="og:image" content="http://toadfish.herokuapp.com/images/photo-1429962714451-bb934ecdc4ec.jpeg" />
-<meta property="og:site_name" content="Toadfish" />
-
 <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
 <script src="/playlist.js"></script>
 <script src="/script/controllers/playlistController.js"></script>
