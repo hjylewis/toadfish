@@ -1,7 +1,4 @@
 <!-- launch.toffee -->
-<script>
-	var rooms = #{rooms}
-</script>
 <div class="black-background">
     <section id="create">
         <div class="launch-container">

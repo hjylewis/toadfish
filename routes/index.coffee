@@ -6,15 +6,9 @@ Room = require('../models/room')
 router = express.Router()
 
 router.get "/", (req, res) ->
-  Room.find {hostSessionID: req.sessionID}, (err, rooms) ->
-    res.render "launch", {title: "Toadfish", rooms: rooms, layout: "views/layout.toffee"}
-
-router.get "/demo", (req, res) ->
-  res.render "room", {
+  res.render "launch", {
     title: "Toadfish", 
-    host: false,
-    roomID: "", 
-    playlistSettings: {}, 
+    description: "Crowd source your party playlists with a share of a link.",
     layout: "views/layout.toffee"
   }
 
@@ -124,12 +118,12 @@ router.get "/host/:roomID", (req, res) ->
     room.save (err) ->
       if (err)
         console.error "Error saving playlist: " + JSON.stringify(err)
-    
     res.render "host-room", {
-      title: "Toadfish - " + roomID, 
+      title: if room.roomName then room.roomName + " | Toadfish Room" else "Toadfish Room", 
       host: true,
       roomID: roomID,
       roomName: room.roomName || "Toadfish Room",
+      description: "Join this room to instantly start adding songs to the playlist.",
       playlistSettings: room.playlistSettings, 
       layout: "views/layout.toffee"
     }
@@ -168,10 +162,11 @@ router.get "/:roomID", (req, res) ->
     room.save 
     
     res.render "basic-room", {
-      title: "Toadfish - " + roomID, 
+      title: if room.roomName then room.roomName + " | Toadfish Room" else "Toadfish Room", 
       host: false,
       roomID: roomID, 
       roomName: room.roomName || "Toadfish Room",
+      description: "Join this room to instantly start adding songs to the playlist.",
       playlistSettings: room.playlistSettings, 
       layout: "views/layout.toffee"
     }
