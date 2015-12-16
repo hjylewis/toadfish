@@ -12,7 +12,7 @@
     <meta property="twitter:title" content="#{title}" />
     <meta property="twitter:description" content="#{description}" />
     <meta property="twitter:image" content="https://toadfish.herokuapp.com/images/Dj-Club-Mix-Girl-2015-Wallpaper.jpg" />
-    <meta property="twitter:site" content="toadfish_music" />
+    <meta property="twitter:site" content="@toadfish_music" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
