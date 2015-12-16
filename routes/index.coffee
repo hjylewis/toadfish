@@ -124,9 +124,9 @@ router.get "/host/:roomID", (req, res) ->
     room.save (err) ->
       if (err)
         console.error "Error saving playlist: " + JSON.stringify(err)
-    
+    title = 
     res.render "host-room", {
-      title: "Toadfish - " + roomID, 
+      title: if room.roomName then room.roomName + " | Toadfish Room" else "Toadfish Room", 
       host: true,
       roomID: roomID,
       roomName: room.roomName || "Toadfish Room",
@@ -168,7 +168,7 @@ router.get "/:roomID", (req, res) ->
     room.save 
     
     res.render "basic-room", {
-      title: "Toadfish - " + roomID, 
+      title: if room.roomName then room.roomName + " | Toadfish Room" else "Toadfish Room", 
       host: false,
       roomID: roomID, 
       roomName: room.roomName || "Toadfish Room",
