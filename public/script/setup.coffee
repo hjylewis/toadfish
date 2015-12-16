@@ -40,6 +40,7 @@ if (host == true)
 
 	#rdio stuff
 	rdio_player = null;
+	console.log window.location.hostname
 	$.ajax {
 		url: '/rdio/playbackToken',
 		success: (res) ->
