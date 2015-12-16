@@ -11,6 +11,7 @@ Room = require('./models/room')
 stylus = require('stylus')
 body_parser = require('body-parser')
 coffee = require('coffee-middleware')
+favicon = require('serve-favicon')
 path = require('path')
 http = require('http')
 logger = require('morgan')
@@ -26,6 +27,7 @@ app.use(cookieParser())
 # compress all requests
 app.use(compression())
 app.use(minify())
+app.use(favicon(__dirname + '/public/favicon.ico'))
 
 mongoose.connect(process.env.MONGOLAB_URI)
 db = mongoose.connection
