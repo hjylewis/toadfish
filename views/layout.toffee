@@ -2,6 +2,13 @@
   <head>
     <title>#{title}</title>
 
+    <meta property="fb:app_id" content="911101582335475" />
+    <meta property="og:url" content="https://toadfish.herokuapp.com/" />
+    <meta property="og:description" content="Crowd source your party playlists with a share of a link." />
+    <meta property="og:title" content="#{title}" />
+    <meta property="og:image" content="http://toadfish.herokuapp.com/images/photo-1429962714451-bb934ecdc4ec.jpeg" />
+    <meta property="og:site_name" content="Toadfish" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Font Awesome -->
