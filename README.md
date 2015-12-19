@@ -1,9 +1,11 @@
-#Toadfish
+#[Toadfish](http://toadfish.xyz)
 
 ##Music, Together.
 
 Host a playlist on Toadfish that guests can join and add songs to just by clicking a link.
+
 Guest are happy that they contribute to the musical experience and you can enjoy the party.
+
 Build playlist with songs from Soundcloud, Rdio, and Youtube so no more jumping between applications.
 
 ##About
