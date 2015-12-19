@@ -17,3 +17,4 @@ Toadfish allows users to make ‘rooms’ that host a playlist that others can a
 ![Image of player](https://raw.githubusercontent.com/hjylewis/toadfish/master/screenshots/player.png)
 <img src='https://raw.githubusercontent.com/hjylewis/toadfish/master/screenshots/mobile%20-%20autoplay.png' width='400'>
 
+© Toadfish 2015
