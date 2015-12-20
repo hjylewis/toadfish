@@ -7,7 +7,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 	$scope.mode = "playlist";
 	$scope.isLoading = true;
 	$scope.volumeShow = false;
-	$scope.viewModal = false;
+	$scope.viewModal = null;
 	$scope.firstModal = true;
 	$scope.rdio_user = null;
 	$scope.apis_loaded = {};
@@ -124,9 +124,11 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 	$scope.stopPropagation = function (e) {
 		e.stopPropagation();
 	}
-	$scope.openModal = function (e) {
-		e.stopPropagation();
-		$scope.viewModal = true;
+	$scope.openModal = function (e, type) {
+		if (e) {
+			e.stopPropagation();
+		}
+		$scope.viewModal = type;
 		$scope.firstModal = false;
 	}
 	$scope.changeColor = function(enter) {
@@ -149,7 +151,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 
   		if (e.keyCode == 27) {
 			if ($scope.viewModal){
-				$scope.viewModal = false;
+				$scope.viewModal = null;
 				return
 			} 
 			if ($scope.mode == "search") {

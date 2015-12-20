@@ -373,7 +373,7 @@ class Playlist
 				scope = angular.element($("body")).scope()
 				openModal = () ->
 					if (scope.firstModal)
-						scope.viewModal = true
+						scope.viewModal = 'rdio'
 						scope.firstModal = false
 				if (scope.$$phase || scope.$root.$$phase) then openModal() else scope.$apply(openModal())
 				@next()

@@ -1,0 +1,8 @@
+<div class="overlay" data-ng-show="viewModal"></div>
+<div class="modal" data-ng-show="viewModal">
+	<i class="fa fa-times clickable hover-purple" data-ng-click="viewModal = null"></i>
+	<span data-ng-if="viewModal == 'rdio'">
+		<h4>Wonder why you only hear 30 seconds?</h4><br />
+		<p>You need to log into a <a href="http://www.rdio.com/" target="_blank">Rdio Account</a> to hear full Rdio tracks.  Once you log in, just <a href="javascript:window.location.href=window.location.href">refresh</a> this page.</p>
+	</span>
+</div>
