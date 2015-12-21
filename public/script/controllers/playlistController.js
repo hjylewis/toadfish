@@ -77,7 +77,6 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 	}
 	$scope.playNow = function (item) {
 		var playlist = $scope.playlist.playlist
-
 		for (var i = 0; i < playlist.length; i++) {
 			if (playlist[i].song_details.id === item.id) {
 				$scope.playlist.goTo(i);
@@ -90,6 +89,14 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 		$scope.mode = "playlist";
 	}
 	$scope.add = function (item) {
+		var playlist = $scope.playlist.playlist
+		for (var i = 0; i < playlist.length; i++) {
+			if (playlist[i].song_details.id === item.id) {
+				$scope.viewModal = "duplicate";
+				$scope.mode = "playlist";
+				return;
+			}
+		};
 		$scope.playlist.add(item);
 		$scope.mode = "playlist";
 	}
