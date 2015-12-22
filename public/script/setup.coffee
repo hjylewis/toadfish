@@ -1,15 +1,4 @@
-rdioLoaded = false
-googleLoaded = false
 rdio_user = null
-
-
-switch (window.location.hostname)
-  when "localhost", "127.0.0.1", "192.168.0.108"
-    ENV = "dev"
-  when "toadfish.herokuapp.com", "toadfish.xyz"
-    ENV = "production"
-  else
-    throw('Unknown environment: ' + window.location.hostname );
 
 
 SC.initialize {
