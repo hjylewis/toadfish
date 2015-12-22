@@ -1,5 +1,3 @@
-rdioLoaded = false
-googleLoaded = false
 rdio_user = null
 
 
