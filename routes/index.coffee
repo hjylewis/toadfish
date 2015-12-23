@@ -77,6 +77,9 @@ router.post "/sendUpdate", (req, res) ->
     io.sockets.to(roomID).emit('update', payload)
     return res.status(200).end()
 
+router.get "/sessionID", (req, res) ->
+  res.send(req.sessionID)
+
 router.get "/host/:roomID", (req, res) ->
   roomID = req.param("roomID")
   Room.findOne {roomID: roomID}, (err, room) ->
