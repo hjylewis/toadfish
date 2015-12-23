@@ -37,32 +37,6 @@ router.post "/createRoom", (req, res) ->
           }
   checkAndCreate()
 
-router.get "/:roomID/enabled", (req, res) ->
-  roomID = req.param("roomID")
-  Room.findOne {roomID: roomID}, (err, room) ->
-    if (err)
-      console.error "Error finding room: " + JSON.stringify(err)
-      return res.status(500).send err
-    if (!room)
-      return res.status(404).end() #render lost page
-    res.send(room.enabled)
-
-router.post "/:roomID/enabled", (req, res) ->
-  Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
-    if (err)
-      console.error "Error finding room to enable: " + JSON.stringify(err)
-      return res.status(500).end()
-    if (!room)
-      console.error "No room " + req.body.roomID + " with sessionID " + req.sessionID + " exists"
-      return res.status(500).end()
-    room.enabled[req.body.type] = true
-    console.log room.enabled
-    room.save (err) ->
-      if (err)
-        console.error "Error saving room: " + JSON.stringify(err)
-        return res.status(500).end()
-      res.status(200).end()
-
 router.post "/savePlaylist", (req, res) ->
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
     if (err)
@@ -180,6 +154,32 @@ router.get "/:roomID/playlistSettings", (req, res) ->
     if (!room)
       return res.status(404).end() #render lost page
     res.send room.playlistSettings
+
+router.get "/:roomID/enabled", (req, res) ->
+  roomID = req.param("roomID")
+  Room.findOne {roomID: roomID}, (err, room) ->
+    if (err)
+      console.error "Error finding room: " + JSON.stringify(err)
+      return res.status(500).send err
+    if (!room)
+      return res.status(404).end() #render lost page
+    res.send(room.enabled)
+
+router.post "/:roomID/enabled", (req, res) ->
+  Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
+    if (err)
+      console.error "Error finding room to enable: " + JSON.stringify(err)
+      return res.status(500).end()
+    if (!room)
+      console.error "No room " + req.body.roomID + " with sessionID " + req.sessionID + " exists"
+      return res.status(500).end()
+    room.enabled[req.body.type] = true
+    console.log room.enabled
+    room.save (err) ->
+      if (err)
+        console.error "Error saving room: " + JSON.stringify(err)
+        return res.status(500).end()
+      res.status(200).end()
 
 router.post "/error", (req, res) ->
   console.error req.body.msg
