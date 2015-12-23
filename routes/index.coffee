@@ -105,7 +105,7 @@ router.get "/host/:roomID", (req, res) ->
       layout: "views/layout.toffee"
     }
 
-router.post "/host/:roomID/login", (req, res) ->
+hostMiddleware = (req, res) ->
   roomID = req.param("roomID")
   Room.findOne {roomID: roomID}, (err, room) ->
       if (err)
@@ -115,12 +115,20 @@ router.post "/host/:roomID/login", (req, res) ->
         return res.status(404).end()
       if (room.hostSessionID != req.sessionID)
         return res.status(403).end()
-      room.socketID = req.body.socketID if !room.socketID # if null
-      room.save (err) ->
-        if (err)
-          console.error "Error saving logging in host: " + JSON.stringify(err)
-        else
-          res.status(200).end()
+      req.room = room
+      next()
+
+router.post "/host/:roomID/login", hostMiddleware, (req, res) ->
+  room = req.room
+  room.socketID = req.body.socketID if !room.socketID # if null
+  room.save (err) ->
+    if (err)
+      console.error "Error saving logging in host: " + JSON.stringify(err)
+    else
+      res.status(200).end()
+
+# router.post "/host/:roomID/ban", (req, res) ->
+
 
 router.get "/:roomID", (req, res) ->
   roomID = req.param("roomID")
