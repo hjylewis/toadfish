@@ -7,7 +7,7 @@
 	</span>
 	<span data-ng-if="modals[0] == 'banUser'">
 		<h4>Do you want to ban this user?</h4><br />
-		<a ng-click="banUser()" class="clickable">Ban user</a><br />
+		<a ng-hide="userBanned" ng-click="banUser()" class="clickable">Ban user</a><span ng-show="userBanned">Done.</span><br />
 		<a ng-click="deleteUserSongs()" class="clickable">Delete all their additions</a>
 	</span>
 	<span data-ng-if="modals[0] == 'banned'">

@@ -145,7 +145,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 			$http.post('/host/' + roomID + '/ban', {
 				sessionID: sessionID
 			}).then(function () {
-
+				$scope.userBanned = true;
 			});
 		}
 		$scope.deleteUserSongs = function () {
@@ -156,6 +156,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 				}
 			}
 		}
+		$scope.userBanned = false;
 		$scope.openModal(e, 'banUser');
 	}
 
