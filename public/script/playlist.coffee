@@ -394,6 +394,8 @@ class Playlist
 			host: host,
 			data: data,
 			socketID: socket.id
+		}).fail((data) ->
+			console.log data
 		})
 
 	readUpdate: (update) ->
