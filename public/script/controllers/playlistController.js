@@ -140,12 +140,21 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 		$scope.firstModal = false;
 	}
 	$scope.banModal = function (e, index) {
+		var sessionID = $scope.playlist.playlist[index].user
 		$scope.banUser = function () {
 			$http.post('/host/' + roomID + '/ban', {
-				sessionID: $scope.playlist.playlist[index].user
+				sessionID: sessionID
 			}).then(function () {
-				
+
 			});
+		}
+		$scope.deleteUserSongs = function () {
+			var pl = $scope.playlist.playlist;
+			for (var i = pl.length - 1; i >= 0; i--){
+				if (pl[i].user === sessionID) {
+					$scope.playlist.remove(i)
+				}
+			}
 		}
 		$scope.openModal(e, 'ban');
 	}
