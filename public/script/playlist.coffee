@@ -25,6 +25,8 @@ class Playlist
 		@state = 0
 		@volume = 100
 		@autoplay = false
+		$.get '/sessionID', (sessionID) =>
+			@sessionID = sessionID
 		socket.on 'update', (update) =>
 			if update.socketID != socket.id
 				@readUpdate(update)
@@ -159,12 +161,13 @@ class Playlist
 
 	add: (song_details, update) ->
 		song_details.uuid = generateUUID()
-		@playlist.push({
+		song_obj = if song_details.song_details then song_details else {
 			song_details: song_details,
-			user: "user",
+			user: @sessionID,
 			time: Date.now()
-		})
-		@save('add', JSON.stringify(song_details)) if !update
+		}
+		@playlist.push(song_obj)
+		@save('add', JSON.stringify(song_obj)) if !update
 		if (@playlist.length == 1)
 			@loadSong () =>
 				@setVolume @volume
@@ -177,13 +180,14 @@ class Playlist
 			@add(song_details, update)
 		else
 			song_details.uuid = generateUUID()
-			@playlist.splice(@currentIndex + 1, 0, {
+			song_obj = if song_details.user then song_details else {
 				song_details: song_details,
-				user: "user",
+				user: @sessionID,
 				time: Date.now()
-			})
+			}
+			@playlist.splice(@currentIndex + 1, 0, song_obj)
 			@next(update || !host)
-			@save "addFirst", JSON.stringify(song_details) if !update
+			@save "addFirst", JSON.stringify(song_obj) if !update
 
 	remove: (index, update) ->
 		if (index < @currentIndex)
