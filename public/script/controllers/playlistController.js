@@ -156,7 +156,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 				}
 			}
 		}
-		$scope.openModal(e, 'ban');
+		$scope.openModal(e, 'banUser');
 	}
 
 	$scope.changeColor = function(enter) {

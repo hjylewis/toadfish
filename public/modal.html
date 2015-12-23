@@ -5,10 +5,13 @@
 		<h4>Wonder why you only hear 30 seconds?</h4><br />
 		<p>You need to log into a <a href="http://www.rdio.com/" target="_blank">Rdio Account</a> to hear full Rdio tracks.  Once you log in, just <a href="javascript:window.location.href=window.location.href">refresh</a> this page.</p>
 	</span>
-	<span data-ng-if="modals[0] == 'ban'">
+	<span data-ng-if="modals[0] == 'banUser'">
 		<h4>Do you want to ban this user?</h4><br />
 		<a ng-click="banUser()" class="clickable">Ban user</a><br />
 		<a ng-click="deleteUserSongs()" class="clickable">Delete all their additions</a>
+	</span>
+	<span data-ng-if="modals[0] == 'banned'">
+		<h3>Sorry, you've been banned from adding songs to this playlist.</h3>
 	</span>
 	<span data-ng-if="modals[0] == 'duplicate'">
 		<h3>Sorry, this song has already been added to the playlist.</h3>

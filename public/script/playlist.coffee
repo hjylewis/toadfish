@@ -401,6 +401,8 @@ class Playlist
 		}).fail (data) =>
 			if (data.responseText == "User has been banned")
 				@reload()
+				scope = angular.element($("body")).scope()
+				if (scope.$$phase || scope.$root.$$phase) then (scope.modals.push('banned')) else scope.$apply(scope.modals.push('banned'))
 
 	readUpdate: (update) ->
 		if (ENV == 'dev')
