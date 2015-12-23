@@ -7,7 +7,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 	$scope.mode = "playlist";
 	$scope.isLoading = true;
 	$scope.volumeShow = false;
-	$scope.viewModal = null;
+	$scope.modals = [];
 	$scope.firstModal = true;
 	$scope.rdio_user = null;
 	$scope.apis_loaded = {};
@@ -92,7 +92,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 		var playlist = $scope.playlist.playlist
 		for (var i = 0; i < playlist.length; i++) {
 			if (playlist[i].song_details.id === item.id) {
-				$scope.viewModal = "duplicate";
+				$scope.modal.push("duplicate");
 				$scope.mode = "playlist";
 				return;
 			}
@@ -136,7 +136,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 		if (e) {
 			e.stopPropagation();
 		}
-		$scope.viewModal = type;
+		$scope.modals.push(type);
 		$scope.firstModal = false;
 	}
 	$scope.banModal = function (e, index) {
@@ -178,8 +178,8 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
     $scope.shortcut = function (e) {
 
   		if (e.keyCode == 27) {
-			if ($scope.viewModal){
-				$scope.viewModal = null;
+			if ($scope.modals[0]){
+				$scope.modals.splice(0,1);
 				return
 			} 
 			if ($scope.mode == "search") {
