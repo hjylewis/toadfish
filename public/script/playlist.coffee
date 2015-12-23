@@ -160,7 +160,9 @@ class Playlist
 	add: (song_details, update) ->
 		song_details.uuid = generateUUID()
 		@playlist.push({
-			song_details: song_details
+			song_details: song_details,
+			user: "user",
+			time: Date.now()
 		})
 		@save('add', JSON.stringify(song_details)) if !update
 		if (@playlist.length == 1)
@@ -176,7 +178,9 @@ class Playlist
 		else
 			song_details.uuid = generateUUID()
 			@playlist.splice(@currentIndex + 1, 0, {
-				song_details: song_details
+				song_details: song_details,
+				user: "user",
+				time: Date.now()
 			})
 			@next(update || !host)
 			@save "addFirst", JSON.stringify(song_details) if !update
@@ -464,7 +468,7 @@ class Playlist
 			roomID: roomID
 		})
 	reload: () ->
-		$.get '/playlistSettings/' + roomID, (settings) =>
+		$.get '/' + roomID + '/playlistSettings', (settings) =>
 			@load settings
 
 # TODO move to utilities eventually

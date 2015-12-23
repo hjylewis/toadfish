@@ -37,6 +37,16 @@ router.post "/createRoom", (req, res) ->
           }
   checkAndCreate()
 
+router.get "/:roomID/enabled", (req, res) ->
+  roomID = req.param("roomID")
+  Room.findOne {roomID: roomID}, (err, room) ->
+    if (err)
+      console.error "Error finding room: " + JSON.stringify(err)
+      return res.status(500).send err
+    if (!room)
+      return res.status(404).end() #render lost page
+    res.send(room.enabled)
+
 router.post "/:roomID/enabled", (req, res) ->
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
     if (err)
@@ -52,16 +62,6 @@ router.post "/:roomID/enabled", (req, res) ->
         console.error "Error saving room: " + JSON.stringify(err)
         return res.status(500).end()
       res.status(200).end()
-
-router.get "/:roomID/enabled", (req, res) ->
-  roomID = req.param("roomID")
-  Room.findOne {roomID: roomID}, (err, room) ->
-    if (err)
-      console.error "Error finding room: " + JSON.stringify(err)
-      return res.status(500).send err
-    if (!room)
-      return res.status(404).end() #render lost page
-    res.send(room.enabled)
 
 router.post "/savePlaylist", (req, res) ->
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
@@ -171,7 +171,7 @@ router.get "/:roomID", (req, res) ->
       layout: "views/layout.toffee"
     }
 
-router.get "/playlistSettings/:roomID", (req, res) ->
+router.get "/:roomID/playlistSettings", (req, res) ->
   roomID = req.param("roomID")
   Room.findOne {roomID: roomID}, (err, room) ->
     if (err)
