@@ -44,7 +44,7 @@ router.post "/savePlaylist", (req, res) ->
       return res.status(500).end()
     if (!room)
       console.error "No room " + req.body.roomID + " with sessionID " + req.sessionID + " exists"
-      return res.status(500).end()
+      return res.status(404).end()
     playlistSettings = JSON.parse(req.body.playlistSettings)
     room.playlistSettings.currentIndex = JSON.parse(playlistSettings.currentIndex) if playlistSettings.currentIndex
     room.playlistSettings.playlist = JSON.stringify(playlistSettings.playlist) if playlistSettings.playlist
@@ -80,32 +80,7 @@ router.post "/sendUpdate", (req, res) ->
 router.get "/sessionID", (req, res) ->
   res.send(req.sessionID)
 
-router.get "/host/:roomID", (req, res) ->
-  roomID = req.param("roomID")
-  Room.findOne {roomID: roomID}, (err, room) ->
-    if (err)
-      console.error "Error finding room: " + JSON.stringify(err)
-      return res.status(500).end()
-    if (!room)
-      return res.status(404).end()
-    if (room.hostSessionID != req.sessionID)
-      return res.redirect '/' + roomID
-    room.enabled = {soundcloud: false, youtube: false, rdio: false} # reset enables
-    room.update = new Date()
-    room.save (err) ->
-      if (err)
-        console.error "Error saving playlist: " + JSON.stringify(err)
-    res.render "host-room", {
-      title: if room.roomName then room.roomName + " | Toadfish Room" else "Toadfish Room", 
-      host: true,
-      roomID: roomID,
-      roomName: room.roomName || "Toadfish Room",
-      description: "Join this room to instantly start adding songs to the playlist.",
-      playlistSettings: room.playlistSettings, 
-      layout: "views/layout.toffee"
-    }
-
-hostMiddleware = (req, res) ->
+hostMiddleware = (req, res, next) ->
   roomID = req.param("roomID")
   Room.findOne {roomID: roomID}, (err, room) ->
       if (err)
@@ -117,6 +92,39 @@ hostMiddleware = (req, res) ->
         return res.status(403).end()
       req.room = room
       next()
+      return
+
+roomMiddleware = (req, res, next) ->
+  roomID = req.param("roomID")
+  Room.findOne {roomID: roomID}, (err, room) ->
+    if (err)
+      console.error "Error finding room: " + JSON.stringify(err)
+      return res.status(500).send err
+    if (!room)
+      return res.status(404).end() #render lost page
+    req.room = room
+    next()
+    return
+
+router.get "/host/:roomID", roomMiddleware, (req, res) ->
+  roomID = req.param("roomID")
+  room = req.room
+  if (room.hostSessionID != req.sessionID)
+    return res.redirect '/' + roomID
+  room.enabled = {soundcloud: false, youtube: false, rdio: false} # reset enables
+  room.update = new Date()
+  room.save (err) ->
+    if (err)
+      console.error "Error saving playlist: " + JSON.stringify(err)
+  res.render "host-room", {
+    title: if room.roomName then room.roomName + " | Toadfish Room" else "Toadfish Room", 
+    host: true,
+    roomID: roomID,
+    roomName: room.roomName || "Toadfish Room",
+    description: "Join this room to instantly start adding songs to the playlist.",
+    playlistSettings: room.playlistSettings, 
+    layout: "views/layout.toffee"
+  }
 
 router.post "/host/:roomID/login", hostMiddleware, (req, res) ->
   room = req.room
@@ -127,54 +135,37 @@ router.post "/host/:roomID/login", hostMiddleware, (req, res) ->
     else
       res.status(200).end()
 
-# router.post "/host/:roomID/ban", (req, res) ->
+# router.post "/host/:roomID/ban", hostMiddleware, (req, res) ->
 
 
-router.get "/:roomID", (req, res) ->
+router.get "/:roomID", roomMiddleware, (req, res) ->
   roomID = req.param("roomID")
-  Room.findOne {roomID: roomID}, (err, room) ->
-    if (err)
-      console.error "Error finding room: " + JSON.stringify(err)
-      return res.status(500).send err
-    if (!room)
-      return res.status(404).end() #render lost page
-    if (room.hostSessionID == req.sessionID)
-      return res.redirect '/host/' + roomID
-    if (!room.socketID)
-      return res.send "There is no longer a host of this room."
+  room = req.room
+  if (room.hostSessionID == req.sessionID)
+    return res.redirect '/host/' + roomID
+  if (!room.socketID)
+    return res.send "There is no longer a host of this room."
 
-    room.update = new Date()
-    room.save 
-    
-    res.render "basic-room", {
-      title: if room.roomName then room.roomName + " | Toadfish Room" else "Toadfish Room", 
-      host: false,
-      roomID: roomID, 
-      roomName: room.roomName || "Toadfish Room",
-      description: "Join this room to instantly start adding songs to the playlist.",
-      playlistSettings: room.playlistSettings, 
-      layout: "views/layout.toffee"
-    }
+  room.update = new Date()
+  room.save 
+  
+  res.render "basic-room", {
+    title: if room.roomName then room.roomName + " | Toadfish Room" else "Toadfish Room", 
+    host: false,
+    roomID: roomID, 
+    roomName: room.roomName || "Toadfish Room",
+    description: "Join this room to instantly start adding songs to the playlist.",
+    playlistSettings: room.playlistSettings, 
+    layout: "views/layout.toffee"
+  }
 
-router.get "/:roomID/playlistSettings", (req, res) ->
-  roomID = req.param("roomID")
-  Room.findOne {roomID: roomID}, (err, room) ->
-    if (err)
-      console.error "Error finding room: " + JSON.stringify(err)
-      return res.status(500).send err
-    if (!room)
-      return res.status(404).end() #render lost page
-    res.send room.playlistSettings
+router.get "/:roomID/playlistSettings", roomMiddleware, (req, res) ->
+  room = req.room
+  res.send room.playlistSettings
 
-router.get "/:roomID/enabled", (req, res) ->
-  roomID = req.param("roomID")
-  Room.findOne {roomID: roomID}, (err, room) ->
-    if (err)
-      console.error "Error finding room: " + JSON.stringify(err)
-      return res.status(500).send err
-    if (!room)
-      return res.status(404).end() #render lost page
-    res.send(room.enabled)
+router.get "/:roomID/enabled", roomMiddleware, (req, res) ->
+  room = req.room
+  res.send(room.enabled)
 
 router.post "/:roomID/enabled", (req, res) ->
   Room.findOne {$and: [{roomID: req.body.roomID}, {hostSessionID: req.sessionID}]}, (err, room) ->
@@ -183,7 +174,7 @@ router.post "/:roomID/enabled", (req, res) ->
       return res.status(500).end()
     if (!room)
       console.error "No room " + req.body.roomID + " with sessionID " + req.sessionID + " exists"
-      return res.status(500).end()
+      return res.status(404).end()
     room.enabled[req.body.type] = true
     console.log room.enabled
     room.save (err) ->
