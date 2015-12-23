@@ -149,7 +149,7 @@
     <a href="" target="_blank" class="twitter-share-button"><i class="fa fa-twitter-square fa-lg"></i></a>
   </div>
   <div ng-cloak>
-    <div class="modal-view"></div>
+    <div class="modal-view" data-ng-show="modals[0]"></div>
   </div>
   <!-- For Rdio -->
   <div id="rdio_player"></div>

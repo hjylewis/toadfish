@@ -91,6 +91,6 @@
     </div>
   </div>
   <div ng-cloak>
-    <div class="modal-view"></div>
+    <div class="modal-view" data-ng-show="modals[0]"></div>
   </div>
 </body>

@@ -92,7 +92,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 		var playlist = $scope.playlist.playlist
 		for (var i = 0; i < playlist.length; i++) {
 			if (playlist[i].song_details.id === item.id) {
-				$scope.modal.push("duplicate");
+				$scope.modals.push("duplicate");
 				$scope.mode = "playlist";
 				return;
 			}
