@@ -1,13 +1,13 @@
 
 
-var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', function($scope, $timeout, $q, $window, $document){
+var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$http', function($scope, $timeout, $q, $window, $document, $http){
 	$scope.results = [];
 	$scope.query = "";
 	$scope.expandSearch = null;
 	$scope.mode = "playlist";
 	$scope.isLoading = true;
 	$scope.volumeShow = false;
-	$scope.viewModal = false;
+	$scope.modals = [];
 	$scope.firstModal = true;
 	$scope.rdio_user = null;
 	$scope.apis_loaded = {};
@@ -77,7 +77,6 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 	}
 	$scope.playNow = function (item) {
 		var playlist = $scope.playlist.playlist
-
 		for (var i = 0; i < playlist.length; i++) {
 			if (playlist[i].song_details.id === item.id) {
 				$scope.playlist.goTo(i);
@@ -90,6 +89,14 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 		$scope.mode = "playlist";
 	}
 	$scope.add = function (item) {
+		var playlist = $scope.playlist.playlist
+		for (var i = 0; i < playlist.length; i++) {
+			if (playlist[i].song_details.id === item.id) {
+				$scope.modal.push("duplicate");
+				$scope.mode = "playlist";
+				return;
+			}
+		};
 		$scope.playlist.add(item);
 		$scope.mode = "playlist";
 	}
@@ -124,11 +131,35 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 	$scope.stopPropagation = function (e) {
 		e.stopPropagation();
 	}
-	$scope.openModal = function (e) {
-		e.stopPropagation();
-		$scope.viewModal = true;
+
+	$scope.openModal = function (e, type) {
+		if (e) {
+			e.stopPropagation();
+		}
+		$scope.modals.push(type);
 		$scope.firstModal = false;
 	}
+	$scope.banModal = function (e, index) {
+		var sessionID = $scope.playlist.playlist[index].user
+		$scope.banUser = function () {
+			$http.post('/host/' + roomID + '/ban', {
+				sessionID: sessionID
+			}).then(function () {
+				$scope.userBanned = true;
+			});
+		}
+		$scope.deleteUserSongs = function () {
+			var pl = $scope.playlist.playlist;
+			for (var i = pl.length - 1; i >= 0; i--){
+				if (pl[i].user === sessionID) {
+					$scope.playlist.remove(i)
+				}
+			}
+		}
+		$scope.userBanned = false;
+		$scope.openModal(e, 'banUser');
+	}
+
 	$scope.changeColor = function(enter) {
 		if (enter && $scope.mode == "search") {
 			$scope.playerColor = {'background-color': 'rgba(0,0,0,0.8)'}
@@ -148,8 +179,8 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
     $scope.shortcut = function (e) {
 
   		if (e.keyCode == 27) {
-			if ($scope.viewModal){
-				$scope.viewModal = false;
+			if ($scope.modals[0]){
+				$scope.modals.splice(0,1);
 				return
 			} 
 			if ($scope.mode == "search") {

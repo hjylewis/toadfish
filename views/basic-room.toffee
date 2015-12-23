@@ -90,5 +90,7 @@
       </span>
     </div>
   </div>
-
+  <div ng-cloak>
+    <div class="modal-view"></div>
+  </div>
 </body>

@@ -25,6 +25,8 @@ class Playlist
 		@state = 0
 		@volume = 100
 		@autoplay = false
+		$.get '/sessionID', (sessionID) =>
+			@sessionID = sessionID
 		socket.on 'update', (update) =>
 			if update.socketID != socket.id
 				@readUpdate(update)
@@ -41,6 +43,10 @@ class Playlist
 		else
 			@autoplay = if playlistSettings.autoplay then JSON.parse(playlistSettings.autoplay) else false
 			@state = playlistSettings.state || 0
+
+		scope = angular.element($("body")).scope()
+		if (!scope.$$phase && !scope.$root.$$phase)
+			scope.$apply()
 
 		if @playlist.length > 0
 			@loadSong () =>
@@ -159,10 +165,13 @@ class Playlist
 
 	add: (song_details, update) ->
 		song_details.uuid = generateUUID()
-		@playlist.push({
-			song_details: song_details
-		})
-		@save('add', JSON.stringify(song_details)) if !update
+		song_obj = if song_details.song_details then song_details else {
+			song_details: song_details,
+			user: @sessionID,
+			time: Date.now()
+		}
+		@playlist.push(song_obj)
+		@save('add', JSON.stringify(song_obj)) if !update
 		if (@playlist.length == 1)
 			@loadSong () =>
 				@setVolume @volume
@@ -175,11 +184,14 @@ class Playlist
 			@add(song_details, update)
 		else
 			song_details.uuid = generateUUID()
-			@playlist.splice(@currentIndex + 1, 0, {
-				song_details: song_details
-			})
+			song_obj = if song_details.user then song_details else {
+				song_details: song_details,
+				user: @sessionID,
+				time: Date.now()
+			}
+			@playlist.splice(@currentIndex + 1, 0, song_obj)
 			@next(update || !host)
-			@save "addFirst", JSON.stringify(song_details) if !update
+			@save "addFirst", JSON.stringify(song_obj) if !update
 
 	remove: (index, update) ->
 		if (index < @currentIndex)
@@ -373,7 +385,7 @@ class Playlist
 				scope = angular.element($("body")).scope()
 				openModal = () ->
 					if (scope.firstModal)
-						scope.viewModal = true
+						scope.modals.push('rdio')
 						scope.firstModal = false
 				if (scope.$$phase || scope.$root.$$phase) then openModal() else scope.$apply(openModal())
 				@next()
@@ -386,7 +398,11 @@ class Playlist
 			host: host,
 			data: data,
 			socketID: socket.id
-		})
+		}).fail (data) =>
+			if (data.responseText == "User has been banned")
+				@reload()
+				scope = angular.element($("body")).scope()
+				if (scope.$$phase || scope.$root.$$phase) then (scope.modals.push('banned')) else scope.$apply(scope.modals.push('banned'))
 
 	readUpdate: (update) ->
 		if (ENV == 'dev')
@@ -464,7 +480,7 @@ class Playlist
 			roomID: roomID
 		})
 	reload: () ->
-		$.get '/playlistSettings/' + roomID, (settings) =>
+		$.get '/' + roomID + '/playlistSettings', (settings) =>
 			@load settings
 
 # TODO move to utilities eventually

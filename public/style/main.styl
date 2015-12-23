@@ -598,7 +598,6 @@ div.modal
   border-radius radius
   color black
   width 400px
-  height 300px
   z-index 6
   position fixed
   padding 30px
@@ -638,6 +637,19 @@ div.overlay
 
   
 @media screen and (max-width: 500px)
+  div.modal-view
+    height 100%
+    width 100%
+    position absolute
+    top 0
+  div.modal
+    width 90%
+    box-sizing border-box
+    margin auto
+    position relative
+    margin-top 100px
+    left 0
+    top 0
   li#register
     display none
     

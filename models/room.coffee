@@ -17,7 +17,8 @@ roomSchema = new mongoose.Schema({
 		youtube: Boolean,
 		rdio: Boolean
 	},
-	update: Date,
+	banned: [String],
+	update: Date
 })
 
 Room = mongoose.model('Room', roomSchema)
