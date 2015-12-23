@@ -74,8 +74,8 @@ router.post "/sendUpdate", (req, res) ->
     if (room.hostSessionID != req.sessionID) # basic user
       if (payload.type != 'add')
         return res.status(401).end()
-      if (room.banned.includes(req.sessionID))
-        return res.status(401).sent("User has been banned").end()
+      if (room.banned.indexOf(req.sessionID) > -1)
+        return res.status(401).send("User has been banned").end()
     io.sockets.to(roomID).emit('update', payload)
     return res.status(200).end()
 

@@ -1,6 +1,6 @@
 
 
-var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', function($scope, $timeout, $q, $window, $document){
+var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$http', function($scope, $timeout, $q, $window, $document, $http){
 	$scope.results = [];
 	$scope.query = "";
 	$scope.expandSearch = null;
@@ -131,6 +131,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 	$scope.stopPropagation = function (e) {
 		e.stopPropagation();
 	}
+
 	$scope.openModal = function (e, type) {
 		if (e) {
 			e.stopPropagation();
@@ -138,6 +139,17 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', fu
 		$scope.viewModal = type;
 		$scope.firstModal = false;
 	}
+	$scope.banModal = function (e, index) {
+		$scope.banUser = function () {
+			$http.post('/host/' + roomID + '/ban', {
+				sessionID: $scope.playlist.playlist[index].user
+			}).then(function () {
+				
+			});
+		}
+		$scope.openModal(e, 'ban');
+	}
+
 	$scope.changeColor = function(enter) {
 		if (enter && $scope.mode == "search") {
 			$scope.playerColor = {'background-color': 'rgba(0,0,0,0.8)'}

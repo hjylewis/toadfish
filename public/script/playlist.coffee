@@ -44,6 +44,10 @@ class Playlist
 			@autoplay = if playlistSettings.autoplay then JSON.parse(playlistSettings.autoplay) else false
 			@state = playlistSettings.state || 0
 
+		scope = angular.element($("body")).scope()
+		if (!scope.$$phase && !scope.$root.$$phase)
+			scope.$apply()
+
 		if @playlist.length > 0
 			@loadSong () =>
 				@setVolume @volume
@@ -394,9 +398,9 @@ class Playlist
 			host: host,
 			data: data,
 			socketID: socket.id
-		}).fail((data) ->
-			console.log data
-		})
+		}).fail (data) =>
+			if (data.responseText == "User has been banned")
+				@reload()
 
 	readUpdate: (update) ->
 		if (ENV == 'dev')
