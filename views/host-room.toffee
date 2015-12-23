@@ -112,7 +112,7 @@
                 'icon-rdio': song.song_details.type === 'rdio'
               }"></i>
             </a>
-            <i ng-click="openModal($event,'ban')" class="hover-purple clickable fa fa-ban"></i>
+            <i ng-if="song.user !== playlist.sessionID" ng-click="openModal($event,'ban')" class="hover-purple clickable fa fa-ban"></i>
             <i ng-click="remove($index, $event)" class="hover-purple clickable fa fa-times"></i>
           </span>
           <span class="song-details">

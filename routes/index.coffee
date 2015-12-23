@@ -135,8 +135,16 @@ router.post "/host/:roomID/login", hostMiddleware, (req, res) ->
     else
       res.status(200).end()
 
-# router.post "/host/:roomID/ban", hostMiddleware, (req, res) ->
-
+router.post "/host/:roomID/ban", hostMiddleware, (req, res) ->
+  room = req.room
+  sessionID = req.body.sessionID
+  room.banned.push(sessionID)
+  room.save (err) ->
+    if (err)
+      console.error "Error saving logging in host: " + JSON.stringify(err)
+      res.status(500).end()
+    else
+      res.status(200).end()
 
 router.get "/:roomID", roomMiddleware, (req, res) ->
   roomID = req.param("roomID")
