@@ -22,6 +22,34 @@
     })
   }
 </script>
+<script>
+  var global = {};
+  var handleFiles = function (files) {
+    var filteredFiles = _.filter(files, function(file) {return soundManager.canPlayMIME(file.type);});
+    async.each(filteredFiles, function(file, callback) {
+      musicmetadata(file, function(err, tags) {
+        if (err) {
+          return callback(err);
+        }
+        var strippedTags = _.pick(tags, 'album', 'artist','genre','title','year');
+        var obj = {
+          tags: strippedTags,
+          url: window.URL.createObjectURL(file)
+        }
+        var picture = _.omit(tags.picture[0].data, function(value) { // Not used
+          return _.isFunction(value);
+        });
+        $.post('/localsong/' + roomID + '/storeSongs', obj, callback());
+      });
+    }, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    })
+  }
+</script>
+<script src="/script/musicmetadata.js"></script>
+<script src="/script/soundmanager2/script/soundmanager2.js"></script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController" data-ng-keydown="shortcut($event)">
   <div ng-if="isLoading" id="loader" ng-cloak>
@@ -32,6 +60,7 @@
       <i ng-if="!apis_loaded.rdio" class="fa fa-spinner fa-pulse"></i></p>
     <p>Youtube <i ng-if="apis_loaded.youtube" class="fa fa-check"></i>
       <i ng-if="!apis_loaded.youtube" class="fa fa-spinner fa-pulse"></i></p>
+    <input type="file" multiple webkitdirectory directory accept="audio/*" onchange="handleFiles(this.files)">
     <input type="button" class="clickable" value="Continue..." ng-show= "showContinue" ng-click="startApp()"/>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
