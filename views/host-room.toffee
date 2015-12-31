@@ -22,7 +22,7 @@
     })
   }
 </script>
-<script>
+<script> //MOVE THIS SOMEWHERE BETTER
   var global = {};
   var handleFiles = function (files) {
     var filteredFiles = _.filter(files, function(file) {return soundManager.canPlayMIME(file.type);});
@@ -32,14 +32,14 @@
           return callback(err);
         }
         var strippedTags = _.pick(tags, 'album', 'artist','genre','title','year');
-        var obj = {
+        var song = {
           tags: strippedTags,
           url: window.URL.createObjectURL(file)
         }
         var picture = _.omit(tags.picture[0].data, function(value) { // Not used
           return _.isFunction(value);
         });
-        $.post('/localsong/' + roomID + '/storeSongs', obj, callback());
+        $.post('/localsong/' + roomID + '/storeSongs', {song: JSON.stringify(song)}, callback());
       });
     }, function (err) {
       if (err) {
