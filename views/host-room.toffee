@@ -61,7 +61,7 @@
   }
 </script>
 <script src="/script/musicmetadata.js"></script>
-<script src="/script/soundmanager2/script/soundmanager2.js"></script>
+<script src="/script/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController" data-ng-keydown="shortcut($event)">
   <div ng-if="isLoading" id="loader" ng-cloak>

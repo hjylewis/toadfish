@@ -46,15 +46,7 @@ if (host == true)
 
 	#SC2 stuff
 	soundManager.setup({
-		url: '/script/soundmanager2/swf/',
-		onready: (() ->
-			console.log("SC ready")
-			# var mySound = soundManager.createSound({
-			# 	id: 'aSound',
-			# 	url: '/path/to/an.mp3'
-			# });
-			# mySound.play();
-			)
+		url: '/script/soundmanager2/swf/'
 	})
 
 
@@ -97,15 +89,16 @@ rdioCallback = {
 }
 
 window.onunload = () ->
-	$.ajax {
-		url: '/localsong/' + roomID,
-		async: false,
-		method: 'delete'
-	}
-	sessionStorage.clear()
-	uploadedSongs.forEach (songUrl) ->
-		console.log(songUrl)
-		window.URL.revokeObjectURL(songUrl)
+	if uploadedSongs.length > 0
+		$.ajax {
+			url: '/localsong/' + roomID,
+			async: false,
+			method: 'delete'
+		}
+		sessionStorage.clear()
+		uploadedSongs.forEach (songUrl) ->
+			console.log(songUrl)
+			window.URL.revokeObjectURL(songUrl)
 
 window.onbeforeunload = () ->
 	if uploadedSongs.length > 0
