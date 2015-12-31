@@ -43,6 +43,19 @@ if (host == true)
 			swfobject.embedSWF('/rdio-api.swf', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
 	}
 
+	#SC2 stuff
+	soundManager.setup({
+		url: '/script/soundmanager2/swf/',
+		onready: (() ->
+			console.log("SC ready")
+			# var mySound = soundManager.createSound({
+			# 	id: 'aSound',
+			# 	url: '/path/to/an.mp3'
+			# });
+			# mySound.play();
+			)
+	})
+
 
 rdioCallback = {
 	ready: (user) ->
