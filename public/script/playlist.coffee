@@ -368,9 +368,27 @@ class Playlist
 				cb()
 			else if (song_details.type == "local")
 				song_details.sound = soundManager.createSound({ 
-				  url: song_details.permalink_url
+					url: song_details.permalink_url,
+					whileplaying: () ->
+						_this.positionChanged "local", this.position
+					onload: () ->
+						song_details.duration = song_details.sound.duration
+						if (this.readyState == 2)
+							song.song_details.error = true
+							_this.save("error", _this.currentIndex.toString())
+							_this.next()
+					onplay: () ->
+						_this.setPlayState 1
+					onstop: () ->
+						_this.setPlayState 0
+					onpause: () ->
+						_this.setPlayState 2
+					onbufferchange: () ->
+						if (this.isBuffering) 
+							_this.setPlayState 3
+						else
+							_this.setPlayState 1
 				})
-				# add duration
 				cb()
 
 	positionChanged: (type, position) ->
