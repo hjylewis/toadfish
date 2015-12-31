@@ -15,7 +15,7 @@
     $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our Toadfish room and jam out!');
     $.get('/' + roomID + '/enabled', function (data) {
       console.log(data);
-      if (data.youtube && data.soundcloud && data.rdio) {
+      if (data.youtube && data.soundcloud) {
         scope.startApp();
       }
       (scope.$$phase || scope.$root.$$phase) ? (scope.apis_loaded = data) : scope.$apply(scope.apis_loaded = data);
@@ -70,8 +70,6 @@
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
     <p>Soundcloud <i ng-if="apis_loaded.soundcloud" class="fa fa-check"></i>
       <i ng-if="!apis_loaded.soundcloud" class="fa fa-spinner fa-pulse"></i></p>
-    <p>Rdio <i ng-if="apis_loaded.rdio" class="fa fa-check"></i>
-      <i ng-if="!apis_loaded.rdio" class="fa fa-spinner fa-pulse"></i></p>
     <p>Youtube <i ng-if="apis_loaded.youtube" class="fa fa-check"></i>
       <i ng-if="!apis_loaded.youtube" class="fa fa-spinner fa-pulse"></i></p>
     <input type="file" multiple webkitdirectory directory accept="audio/*" onchange="handleFiles(this.files)">
