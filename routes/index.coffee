@@ -1,6 +1,7 @@
 log = console.log
 express = require('express')
 util = require('../lib/util')
+middleware = require('../lib/middleware')
 mongoose = require('mongoose')
 Room = require('../models/room')
 router = express.Router()
@@ -82,33 +83,7 @@ router.post "/sendUpdate", (req, res) ->
 router.get "/sessionID", (req, res) ->
   res.send(req.sessionID)
 
-hostMiddleware = (req, res, next) ->
-  roomID = req.param("roomID")
-  Room.findOne {roomID: roomID}, (err, room) ->
-      if (err)
-        console.error "Error finding room: " + JSON.stringify(err)
-        return res.status(500).end()
-      if (!room)
-        return res.status(404).end()
-      if (room.hostSessionID != req.sessionID)
-        return res.status(403).end()
-      req.room = room
-      next()
-      return
-
-roomMiddleware = (req, res, next) ->
-  roomID = req.param("roomID")
-  Room.findOne {roomID: roomID}, (err, room) ->
-    if (err)
-      console.error "Error finding room: " + JSON.stringify(err)
-      return res.status(500).send err
-    if (!room)
-      return res.status(404).end() #render lost page
-    req.room = room
-    next()
-    return
-
-router.get "/host/:roomID", roomMiddleware, (req, res) ->
+router.get "/host/:roomID", middleware.roomMiddleware, (req, res) ->
   roomID = req.param("roomID")
   room = req.room
   if (room.hostSessionID != req.sessionID)
@@ -128,7 +103,7 @@ router.get "/host/:roomID", roomMiddleware, (req, res) ->
     layout: "views/layout.toffee"
   }
 
-router.post "/host/:roomID/login", hostMiddleware, (req, res) ->
+router.post "/host/:roomID/login", middleware.hostMiddleware, (req, res) ->
   room = req.room
   room.socketID = req.body.socketID if !room.socketID # if null
   room.save (err) ->
@@ -137,7 +112,7 @@ router.post "/host/:roomID/login", hostMiddleware, (req, res) ->
     else
       res.status(200).end()
 
-router.post "/host/:roomID/ban", hostMiddleware, (req, res) ->
+router.post "/host/:roomID/ban", middleware.hostMiddleware, (req, res) ->
   room = req.room
   sessionID = req.body.sessionID
   room.banned.push(sessionID)
@@ -148,7 +123,7 @@ router.post "/host/:roomID/ban", hostMiddleware, (req, res) ->
     else
       res.status(200).end()
 
-router.get "/:roomID", roomMiddleware, (req, res) ->
+router.get "/:roomID", middleware.roomMiddleware, (req, res) ->
   roomID = req.param("roomID")
   room = req.room
   if (room.hostSessionID == req.sessionID)
@@ -169,11 +144,11 @@ router.get "/:roomID", roomMiddleware, (req, res) ->
     layout: "views/layout.toffee"
   }
 
-router.get "/:roomID/playlistSettings", roomMiddleware, (req, res) ->
+router.get "/:roomID/playlistSettings", middleware.roomMiddleware, (req, res) ->
   room = req.room
   res.send room.playlistSettings
 
-router.get "/:roomID/enabled", roomMiddleware, (req, res) ->
+router.get "/:roomID/enabled", middleware.roomMiddleware, (req, res) ->
   room = req.room
   res.send(room.enabled)
 
