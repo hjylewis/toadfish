@@ -138,8 +138,8 @@ class Search
 
     resultObj.collections = _.map results, (result) ->
       retObj = {}
-      retObj.id = if type != 'local' then result.key || result.id.videoId || result.id
-      retObj.permalink_url = result.permalink_url || result.shortUrl || ('https://www.youtube.com/watch?v=' + retObj.id if type == 'youtube')
+      retObj.id = result.key || result._id || result.id.videoId || result.id
+      retObj.permalink_url = result.permalink_url || result.url || result.shortUrl || ('https://www.youtube.com/watch?v=' + retObj.id if type == 'youtube')
       retObj.title = result.title || result.name || result.snippet.title
       retObj.artist = result.artist if result.artist?
       retObj.duration = result.duration if result.duration?

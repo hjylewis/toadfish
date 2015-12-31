@@ -75,6 +75,8 @@ class Playlist
 				@positionChanged "youtube"
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_play()
+			else if (song.song_details.type == "local")
+				song.song_details.sound.play()
 			@save('play') if !update
 		@state = 1
 			# set state
@@ -363,6 +365,12 @@ class Playlist
 			else if (song_details.type == "rdio")
 				rdio_player.rdio_play(song_details.id)
 				rdio_player.rdio_pause()
+				cb()
+			else if (song_details.type == "local")
+				song_details.sound = soundManager.createSound({ 
+				  url: song_details.permalink_url
+				})
+				# add duration
 				cb()
 
 	positionChanged: (type, position) ->
