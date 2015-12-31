@@ -40,6 +40,7 @@ class Playlist
 
 		if host
 			@save "autoplay", "false"
+			@playlist = _.filter(@playlist, (song) -> return song.song_details.type != 'local') # remove local songs on reload
 		else
 			@autoplay = if playlistSettings.autoplay then JSON.parse(playlistSettings.autoplay) else false
 			@state = playlistSettings.state || 0
