@@ -23,7 +23,7 @@
   }
 </script>
 <script> //TODO: MOVE THIS SOMEWHERE BETTER
-  var global = {};
+  $.get('/localsong/' + roomID + '/search', {q: "Life in the Vivid Dream grimes"});
   var handleFiles = function (files) {
     var filteredFiles = _.filter(files, function(file) {return soundManager.canPlayMIME(file.type);});
     async.each(filteredFiles, function(file, callback) {
@@ -45,6 +45,7 @@
       if (err) {
         console.log(err);
       }
+
     })
   }
 </script>

@@ -11,6 +11,9 @@ localsongSchema = new mongoose.Schema({
 	url: String
 })
 
+localsongSchema.index({ title: 'text', artist: 'text', album: 'text', genre: 'text' , year: 'text'}, 
+	{name: 'localSongIndex', weights: { title: 10, artist: 8, album: 4, genre: 2}})
+
 LocalSong = mongoose.model('LocalSong', localsongSchema)
 
 module.exports = LocalSong
