@@ -34,9 +34,12 @@ router.get "/:roomID/search", middleware.roomMiddleware, (req, res) ->
     .where('roomID').equals(roomID)
     .sort({ score : { $meta : 'textScore' } })
     .exec((err, results) ->
-    	console.log err
+    	if (err)
+    		res.status(500).end()
+	    	console.error err
+	    	return
+    	res.send results
     	console.log(results)
     )
-	res.status(200).end()
 
 module.exports = router
