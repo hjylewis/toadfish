@@ -11,12 +11,9 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 	$scope.firstModal = true;
 	$scope.rdio_user = null;
 	$scope.apis_loaded = {};
-	$scope.showContinue = false;
 	$scope.from = {
 		index: null
 	};
-
-  	$timeout(function() { $scope.showContinue = true }, 5000);
 
 	$scope.playerColor = {'background-color': 'rgba(0,0,0,0.5)'}
 	var timeoutPromise;

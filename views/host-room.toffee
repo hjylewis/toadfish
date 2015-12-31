@@ -15,7 +15,7 @@
     $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our Toadfish room and jam out!');
     $.get('/' + roomID + '/enabled', function (data) {
       console.log(data);
-      if (data.youtube && data.soundcloud) {
+      if (data.youtube && data.soundcloud && data.local) {
         scope.startApp();
       }
       (scope.$$phase || scope.$root.$$phase) ? (scope.apis_loaded = data) : scope.$apply(scope.apis_loaded = data);
@@ -23,12 +23,6 @@
   }
 </script>
 <script> //TODO: MOVE THIS SOMEWHERE BETTER
-  //TODO remove these
-  // $.get('/localsong/' + roomID + '/search', {q: "Life in the Vivid Dream grimes"});
-  $.post('/' + roomID+ '/enabled', { 
-    type: 'local',
-    roomID: roomID
-  })
   var handleFiles = function (files) {
     var filteredFiles = _.filter(files, function(file) {return soundManager.canPlayMIME(file.type);});
     async.each(filteredFiles, function(file, callback) {
@@ -57,6 +51,10 @@
       $.post('/' + roomID+ '/enabled', { 
         type: 'local',
         roomID: roomID
+      }, function (err) {
+        if (!err) {
+          loadPlaylist()
+        }
       })
 
     })
@@ -72,8 +70,9 @@
       <i ng-if="!apis_loaded.soundcloud" class="fa fa-spinner fa-pulse"></i></p>
     <p>Youtube <i ng-if="apis_loaded.youtube" class="fa fa-check"></i>
       <i ng-if="!apis_loaded.youtube" class="fa fa-spinner fa-pulse"></i></p>
-    <input type="file" multiple webkitdirectory directory accept="audio/*" onchange="handleFiles(this.files)">
-    <input type="button" class="clickable" value="Continue..." ng-show= "showContinue" ng-click="startApp()"/>
+    <p id="uploadText">Use your own music library! <i class="fa fa-upload clickable hover-purple" onclick="document.getElementById('inputFiles').click();"></i></p>
+    <input type="file" id="inputFiles" multiple webkitdirectory directory accept="audio/*" style="display:none;" onchange="handleFiles(this.files)">
+    <input type="button" class="clickable" value="Continue..." ng-click="startApp()"/>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
     <div class="search-container">
