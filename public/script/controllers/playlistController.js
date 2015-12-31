@@ -11,6 +11,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 	$scope.firstModal = true;
 	$scope.rdio_user = null;
 	$scope.apis_loaded = {};
+	$scope.isUploading = false;
 	$scope.from = {
 		index: null
 	};
