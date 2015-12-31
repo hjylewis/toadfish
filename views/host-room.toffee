@@ -22,7 +22,7 @@
     })
   }
 </script>
-<script> //MOVE THIS SOMEWHERE BETTER
+<script> //TODO: MOVE THIS SOMEWHERE BETTER
   var global = {};
   var handleFiles = function (files) {
     var filteredFiles = _.filter(files, function(file) {return soundManager.canPlayMIME(file.type);});
