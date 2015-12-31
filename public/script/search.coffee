@@ -93,13 +93,24 @@ class Search
             success: (res) =>
                 callback null, @cleanUpResults(res, "rdio")
           }
+        ,"local": (callback) =>
+          return callback null, null if _.indexOf(options.types,'local') == -1
+          page = if options.next && storedResults.results.local && storedResults.results.local.next then storedResults.results.local.next else 0
+          $.ajax {
+            url: '/localsong/' + roomID + '/search',
+            data: {'q': str, 'page_length': PAGE_LENGTH, 'page': page},
+            success: (res) =>
+                callback null, @cleanUpResults(res, "local")
+          }
+
       }, (err, results) =>
+        console.log results
         ret = {}
         storeResults = _.mapObject results, (obj, type) ->
           obj = {} if not obj
           collections = if storedResults.results[type] then storedResults.results[type].collections.concat(obj.collections || []) else obj.collections
           next = obj.next || (storedResults.results[type].next if storedResults.results[type])
-          if collections && next
+          if collections && collections.length > 0 && next
             return {
               collections: collections,
               next: next
@@ -127,7 +138,7 @@ class Search
 
     resultObj.collections = _.map results, (result) ->
       retObj = {}
-      retObj.id = result.key || result.id.videoId || result.id
+      retObj.id = if type != 'local' then result.key || result.id.videoId || result.id
       retObj.permalink_url = result.permalink_url || result.shortUrl || ('https://www.youtube.com/watch?v=' + retObj.id if type == 'youtube')
       retObj.title = result.title || result.name || result.snippet.title
       retObj.artist = result.artist if result.artist?

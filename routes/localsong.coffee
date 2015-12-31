@@ -24,22 +24,35 @@ router.post "/:roomID/storeSongs", middleware.hostMiddleware, (req, res) ->
         else
           return res.status(200).end()
 
+router.delete "/:roomID", middleware.hostMiddleware, (req, res) ->
+	roomID = req.param("roomID")
+	LocalSong.find({roomID: roomID}).remove().exec()
+	res.status(200).end()
+
 router.get "/:roomID/search", middleware.roomMiddleware, (req, res) ->
 	roomID = req.param("roomID")
 	query = req.query.q
+	page = parseInt(req.query.page) || 0
+	page_length = parseInt(req.query.page_length)
 	LocalSong.find(
         { $text : { $search : query } }, 
         { score : { $meta: "textScore" } }
     )
     .where('roomID').equals(roomID)
     .sort({ score : { $meta : 'textScore' } })
+    .skip(page_length * page)
+    .limit(page_length)
     .exec((err, results) ->
     	if (err)
-    		res.status(500).end()
 	    	console.error err
+	    	res.send []
 	    	return
-    	res.send results
-    	console.log(results)
+    	result = {
+          collection: results || [],
+          next_page: page + 1
+        }
+    	res.send result
+    	console.log(result)
     )
 
 module.exports = router

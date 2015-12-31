@@ -1,4 +1,5 @@
 rdio_user = null
+uploadedSongs = [];
 
 
 SC.initialize {
@@ -94,6 +95,21 @@ rdioCallback = {
 			if (!scope.$$phase && !scope.$root.$$phase)
 				scope.$apply()
 }
+
+window.onunload = () ->
+	$.ajax {
+		url: '/localsong/' + roomID,
+		async: false,
+		method: 'delete'
+	}
+	sessionStorage.clear()
+	uploadedSongs.forEach (songUrl) ->
+		console.log(songUrl)
+		window.URL.revokeObjectURL(songUrl)
+
+window.onbeforeunload = () ->
+	if uploadedSongs.length > 0
+		return 'If you leave or refresh this page you\'ll have to reupload your library again.'
 
 logError = (msg) ->
   $.post "/error", { "msg" : msg }

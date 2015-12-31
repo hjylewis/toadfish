@@ -15,7 +15,8 @@ roomSchema = new mongoose.Schema({
 	enabled: {
 		soundcloud: Boolean,
 		youtube: Boolean,
-		rdio: Boolean
+		rdio: Boolean,
+		local: Boolean
 	},
 	banned: [String],
 	update: Date

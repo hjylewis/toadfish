@@ -27,7 +27,7 @@ app.use(cookieParser())
 
 # compress all requests
 app.use(compression())
-app.use(minify())
+# app.use(minify()) TODO undo this
 app.use(favicon(__dirname + '/public/favicon.ico'))
 
 mongoose.connect(process.env.MONGOLAB_URI)

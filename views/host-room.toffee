@@ -23,7 +23,12 @@
   }
 </script>
 <script> //TODO: MOVE THIS SOMEWHERE BETTER
-  $.get('/localsong/' + roomID + '/search', {q: "Life in the Vivid Dream grimes"});
+  //TODO remove these
+  // $.get('/localsong/' + roomID + '/search', {q: "Life in the Vivid Dream grimes"});
+  $.post('/' + roomID+ '/enabled', { 
+    type: 'local',
+    roomID: roomID
+  })
   var handleFiles = function (files) {
     var filteredFiles = _.filter(files, function(file) {return soundManager.canPlayMIME(file.type);});
     async.each(filteredFiles, function(file, callback) {
@@ -32,19 +37,27 @@
           return callback(err);
         }
         var strippedTags = _.pick(tags, 'album', 'artist','genre','title','year');
+        var url = window.URL.createObjectURL(file);
         var song = {
           tags: strippedTags,
-          url: window.URL.createObjectURL(file)
+          url: url
         }
-        var picture = _.omit(tags.picture[0].data, function(value) { // Not used
-          return _.isFunction(value);
-        });
+        if (tags.picture.length > 0) {
+          var picture = _.omit(tags.picture[0].data, function(value) { // Not used
+            return _.isFunction(value);
+          });
+        }
+        uploadedSongs.push(url);
         $.post('/localsong/' + roomID + '/storeSongs', {song: JSON.stringify(song)}, callback());
       });
     }, function (err) {
       if (err) {
         console.log(err);
       }
+      $.post('/' + roomID+ '/enabled', { 
+        type: 'local',
+        roomID: roomID
+      })
 
     })
   }
