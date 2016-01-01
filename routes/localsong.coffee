@@ -52,7 +52,28 @@ router.get "/:roomID/search", middleware.roomMiddleware, (req, res) ->
           next_page: page + 1
         }
     	res.send result
-    	console.log(result)
     )
+
+router.get "/autoplay/:songid", (req, res) ->
+	songid = req.param("songid")
+	LocalSong.findOne {_id: songid}, (err, song) ->
+		if (err)
+			console.error "Error finding song " + err
+			return res.status(500).end()
+		if (!song)
+			return res.status(404).end()
+		query = song.artist + ' ' + song.album + ' ' + song.genre
+		LocalSong.find(
+			{ $text : { $search : query } }, 
+			{ score : { $meta: "textScore" } }
+		)
+		.where('roomID').equals(song.roomID)
+		.where('_id').ne(songid)
+		.sort({ score : { $meta : 'textScore' } })
+		.limit(1)
+		.exec((err, result) ->
+			return res.status(500).end() if err?
+			res.send result[0]
+		)
 
 module.exports = router
