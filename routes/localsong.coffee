@@ -73,7 +73,7 @@ router.get "/autoplay/:songid", (req, res) ->
 		.limit(1)
 		.exec((err, result) ->
 			return res.status(500).end() if err?
-			res.send result[0]
+			res.send result
 		)
 
 module.exports = router

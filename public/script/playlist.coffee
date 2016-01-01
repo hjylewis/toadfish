@@ -254,7 +254,7 @@ class Playlist
 		# In case of error
 		seekEnd = () =>
 			@autoplay = false
-			@state = 0
+			@setPlayState 0
 			@seek(100) # seek end of song
 			@stop()
 
@@ -297,15 +297,19 @@ class Playlist
 							@play() #auto play
 						@save 'autoplay', JSON.stringify(song_details)
 			when "local"
-				$.get('/localsong/autoplay/' + song.song_details.id, (track) =>
-						console.log track
-						song_details = search.cleanUpResults({collection: [track]}, 'local').collections[0]
+				$.get('/localsong/autoplay/' + song.song_details.id, (tracks) =>
+						console.log tracks
+						if (tracks.length == 0)
+							seekEnd()
+							return
+						song_details = search.cleanUpResults({collection: tracks}, 'local').collections[0]
 						@autoplay = song_details
 						@loadSong () =>
 							@setVolume @volume
 							@play() #auto play
 						@save 'autoplay', JSON.stringify(song_details)
-					)
+					).fail () ->
+						seekEnd()
 
 	loadArt: () ->
 		song = @getCurrentSong()
