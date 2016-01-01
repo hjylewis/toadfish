@@ -82,7 +82,7 @@ class Playlist
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_play()
 			else if (song.song_details.type == "local")
-				song.sound.play()
+				soundManager.sound.play()
 			@save('play') if !update
 		@state = 1
 			# set state
@@ -98,7 +98,7 @@ class Playlist
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_pause()
 		else if (song.song_details.type == "local")
-				song.sound.pause()
+				soundManager.sound.pause()
 		@state = 2
 		@save('pause') if !update
 			
@@ -115,7 +115,7 @@ class Playlist
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_stop()
 			else if (song.song_details.type == "local")
-				song.sound.stop()
+				soundManager.sound.stop()
 		@state = 0
 		@save('stop') if !update
 
@@ -129,7 +129,7 @@ class Playlist
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_seek(song.song_details.duration * (percent / 100))
 		else if (song.song_details.type == "local")
-			song.sound.setPosition(song.song_details.duration * (percent / 100))
+			soundManager.sound.setPosition(song.song_details.duration * (percent / 100))
 
 	setVolume: () ->
 		return if !host
@@ -141,7 +141,7 @@ class Playlist
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_setVolume(@volume / 100)
 		else if (song.song_details.type == "local")
-			song.sound.setVolume(@volume)
+			soundManager.sound.setVolume(@volume)
 
 	# add_autoplay: just added the autoplay song, so don't stop or reload the song
 	next: (update, add_autoplay) ->
@@ -296,7 +296,16 @@ class Playlist
 							@setVolume @volume
 							@play() #auto play
 						@save 'autoplay', JSON.stringify(song_details)
-			#TODO for local
+			when "local"
+				$.get('/localsong/autoplay/' + song.song_details.id, (track) =>
+						console.log track
+						song_details = search.cleanUpResults({collection: [track]}, 'local').collections[0]
+						@autoplay = song_details
+						@loadSong () =>
+							@setVolume @volume
+							@play() #auto play
+						@save 'autoplay', JSON.stringify(song_details)
+					)
 
 	loadArt: () ->
 		song = @getCurrentSong()
@@ -383,12 +392,12 @@ class Playlist
 				rdio_player.rdio_pause()
 				cb()
 			else if (song_details.type == "local")
-				song.sound = soundManager.createSound({ 
+				soundManager.sound = soundManager.createSound({ 
 					url: song_details.permalink_url,
 					whileplaying: () ->
 						_this.positionChanged "local", this.position
 					onload: () ->
-						song_details.duration = song.sound.duration
+						song_details.duration = soundManager.sound.duration
 						if (this.readyState == 2)
 							song.song_details.error = true
 							_this.save("error", _this.currentIndex.toString())
