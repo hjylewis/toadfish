@@ -70,7 +70,7 @@ router.get "/autoplay/:songid", (req, res) ->
 		.where('roomID').equals(song.roomID)
 		.where('_id').ne(songid)
 		.sort({ score : { $meta : 'textScore' } })
-		.limit(1)
+		.limit(10)
 		.exec((err, result) ->
 			return res.status(500).end() if err?
 			res.send result

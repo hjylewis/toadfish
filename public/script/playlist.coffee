@@ -298,11 +298,11 @@ class Playlist
 						@save 'autoplay', JSON.stringify(song_details)
 			when "local"
 				$.get('/localsong/autoplay/' + song.song_details.id, (tracks) =>
-						console.log tracks
 						if (tracks.length == 0)
 							seekEnd()
 							return
-						song_details = search.cleanUpResults({collection: tracks}, 'local').collections[0]
+						track = tracks[Math.floor(Math.random() * tracks.length)]
+						song_details = search.cleanUpResults({collection: [track]}, 'local').collections[0]
 						@autoplay = song_details
 						@loadSong () =>
 							@setVolume @volume
@@ -316,7 +316,6 @@ class Playlist
 		if !song
 			$("body").css "background-image", ""
 			return
-		console.log song
 		song_details = song.song_details
 
 		$("body").css "background-image", "linear-gradient(rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.2)),url('#{song_details.artwork_url || ""}')"
