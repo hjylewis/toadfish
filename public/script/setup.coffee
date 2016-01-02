@@ -1,6 +1,14 @@
 rdio_user = null
 uploadedSongs = [];
 
+socket = io(window.location.origin)
+socket.on 'roomID', (msg) ->
+	socket.emit('roomID', roomID)
+	if host
+		$.post('/host/'+roomID+'/login', {
+			roomID: roomID,
+			socketID: socket.id
+		})
 
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
