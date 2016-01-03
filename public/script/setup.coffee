@@ -115,8 +115,12 @@ handleFiles = (files) ->
 			if (tags.picture.length > 0)
 				picture = _.omit tags.picture[0].data, (value) -> # Not used
 					return _.isFunction(value)
-			uploadedSongs.push(url)
-			$.post('/localsong/' + roomID + '/storeSongs', {song: JSON.stringify(song)}, callback())
+			$.post('/localsong/' + roomID + '/storeSongs', {song: JSON.stringify(song)}, (data) ->
+				if (data.alreadyExists)
+					window.URL.revokeObjectURL(url)
+				else
+					uploadedSongs.push(url)
+				callback())
 	, (err) ->
 		if (err)
 			console.log(err)

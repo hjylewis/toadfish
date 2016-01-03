@@ -9,20 +9,33 @@ router.post "/:roomID/storeSongs", middleware.hostMiddleware, (req, res) ->
 	roomID = req.param("roomID")
 	song = JSON.parse(req.body.song)
 	# TODO find and inactivate all old songs
-	LocalSong.create {
+	LocalSong.findOne {
 		roomID: roomID,
 		title: song.tags.title,
 		album: song.tags.album,
 		artist: song.tags.artist[0],
 		genre: song.tags.genre[0],
-		year: song.tags.year,
-		url: song.url
-	}, (err, newSong) ->
+		year: song.tags.year
+	}, (err, existingSong) ->
 		if (err)
-          console.error "Error storing song: " + JSON.stringify(err)
-          res.status(500).send err
-        else
-          return res.status(200).end()
+			console.error "Error looking for song: " + JSON.stringify(err)
+			return res.status(500).send err
+		if (existingSong)
+			return res.send { alreadyExists: true }
+		LocalSong.create {
+			roomID: roomID,
+			title: song.tags.title,
+			album: song.tags.album,
+			artist: song.tags.artist[0],
+			genre: song.tags.genre[0],
+			year: song.tags.year,
+			url: song.url
+		}, (err, newSong) ->
+			if (err)
+	          console.error "Error storing song: " + JSON.stringify(err)
+	          res.status(500).send err
+	        else
+	          return res.send { songID: newSong._id }
 
 router.delete "/:roomID", middleware.hostMiddleware, (req, res) ->
 	roomID = req.param("roomID")
