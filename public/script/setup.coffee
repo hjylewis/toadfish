@@ -96,6 +96,41 @@ rdioCallback = {
 				scope.$apply()
 }
 
+handleFiles = (files) ->
+	scope = angular.element($("body")).scope()
+	scope.isUploading = true
+	if (!scope.$$phase && !scope.$root.$$phase)
+		scope.$apply()
+	filteredFiles = _.filter(files, (file) -> return soundManager.canPlayMIME(file.type))
+	async.each filteredFiles, (file, callback) ->
+		musicmetadata file, (err, tags) ->
+			if (err)
+				return callback(err)
+			strippedTags = _.pick(tags, 'album', 'artist','genre','title','year')
+			url = window.URL.createObjectURL(file)
+			song = {
+				tags: strippedTags,
+				url: url
+			}
+			if (tags.picture.length > 0)
+				picture = _.omit tags.picture[0].data, (value) -> # Not used
+					return _.isFunction(value)
+			uploadedSongs.push(url)
+			$.post('/localsong/' + roomID + '/storeSongs', {song: JSON.stringify(song)}, callback())
+	, (err) ->
+		if (err)
+			console.log(err)
+		scope.isUploading = false
+		if (!scope.$$phase && !scope.$root.$$phase)
+			scope.$apply()
+		if (!scope.apis_loaded.local)
+			$.post '/' + roomID+ '/enabled', { 
+				type: 'local',
+				roomID: roomID
+			}, (err) ->
+				if (!err)
+					loadPlaylist()
+
 window.onunload = () ->
 	if uploadedSongs.length > 0
 		$.ajax {

@@ -23,47 +23,7 @@
   }
 </script>
 <script> //TODO: MOVE THIS SOMEWHERE BETTER
-  var handleFiles = function (files) {
-    var scope = angular.element($("body")).scope();
-    (scope.$$phase || scope.$root.$$phase) ? (scope.isUploading = true) : scope.$apply(scope.isUploading = true);
-    var filteredFiles = _.filter(files, function(file) {return soundManager.canPlayMIME(file.type);});
-    async.each(filteredFiles, function(file, callback) {
-      musicmetadata(file, function(err, tags) {
-        if (err) {
-          return callback(err);
-        }
-        var strippedTags = _.pick(tags, 'album', 'artist','genre','title','year');
-        var url = window.URL.createObjectURL(file);
-        var song = {
-          tags: strippedTags,
-          url: url
-        }
-        if (tags.picture.length > 0) {
-          var picture = _.omit(tags.picture[0].data, function(value) { // Not used
-            return _.isFunction(value);
-          });
-        }
-        uploadedSongs.push(url);
-        $.post('/localsong/' + roomID + '/storeSongs', {song: JSON.stringify(song)}, callback());
-      });
-    }, function (err) {
-      if (err) {
-        console.log(err);
-      }
-      (scope.$$phase || scope.$root.$$phase) ? (scope.isUploading = false) : scope.$apply(scope.isUploading = false);
-      if (!scope.apis_loaded.local) {
-        $.post('/' + roomID+ '/enabled', { 
-          type: 'local',
-          roomID: roomID
-        }, function (err) {
-          if (!err) {
-            loadPlaylist()
-          }
-        })
-      }
 
-    })
-  }
 </script>
 <script src="/script/musicmetadata.js"></script>
 <script src="/script/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
