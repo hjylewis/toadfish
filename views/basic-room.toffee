@@ -35,7 +35,7 @@
         </li>
         <div ng-repeat="item in result.collections">
           <li class='result' ng-hide="!expandSearch && $index > 2">
-            <div class="art">
+            <div class="art" ng-hide="item.type === 'local'"> <!-- For now, hide the art of local songs -->
               <img ng-src='{{item.artwork_small || item.artwork_url}}' />
             </div>
             <div class="details">
