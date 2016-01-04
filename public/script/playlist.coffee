@@ -34,7 +34,7 @@ class Playlist
 		@loaded = true
 
 		if host
-			@endAutoPlay
+			@endAutoPlay()
 			@playlist = _.filter(@playlist, (song, index) -> 
 				ret = song.song_details.type != 'local'
 				if (!ret && index <= @currentIndex)
@@ -248,7 +248,7 @@ class Playlist
 
 		# In case of error
 		seekEnd = () =>
-			@endAutoPlay
+			@endAutoPlay()
 			@setPlayState 0
 			@seek(100) # seek end of song
 			@stop()
