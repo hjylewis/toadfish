@@ -105,6 +105,7 @@ port = process.env.PORT || 8000
 io.on 'connection', (socket) ->
 	console.log("user connected " + socket.id)
 	socket.emit('roomID')
+	socket.emit('reload')
 	socket.on 'roomID', (roomID) ->
 		socket.join(roomID)
 	socket.on 'disconnect', () ->

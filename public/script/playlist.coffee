@@ -16,6 +16,7 @@ class Playlist
 		@state = 0
 		@volume = 100
 		@autoplay = false
+		@loaded = false
 		$.get '/sessionID', (sessionID) =>
 			@sessionID = sessionID
 		socket.on 'update', (update) =>
@@ -23,11 +24,14 @@ class Playlist
 				@readUpdate(update)
 		socket.on 'no host', () =>
 			window.location.reload()
+		socket.on 'reload', () =>
+			@reload() if @loaded
 
 	load: (playlistSettings) ->
 		@currentIndex = playlistSettings.currentIndex || 0
 		@playlist = if playlistSettings.playlist then JSON.parse(playlistSettings.playlist) else []
 		@volume = playlistSettings.volume || 100
+		@loaded = true
 
 		if host
 			@endAutoPlay
