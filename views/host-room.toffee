@@ -22,9 +22,6 @@
     })
   }
 </script>
-<script> //TODO: MOVE THIS SOMEWHERE BETTER
-
-</script>
 <script src="/script/musicmetadata.js"></script>
 <script src="/script/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
 <script src="/setup.js"></script>
