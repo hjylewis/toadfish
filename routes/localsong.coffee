@@ -8,7 +8,6 @@ router = express.Router()
 router.post "/:roomID/storeSongs", middleware.hostMiddleware, (req, res) ->
 	roomID = req.param("roomID")
 	song = JSON.parse(req.body.song)
-	# TODO find and inactivate all old songs
 	LocalSong.findOne {
 		roomID: roomID,
 		title: song.tags.title,
