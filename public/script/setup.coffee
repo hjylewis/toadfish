@@ -1,5 +1,14 @@
 rdio_user = null
+uploadedSongs = [];
 
+socket = io(window.location.origin)
+socket.on 'roomID', (msg) ->
+	socket.emit('roomID', roomID)
+	if host
+		$.post('/host/'+roomID+'/login', {
+			roomID: roomID,
+			socketID: socket.id
+		})
 
 SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
@@ -43,6 +52,11 @@ if (host == true)
 			swfobject.embedSWF('/rdio-api.swf', 'rdio_player', 1, 1, '9.0.0', 'expressInstall.swf', flashvars, params, {})
 	}
 
+	#SC2 stuff
+	soundManager.setup({
+		url: '/script/soundmanager2/swf/'
+	})
+
 
 rdioCallback = {
 	ready: (user) ->
@@ -81,6 +95,61 @@ rdioCallback = {
 			if (!scope.$$phase && !scope.$root.$$phase)
 				scope.$apply()
 }
+
+handleFiles = (files) ->
+	scope = angular.element($("body")).scope()
+	scope.isUploading = true
+	if (!scope.$$phase && !scope.$root.$$phase)
+		scope.$apply()
+	filteredFiles = _.filter(files, (file) -> return soundManager.canPlayMIME(file.type))
+	async.each filteredFiles, (file, callback) ->
+		musicmetadata file, (err, tags) ->
+			if (err)
+				return callback(err)
+			strippedTags = _.pick(tags, 'album', 'artist','genre','title','year')
+			url = window.URL.createObjectURL(file)
+			song = {
+				tags: strippedTags,
+				url: url
+			}
+			if (tags.picture.length > 0)
+				picture = _.omit tags.picture[0].data, (value) -> # Not used
+					return _.isFunction(value)
+			$.post('/localsong/' + roomID + '/storeSongs', {song: JSON.stringify(song)}, (data) ->
+				if (data.alreadyExists)
+					window.URL.revokeObjectURL(url)
+				else
+					uploadedSongs.push(url)
+				callback())
+	, (err) ->
+		if (err)
+			console.log(err)
+		scope.isUploading = false
+		if (!scope.$$phase && !scope.$root.$$phase)
+			scope.$apply()
+		if (!scope.apis_loaded.local)
+			$.post '/' + roomID+ '/enabled', { 
+				type: 'local',
+				roomID: roomID
+			}, (err) ->
+				if (!err)
+					loadPlaylist()
+
+window.onunload = () ->
+	if uploadedSongs.length > 0
+		$.ajax {
+			url: '/localsong/' + roomID,
+			async: false,
+			method: 'delete'
+		}
+		sessionStorage.clear()
+		uploadedSongs.forEach (songUrl) ->
+			console.log(songUrl)
+			window.URL.revokeObjectURL(songUrl)
+
+window.onbeforeunload = () ->
+	if uploadedSongs.length > 0
+		return 'If you leave or refresh this page you\'ll have to reupload your library again.'
 
 logError = (msg) ->
   $.post "/error", { "msg" : msg }

@@ -232,8 +232,11 @@ section
       font-size 40px
       color white
       background-color rgba(0,0,0,.3)
-      padding 10px
+      padding 20px
       border-radius 5px
+      p
+        font-size 20px
+        text-align left
       div
         position relative 
         width 438px
@@ -313,7 +316,10 @@ section
     &:hover
       color grey
       background purple
-    
+  #uploadText
+    padding-top 30px  
+  em
+    font-size 12px  
 
 div.search-container
   margin-top 20px
@@ -371,6 +377,9 @@ div.share
     margin-top 0px
     vertical-align middle
     display inline-block
+  .uploadButton
+    float right
+    margin-top 9px
 
 div#player
   background-color transblack
@@ -566,6 +575,7 @@ ul#result_list
       display inline-block
       overflow hidden
       max-width 100% 
+      max-height 70px
       color black
       &:hover
         color purple
@@ -658,11 +668,17 @@ div.overlay
     width 100% 
   input#createRoomName
     width 90%
+  section#about div.info div
+    display none
 
 @media screen and (max-width: 980px)
   section#about
     div.info
       width 90%
+  section#accounts .launch-button
+    position relative
+    margin-bottom 20px
+    bottom 0px
 
 //Loader
 //http://codepen.io/boris-graeff/pen/bdBXmj
@@ -672,7 +688,7 @@ div.overlay
   left:0;
   right:0;
   top:50%;
-  width: 90px;
+  width: 250px;
   color: black;
   white-space: nowrap;
   

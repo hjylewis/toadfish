@@ -3,15 +3,6 @@
 yt_player = null #for youtube, remember the player div
 YT_TIME_INTERVAL = 500
 
-socket = io(window.location.origin)
-socket.on 'roomID', (msg) ->
-	socket.emit('roomID', roomID)
-	if host
-		$.post('/host/'+roomID+'/login', {
-			roomID: roomID,
-			socketID: socket.id
-		})
-
 # TODO: state
 # 0: stop
 # 1: play
@@ -40,6 +31,12 @@ class Playlist
 
 		if host
 			@save "autoplay", "false"
+			@playlist = _.filter(@playlist, (song, index) -> 
+				ret = song.song_details.type != 'local'
+				if (!ret && index <= @currentIndex)
+					@currentIndex--
+				return ret) # remove local songs on reload
+			@saveToDB 'playlist'
 		else
 			@autoplay = if playlistSettings.autoplay then JSON.parse(playlistSettings.autoplay) else false
 			@state = playlistSettings.state || 0
@@ -75,6 +72,8 @@ class Playlist
 				@positionChanged "youtube"
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_play()
+			else if (song.song_details.type == "local")
+				soundManager.sound.play()
 			@save('play') if !update
 		@state = 1
 			# set state
@@ -89,6 +88,8 @@ class Playlist
 			yt_player.pauseVideo()
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_pause()
+		else if (song.song_details.type == "local")
+				soundManager.sound.pause()
 		@state = 2
 		@save('pause') if !update
 			
@@ -104,6 +105,8 @@ class Playlist
 				yt_player.stopVideo()
 			else if (song.song_details.type == "rdio")
 				rdio_player.rdio_stop()
+			else if (song.song_details.type == "local")
+				soundManager.sound.stop()
 		@state = 0
 		@save('stop') if !update
 
@@ -116,6 +119,8 @@ class Playlist
 			yt_player.seekTo(yt_player.getDuration() * (percent / 100))
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_seek(song.song_details.duration * (percent / 100))
+		else if (song.song_details.type == "local")
+			soundManager.sound.setPosition(song.song_details.duration * (percent / 100))
 
 	setVolume: () ->
 		return if !host
@@ -126,6 +131,8 @@ class Playlist
 			yt_player.setVolume(@volume)
 		else if (song.song_details.type == "rdio")
 			rdio_player.rdio_setVolume(@volume / 100)
+		else if (song.song_details.type == "local")
+			soundManager.sound.setVolume(@volume)
 
 	# add_autoplay: just added the autoplay song, so don't stop or reload the song
 	next: (update, add_autoplay) ->
@@ -184,14 +191,14 @@ class Playlist
 			@add(song_details, update)
 		else
 			song_details.uuid = generateUUID()
-			song_obj = if song_details.user then song_details else {
+			song_obj = if song_details.song_details then song_details else {
 				song_details: song_details,
 				user: @sessionID,
 				time: Date.now()
 			}
 			@playlist.splice(@currentIndex + 1, 0, song_obj)
-			@next(update || !host)
 			@save "addFirst", JSON.stringify(song_obj) if !update
+			@next(update || !host)
 
 	remove: (index, update) ->
 		if (index < @currentIndex)
@@ -238,7 +245,7 @@ class Playlist
 		# In case of error
 		seekEnd = () =>
 			@autoplay = false
-			@state = 0
+			@setPlayState 0
 			@seek(100) # seek end of song
 			@stop()
 
@@ -280,6 +287,20 @@ class Playlist
 							@setVolume @volume
 							@play() #auto play
 						@save 'autoplay', JSON.stringify(song_details)
+			when "local"
+				$.get('/localsong/autoplay/' + song.song_details.id, (tracks) =>
+						if (tracks.length == 0)
+							seekEnd()
+							return
+						track = tracks[Math.floor(Math.random() * tracks.length)]
+						song_details = search.cleanUpResults({collection: [track]}, 'local').collections[0]
+						@autoplay = song_details
+						@loadSong () =>
+							@setVolume @volume
+							@play() #auto play
+						@save 'autoplay', JSON.stringify(song_details)
+					).fail () ->
+						seekEnd()
 
 	loadArt: () ->
 		song = @getCurrentSong()
@@ -363,6 +384,30 @@ class Playlist
 			else if (song_details.type == "rdio")
 				rdio_player.rdio_play(song_details.id)
 				rdio_player.rdio_pause()
+				cb()
+			else if (song_details.type == "local")
+				soundManager.sound = soundManager.createSound({ 
+					url: song_details.permalink_url,
+					whileplaying: () ->
+						_this.positionChanged "local", this.position
+					onload: () ->
+						song_details.duration = soundManager.sound.duration
+						if (this.readyState == 2)
+							song.song_details.error = true
+							_this.save("error", _this.currentIndex.toString())
+							_this.next()
+					onplay: () ->
+						_this.setPlayState 1
+					onstop: () ->
+						_this.setPlayState 0
+					onpause: () ->
+						_this.setPlayState 2
+					onbufferchange: () ->
+						if (this.isBuffering) 
+							_this.setPlayState 3
+						else
+							_this.setPlayState 1
+				})
 				cb()
 
 	positionChanged: (type, position) ->
@@ -460,7 +505,7 @@ class Playlist
 
 		if (playlistArray.indexOf(type) != -1)
 			stripped_playlist = _.map @playlist, (song) ->
-				return _.omit(song, 'obj')
+				return _.omit(song, 'sound')
 
 		if (indexArray.indexOf(type) != -1)
 			currentIndex = JSON.stringify(@currentIndex)

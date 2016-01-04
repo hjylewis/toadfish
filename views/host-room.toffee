@@ -15,24 +15,27 @@
     $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our Toadfish room and jam out!');
     $.get('/' + roomID + '/enabled', function (data) {
       console.log(data);
-      if (data.youtube && data.soundcloud && data.rdio) {
+      if (data.youtube && data.soundcloud && data.local) {
         scope.startApp();
       }
       (scope.$$phase || scope.$root.$$phase) ? (scope.apis_loaded = data) : scope.$apply(scope.apis_loaded = data);
     })
   }
 </script>
+<script src="/script/musicmetadata.js"></script>
+<script src="/script/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController" data-ng-keydown="shortcut($event)">
+  <input type="file" id="inputFiles" multiple webkitdirectory directory accept="audio/*" style="display:none;" onchange="handleFiles(this.files)">
   <div ng-if="isLoading" id="loader" ng-cloak>
     <ul><li></li><li></li><li></li><li></li><li></li><li></li></ul>
     <p>Soundcloud <i ng-if="apis_loaded.soundcloud" class="fa fa-check"></i>
       <i ng-if="!apis_loaded.soundcloud" class="fa fa-spinner fa-pulse"></i></p>
-    <p>Rdio <i ng-if="apis_loaded.rdio" class="fa fa-check"></i>
-      <i ng-if="!apis_loaded.rdio" class="fa fa-spinner fa-pulse"></i></p>
     <p>Youtube <i ng-if="apis_loaded.youtube" class="fa fa-check"></i>
       <i ng-if="!apis_loaded.youtube" class="fa fa-spinner fa-pulse"></i></p>
-    <input type="button" class="clickable" value="Continue..." ng-show= "showContinue" ng-click="startApp()"/>
+    <p id="uploadText">Use your own music library! <i ng-class="{'fa-upload clickable hover-purple': !isUploading, 'fa-spinner fa-pulse': isUploading}" class="fa" onclick="document.getElementById('inputFiles').click();"></i></p>
+    <em>Caution: Too many songs will slow down your browser</em>
+    <input type="button" class="clickable" value="Continue..." ng-click="startApp()"/>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
     <div class="search-container">
@@ -82,7 +85,7 @@
         </li>
         <div ng-repeat="item in result.collections">
           <li class='result' ng-hide="!expandSearch && $index > 2">
-            <div class="art">
+            <div class="art" ng-hide="item.type === 'local'"> <!-- For now, hide the art of local songs -->
               <img ng-src='{{item.artwork_small || item.artwork_url}}' />
             </div>
             <div class="details">
@@ -147,6 +150,7 @@
     <h3>Share this link to invite anyone:</h3><input id="share-link" onclick="this.select();" type="text">
     <a href="" target="_blank" class="fb-share-button"><i class="fa fa-facebook-square fa-lg"></i></a>
     <a href="" target="_blank" class="twitter-share-button"><i class="fa fa-twitter-square fa-lg"></i></a>
+    <i class="uploadButton fa" ng-class="{'fa-upload clickable hover-purple': !isUploading, 'fa-spinner fa-pulse': isUploading}" onclick="document.getElementById('inputFiles').click();"></i>
   </div>
   <div ng-cloak>
     <div class="modal-view" data-ng-show="modals[0]"></div>

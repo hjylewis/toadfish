@@ -21,6 +21,7 @@ params.extend(app)
 
 routes = require('./routes/index')
 rdio_routes = require('./routes/rdio')
+localsong_routes = require('./routes/localsong')
 
 app.use(cookieParser())
 
@@ -76,6 +77,7 @@ app.use (req, res, next) ->
 # Routers
 app.use('/', routes)
 app.use('/rdio', rdio_routes)
+app.use('/localsong', localsong_routes)
 
 
 app.get /.*/, (request, result) ->
