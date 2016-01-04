@@ -12,13 +12,12 @@
     <section id="about">
         <h1>Music, Together.</h1>
         <div class="info">
-            <p>Host a playlist on Toadfish that guests can join and add songs to just by clicking a link!</p>
             <div>
                 <i class="fa fa-laptop fa-5x"></i><i class="fa fa-volume-up fa-2x"></i><i class="fa fa-wifi fa-3x"></i><i class="fa fa-mobile fa-5x"></i>
             </div>
-            <p>Guest are happy that they contribute to the musical experience and you can enjoy the party!</p>
-            <br />
+            <p>Host a playlist on Toadfish that guests can join and add songs to just by clicking a link!  Guest are happy that they contribute to the musical experience and you can enjoy the party!</p><br />
             <p>Build playlist with songs from <a href="https://soundcloud.com" target="_blank">Soundcloud</a>, <a href="https://youtube.com" target="_blank">Youtube</a>, and your own music collection so no more jumping between applications!</p>
+            <p>
         </div>
     </section>
     <section id="accounts">
