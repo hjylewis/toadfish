@@ -30,7 +30,7 @@ class Playlist
 		@volume = playlistSettings.volume || 100
 
 		if host
-			@save "autoplay", "false"
+			@endAutoPlay
 			@playlist = _.filter(@playlist, (song, index) -> 
 				ret = song.song_details.type != 'local'
 				if (!ret && index <= @currentIndex)
@@ -138,7 +138,7 @@ class Playlist
 	next: (update, add_autoplay) ->
 		if (@currentIndex + 1 < @playlist.length )
 			@stop(true) if !add_autoplay
-			@autoplay = false
+			@endAutoPlay update
 			@currentIndex++
 			@save('next', @currentIndex.toString()) if !update
 			if !add_autoplay
@@ -162,7 +162,7 @@ class Playlist
 	goTo: (index, update) ->
 		if (index >= 0 && index < @playlist.length)
 			@stop(true)
-			@autoplay = false
+			@endAutoPlay update
 			@currentIndex = index
 			@save('goTo', @currentIndex.toString()) if !update
 			@loadSong () =>
@@ -244,7 +244,7 @@ class Playlist
 
 		# In case of error
 		seekEnd = () =>
-			@autoplay = false
+			@endAutoPlay
 			@setPlayState 0
 			@seek(100) # seek end of song
 			@stop()
@@ -301,7 +301,9 @@ class Playlist
 						@save 'autoplay', JSON.stringify(song_details)
 					).fail () ->
 						seekEnd()
-
+	endAutoPlay: (update) ->
+		@autoplay = false
+		@save "autoplay", "false" if !update
 	loadArt: () ->
 		song = @getCurrentSong()
 		if !song
