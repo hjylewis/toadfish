@@ -110,6 +110,7 @@ io.on 'connection', (socket) ->
 		socket.join(roomID)
 	socket.on 'disconnect', () ->
 		console.log('user disconnected ' + socket.id)
+		# socket.leave(roomID)
 		# Log out host
 		Room.findOne {socketID: socket.id}, (err, room) ->
 			if (!err && room)
