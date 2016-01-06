@@ -124,6 +124,7 @@
                 'icon-rdio': song.song_details.type === 'rdio'
               }"></i>
             </a>
+            <i class="fa clickable hover-purple fa-search" ng-click="searchSimilar($event, $index)"></i>
             <i ng-if="song.user !== playlist.sessionID" ng-click="banModal($event, $index)" class="hover-purple clickable fa fa-ban"></i>
             <i ng-click="remove($index, $event)" class="hover-purple clickable fa fa-times"></i>
           </span>
@@ -146,6 +147,7 @@
             'icon-rdio': playlist.autoplay.type === 'rdio'
           }"></i>
         </a>
+        <i class="fa clickable hover-purple fa-search" ng-click="searchSimilar($event, 'autoplay')"></i>
         <i ng-click="addAutoplay()" class="fa fa-plus clickable hover-purple"></i>
       </span>
       <span class="over-container">

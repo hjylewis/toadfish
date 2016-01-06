@@ -62,6 +62,7 @@
                 'icon-rdio': song.song_details.type === 'rdio'
               }"></i>
             </a>
+            <i class="fa clickable hover-purple fa-search" ng-click="searchSimilar($event, $index)"></i>
           </span>
           <span class="song-details">
             <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa" ng-class="{'fa-pause': playlist.state === 2 || playlist.state === 0, 'fa-play': playlist.state === 1}"></i> 
@@ -81,6 +82,7 @@
             'icon-rdio': playlist.autoplay.type === 'rdio'
           }"></i>
         </a>
+        <i class="fa clickable hover-purple fa-search" ng-click="searchSimilar($event, 'autoplay')"></i>
         <i ng-click="addAutoplay()" class="fa fa-plus clickable hover-purple"></i>
       </span>
       <span class="over-container">

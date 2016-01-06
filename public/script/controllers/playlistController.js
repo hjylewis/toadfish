@@ -158,6 +158,16 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 		$scope.openModal(e, 'banUser');
 	}
 
+	$scope.searchSimilar = function(e, index) {
+		e.stopPropagation();
+		if (index === 'autoplay') {
+			$scope.query = $scope.playlist.autoplay.title
+		} else {
+			$scope.query = $scope.playlist.playlist[index].song_details.title
+		}
+		$scope.triggerSearch();
+	}
+
 	$scope.changeColor = function(enter) {
 		if (enter && $scope.mode == "search") {
 			$scope.playerColor = {'background-color': 'rgba(0,0,0,0.8)'}
