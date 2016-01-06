@@ -50,6 +50,14 @@
         id = 'first_search' autofocus autocomplete="off">
       </span>
     </div>
+    <div class="getting-started" ng-show="playlist.playlist.length == 0 && mode !== 'search'">
+      <h1>Getting Started</h1>
+      <ol>
+        <li>Search for a song you would like to add</li>
+        <li>Add it to the playlist</li>
+        <li>Share the link to your room</li>
+      </ol>
+    </div>
     <div id="player" ng-hide="playlist.playlist.length == 0" ng-style="playerColor" ng-mouseenter="changeColor(true)" ng-mouseleave="changeColor(false)" ng-class="{clickable: mode == 'search'}" ng-click="mode = 'playlist'; changeColor()">
       <div id="top-line">
         <div id="buttons">
