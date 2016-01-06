@@ -103,14 +103,16 @@ port = process.env.PORT || 8000
 # For socket.io
 
 io.on 'connection', (socket) ->
+	roomID = null
 	console.log("user connected " + socket.id)
 	socket.emit('roomID')
 	socket.emit('reload')
-	socket.on 'roomID', (roomID) ->
+	socket.on 'roomID', (rID) ->
+		roomID = rID
 		socket.join(roomID)
 	socket.on 'disconnect', () ->
 		console.log('user disconnected ' + socket.id)
-		# socket.leave(roomID)
+		socket.leave(roomID) if roomID
 		# Log out host
 		Room.findOne {socketID: socket.id}, (err, room) ->
 			if (!err && room)
