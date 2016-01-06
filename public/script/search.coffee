@@ -104,7 +104,8 @@ class Search
           }
 
       }, (err, results) =>
-        console.log results
+        if (ENV == 'dev')
+          console.log results
         ret = {}
         storeResults = _.mapObject results, (obj, type) ->
           obj = {} if not obj
