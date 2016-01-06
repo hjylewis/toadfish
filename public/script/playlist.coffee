@@ -310,11 +310,10 @@ class Playlist
 		@save "autoplay", "false" if !update
 	loadArt: () ->
 		song = @getCurrentSong()
-		if !song
+		if !song || song.song_details.type == "local"
 			$("body").css "background-image", ""
 			return
 		song_details = song.song_details
-
 		$("body").css "background-image", "linear-gradient(rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.2)),url('#{song_details.artwork_url || ""}')"
 		$("body").css "background-size", "cover"
 		$("body").css "background-attachment", "fixed"

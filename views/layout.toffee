@@ -65,7 +65,6 @@
     <!-- Load actual body -->
     #{raw body}
 
-
     <!-- Would load navbar here too -->
 
     <nav>
