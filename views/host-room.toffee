@@ -14,7 +14,8 @@
     $('.fb-share-button').attr('href','https://www.facebook.com/sharer/sharer.php?u=https://' + url);
     $('.twitter-share-button').attr('href', 'http://twitter.com/share?url=https://' + url + '&amp;text=Come join our Toadfish room and jam out!');
     $.get('/' + roomID + '/enabled', function (data) {
-      console.log(data);
+      if (ENV == 'dev')
+        console.log(data);
       if (data.youtube && data.soundcloud && data.local) {
         scope.startApp();
       }
