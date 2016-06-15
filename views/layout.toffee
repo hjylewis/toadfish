@@ -16,7 +16,7 @@
     <meta property="twitter:site" content="@toadfish_music" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
@@ -41,7 +41,7 @@
     <script>
         switch (window.location.hostname) {
           case "localhost":
-          case "127.0.0.1": 
+          case "127.0.0.1":
           case "192.168.0.108":
             var ENV = "dev";
             break;
@@ -84,18 +84,16 @@
 
 
 
-    <script type="text/javascript" src="/script/async-min.js"></script>
-    <script type="text/javascript" src="/script/underscore-min.js"></script>
+    <script type="text/javascript" src="/script/vendor/async-min.js"></script>
+    <script type="text/javascript" src="/script/vendor/underscore-min.js"></script>
 
 
     <!-- youtube -->
     <script src="//apis.google.com/js/client.js?onload=googleApiClientReady"></script>
 
     <script src="/script/tf-app.js"></script>
-    <script src="/script/angular-drag-and-drop-lists.min.js"></script>
-    
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-    <script src="/script/canvas.js"></script>-->
+    <script src="/script/vendor/angular-drag-and-drop-lists.min.js"></script>
+
     <!-- Google Analytics -->
     <script>
         if (ENV === 'production') {

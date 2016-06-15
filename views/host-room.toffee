@@ -23,8 +23,8 @@
     })
   }
 </script>
-<script src="/script/musicmetadata.js"></script>
-<script src="/script/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
+<script src="/script/vendor/musicmetadata.js"></script>
+<script src="/script/vendor/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
 <script src="/setup.js"></script>
 <body ng-controller="PlaylistController" data-ng-keydown="shortcut($event)">
   <input type="file" id="inputFiles" multiple webkitdirectory directory accept="audio/*" style="display:none;" onchange="handleFiles(this.files)">
@@ -119,8 +119,8 @@
           <span class="song-icons" style="float:right" ng-show="songHover">
             <a ng-click="stopPropagation($event)" href="{{song.song_details.permalink_url}}" target="_blank" title="Go to song on {{song.song_details.type}}">
               <i data-ng-class="{
-                'fa fa-youtube-play': song.song_details.type === 'youtube', 
-                'fa fa-soundcloud': song.song_details.type === 'soundcloud', 
+                'fa fa-youtube-play': song.song_details.type === 'youtube',
+                'fa fa-soundcloud': song.song_details.type === 'soundcloud',
                 'icon-rdio': song.song_details.type === 'rdio'
               }"></i>
             </a>
@@ -129,7 +129,7 @@
             <i ng-click="remove($index, $event)" class="hover-purple clickable fa fa-times"></i>
           </span>
           <span class="song-details">
-            <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa fa-play"></i> 
+            <i ng-show="$index == playlist.currentIndex && !playlist.autoplay" class="fa fa-play"></i>
             <i ng-show="song.song_details.error" class="fa fa-exclamation-triangle"></i>
             <span class="hover-purple icon-30" ng-if="song.song_details.type =='rdio' && !rdio_user" data-ng-click="openModal($event,'rdio')"></span>
             {{song.song_details.title}}<span ng-if="song.song_details.artist"> - {{song.song_details.artist}}</span>
@@ -142,8 +142,8 @@
       <span class="song-icons" style="float:right" ng-show="autoplayHover">
         <a ng-click="stopPropagation($event)" href="{{playlist.autoplay.permalink_url}}" target="_blank" title="Go to song on {{playlist.autoplay.type}}">
           <i data-ng-class="{
-            'fa fa-youtube-play': playlist.autoplay.type === 'youtube', 
-            'fa fa-soundcloud': playlist.autoplay.type === 'soundcloud', 
+            'fa fa-youtube-play': playlist.autoplay.type === 'youtube',
+            'fa fa-soundcloud': playlist.autoplay.type === 'soundcloud',
             'icon-rdio': playlist.autoplay.type === 'rdio'
           }"></i>
         </a>
