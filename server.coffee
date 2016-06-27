@@ -49,7 +49,7 @@ app.use coffee {
 	bare: true
 }
 
-app.use(body_parser.json()) 
+app.use(body_parser.json())
 app.use(body_parser.urlencoded({ extended: false }))
 
 app.use stylus.middleware {
@@ -135,5 +135,3 @@ cleanUpDB = () ->
 	setTimeout(cleanUpDB, 86400000) #one day
 
 cleanUpDB()
-
-

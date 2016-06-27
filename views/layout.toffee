@@ -24,8 +24,10 @@
     <link rel="stylesheet" href="/style/icons/icons.css">
 
     <!-- Google Fonts -->
-
     <link href='https://fonts.googleapis.com/css?family=Roboto:100|Open+Sans:300' rel='stylesheet' type='text/css'>
+
+    <!-- Electron -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
     <!-- JQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -108,5 +110,8 @@
     </script>
 
   </body>
+
+  <!-- Electron -->
+  <script>if (window.module) module = window.module;</script>
 
 </html>
