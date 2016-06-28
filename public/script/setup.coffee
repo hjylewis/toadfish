@@ -1,5 +1,8 @@
 rdio_user = null
 uploadedSongs = [];
+electron = window && window.process && window.process.type #true if loading using electron
+if (electron)
+	{ipcRenderer} = require('electron');
 
 socket = io(window.location.origin)
 socket.on 'roomID', (msg) ->
@@ -14,7 +17,7 @@ SC.initialize {
     client_id: "3baff77b75f4de090413f7aa542254cd"
 }
 if (host == true)
-	$.post('/' + roomID + '/enabled', { 
+	$.post('/' + roomID + '/enabled', {
 		type: 'soundcloud',
 		roomID: roomID
 	})
@@ -23,7 +26,7 @@ googleApiClientReady = ->
 	gapi.client.setApiKey 'AIzaSyDxetqce82LNsSBK4aSQ_7sSFDelsRtwSM'
 	gapi.client.load 'youtube', 'v3'
 	if (host == true)
-		$.post('/' + roomID+ '/enabled', { 
+		$.post('/' + roomID+ '/enabled', {
 			type: 'youtube',
 			roomID: roomID
 		}, (err) ->
@@ -43,7 +46,7 @@ if (host == true)
 		success: (res) ->
 			flashvars = {
 				'playbackToken': res,
-				'domain': window.location.hostname,            
+				'domain': window.location.hostname,
 				'listener': 'rdioCallback'    # the global name of the object that will receive callbacks from the SWF
 			}
 			params = {
@@ -61,7 +64,7 @@ if (host == true)
 rdioCallback = {
 	ready: (user) ->
 		rdio_player = $('#rdio_player').get(0)
-		$.post('/' + roomID+ '/enabled', { 
+		$.post('/' + roomID+ '/enabled', {
 			type: 'rdio',
 			roomID: roomID
 		}, (err) ->
@@ -128,7 +131,7 @@ handleFiles = (files) ->
 		if (!scope.$$phase && !scope.$root.$$phase)
 			scope.$apply()
 		if (!scope.apis_loaded.local)
-			$.post '/' + roomID+ '/enabled', { 
+			$.post '/' + roomID+ '/enabled', {
 				type: 'local',
 				roomID: roomID
 			}, (err) ->
