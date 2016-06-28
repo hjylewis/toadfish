@@ -17,6 +17,7 @@ class Playlist
 		@volume = 100
 		@autoplay = false
 		@loaded = false
+		@localURL = null
 		$.get '/sessionID', (sessionID) =>
 			@sessionID = sessionID
 		socket.on 'update', (update) =>
@@ -336,6 +337,8 @@ class Playlist
 
 		if host
 			_this = @
+			URL.revokeObjectURL(_this.localURL)
+			_this.localURL = null
 			# if (song_details.type == "soundcloud")
 			# 	SC.stream "/tracks/" + song_details.id, {
 			# 			whileplaying: () ->
@@ -343,8 +346,7 @@ class Playlist
 			# 			onload: () ->
 			# 				if (this.readyState == 2)
 			# 					console.log "sc error"
-			# 					song.song_details.error = true
-			# 					_this.save("error", _this.currentIndex.toString())
+			# 					_this.reportError()
 			# 					song.obj = null
 			# 					_this.next()
 			# 			onplay: () ->
@@ -396,13 +398,16 @@ class Playlist
 					path = '/Users/hlewis/Music/iTunes/iTunes Media/Music/Grimes/Art Angels/06\ Kill\ V.\ Maim.m4a'
 					ipcRenderer.send('song', path);
 					ipcRenderer.removeAllListeners('song'); # ignore stale messages
-					ipcRenderer.on 'song', (event, confirmPath, data) =>
-						if (confirmPath == path) # ignore stale messages TODO: switch to current song path?
-							blob = new Blob([data.buffer])
-							objectURL = URL.createObjectURL(blob);
-							console.log(objectURL);
+					ipcRenderer.on 'song', (event, data) =>
+						if (data.err)
+							# TODO
+							_this.reportError()
+							_this.next()
+						else if (data.confirmPath == path) # ignore stale messages TODO: switch to current song path?
+							_this.localURL = URL.createObjectURL(new Blob([data.song]));
+							console.log(_this.localURL);
 							soundManager.sound = soundManager.createSound({
-								url: objectURL,
+								url: _this.localURL,
 								whileplaying: () ->
 									_this.positionChanged "local", this.position
 								onload: () ->
@@ -425,9 +430,19 @@ class Playlist
 							})
 							cb()
 							ipcRenderer.removeAllListeners('song'); # remove listener
-							# remove url after done
-							# else handling
+				else
+					# TODO get desktop
+					_this.reportError()
+					_this.next()
+			else
+				_this.reportError()
+				_this.next()
 
+
+	reportError: () ->
+		console.log "error"
+		@getCurrentSong().song_details.error = true
+		@save("error", _this.currentIndex.toString())
 
 	positionChanged: (type, position) ->
 		return if !host

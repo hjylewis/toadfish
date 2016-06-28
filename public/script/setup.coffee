@@ -4,6 +4,8 @@ electron = window && window.process && window.process.type #true if loading usin
 if (electron)
 	{ipcRenderer} = require('electron');
 
+# TODO ping desktop to send songs to db
+
 socket = io(window.location.origin)
 socket.on 'roomID', (msg) ->
 	socket.emit('roomID', roomID)
