@@ -5,7 +5,7 @@ middleware = require('../lib/middleware')
 LocalSong = require('../models/localsong')
 router = express.Router()
 
-router.post "/:roomID/storeSongs", (req, res) ->
+router.post "/:roomID/storeSongs", middleware.hostMiddleware, (req, res) ->
 	roomID = req.param("roomID")
 	console.log(req.body);
 	song = JSON.parse(req.body.song)
