@@ -339,65 +339,64 @@ class Playlist
 			_this = @
 			URL.revokeObjectURL(_this.localURL)
 			_this.localURL = null
-			# if (song_details.type == "soundcloud")
-			# 	SC.stream "/tracks/" + song_details.id, {
-			# 			whileplaying: () ->
-			# 				_this.positionChanged "soundcloud", this.position
-			# 			onload: () ->
-			# 				if (this.readyState == 2)
-			# 					console.log "sc error"
-			# 					_this.reportError()
-			# 					song.obj = null
-			# 					_this.next()
-			# 			onplay: () ->
-			# 				_this.setPlayState 1
-			# 			onstop: () ->
-			# 				_this.setPlayState 0
-			# 			onpause: () ->
-			# 				_this.setPlayState 2
-			# 			onbufferchange: () ->
-			# 				if (this.isBuffering)
-			# 					_this.setPlayState 3
-			# 				else
-			# 					_this.setPlayState 1
-			# 		}, (sound) ->
-			# 			SC.sound = sound
-			# 			cb()
-			# else if (song_details.type == "youtube")
-			# 	if (yt_player == null)
-			# 		yt_player = new YT.Player('yt_player', {
-			# 			height: '0',
-			# 			width: '0',
-			# 			videoId: song_details.id,
-			# 			playerVars: {'autoplay': 0, 'controls': 0, rel: 0},
-			# 			events: {
-			# 				'onReady': () ->
-			# 					yt_player.unMute()
-			# 					cb()
-			# 				'onStateChange': (event) =>
-			# 					if (event.data == YT.PlayerState.PLAYING)
-			# 						@setPlayState 1
-			# 					else if (event.data == YT.PlayerState.PAUSED)
-			# 						@setPlayState 2
-			# 					else if (event.data == YT.PlayerState.BUFFERING)
-			# 						@setPlayState 3
-			# 					else if (event.data == -1)
-			# 						@setPlayState 0
-			# 			}
-			#         })
-			# 	else
-			# 		yt_player.loadVideoById(song_details.id)
-			# 		cb()
-			# else if (song_details.type == "rdio")
-			# 	rdio_player.rdio_play(song_details.id)
-			# 	rdio_player.rdio_pause()
-			# 	cb()
-			# else if (song_details.type == "local")
-			if (true)
+			if (song_details.type == "soundcloud")
+				SC.stream "/tracks/" + song_details.id, {
+						whileplaying: () ->
+							_this.positionChanged "soundcloud", this.position
+						onload: () ->
+							if (this.readyState == 2)
+								console.log "sc error"
+								_this.reportError()
+								song.obj = null
+								_this.next()
+						onplay: () ->
+							_this.setPlayState 1
+						onstop: () ->
+							_this.setPlayState 0
+						onpause: () ->
+							_this.setPlayState 2
+						onbufferchange: () ->
+							if (this.isBuffering)
+								_this.setPlayState 3
+							else
+								_this.setPlayState 1
+					}, (sound) ->
+						SC.sound = sound
+						cb()
+			else if (song_details.type == "youtube")
+				if (yt_player == null)
+					yt_player = new YT.Player('yt_player', {
+						height: '0',
+						width: '0',
+						videoId: song_details.id,
+						playerVars: {'autoplay': 0, 'controls': 0, rel: 0},
+						events: {
+							'onReady': () ->
+								yt_player.unMute()
+								cb()
+							'onStateChange': (event) =>
+								if (event.data == YT.PlayerState.PLAYING)
+									@setPlayState 1
+								else if (event.data == YT.PlayerState.PAUSED)
+									@setPlayState 2
+								else if (event.data == YT.PlayerState.BUFFERING)
+									@setPlayState 3
+								else if (event.data == -1)
+									@setPlayState 0
+						}
+			        })
+				else
+					yt_player.loadVideoById(song_details.id)
+					cb()
+			else if (song_details.type == "rdio")
+				rdio_player.rdio_play(song_details.id)
+				rdio_player.rdio_pause()
+				cb()
+			else if (song_details.type == "local")
 				if (electron)
-					path = '/Users/hlewis/Music/iTunes/iTunes Media/Music/Grimes/Art Angels/06\ Kill\ V.\ Maim.m4a'
-					ipcRenderer.send('song', path);
-					ipcRenderer.removeAllListeners('song'); # ignore stale messages
+					path = song_details.permalink_url
+					ipcRenderer.send('song', path)
+					ipcRenderer.removeAllListeners('song') # ignore stale messages
 					ipcRenderer.on 'song', (event, data) =>
 						if (data.err)
 							# TODO

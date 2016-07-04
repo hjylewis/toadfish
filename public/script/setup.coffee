@@ -6,11 +6,20 @@ if (electron)
 
 # TODO ping desktop to send songs to db
 if (electron)
+	scope = angular.element($("body")).scope()
 	$.get '/sessionID', (sessionID) =>
 		ipcRenderer.send('storeSongs', {
 			roomID: roomID,
 			sessionID: sessionID
 		});
+	ipcRenderer.on 'localEnabled', (event) =>
+		$.post '/' + roomID+ '/enabled', {
+			type: 'local',
+			roomID: roomID
+		}, (err) ->
+			if (!err)
+				loadPlaylist()
+
 
 socket = io(window.location.origin)
 socket.on 'roomID', (msg) ->
@@ -107,6 +116,7 @@ rdioCallback = {
 				scope.$apply()
 }
 
+# Depreciated
 handleFiles = (files) ->
 	scope = angular.element($("body")).scope()
 	scope.isUploading = true
