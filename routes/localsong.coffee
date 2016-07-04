@@ -5,16 +5,17 @@ middleware = require('../lib/middleware')
 LocalSong = require('../models/localsong')
 router = express.Router()
 
-router.post "/:roomID/storeSongs", middleware.hostMiddleware, (req, res) ->
+router.post "/:roomID/storeSongs", (req, res) ->
 	roomID = req.param("roomID")
+	console.log(req.body);
 	song = JSON.parse(req.body.song)
 	LocalSong.findOne {
 		roomID: roomID,
-		title: song.tags.title,
-		album: song.tags.album,
-		artist: song.tags.artist[0],
-		genre: song.tags.genre[0],
-		year: song.tags.year
+		title: song.title,
+		album: song.album,
+		artist: song.artist[0],
+		genre: song.genre[0],
+		year: song.year
 	}, (err, existingSong) ->
 		if (err)
 			console.error "Error looking for song: " + JSON.stringify(err)
@@ -23,12 +24,12 @@ router.post "/:roomID/storeSongs", middleware.hostMiddleware, (req, res) ->
 			return res.send { alreadyExists: true }
 		LocalSong.create {
 			roomID: roomID,
-			title: song.tags.title,
-			album: song.tags.album,
-			artist: song.tags.artist[0],
-			genre: song.tags.genre[0],
-			year: song.tags.year,
-			url: song.url
+			title: song.title,
+			album: song.album,
+			artist: song.artist[0],
+			genre: song.genre[0],
+			year: song.year,
+			url: song.path
 		}, (err, newSong) ->
 			if (err)
 	          console.error "Error storing song: " + JSON.stringify(err)
@@ -47,7 +48,7 @@ router.get "/:roomID/search", middleware.roomMiddleware, (req, res) ->
 	page = parseInt(req.query.page) || 0
 	page_length = parseInt(req.query.page_length)
 	LocalSong.find(
-        { $text : { $search : query } }, 
+        { $text : { $search : query } },
         { score : { $meta: "textScore" } }
     )
     .where('roomID').equals(roomID)
@@ -76,7 +77,7 @@ router.get "/autoplay/:songid", (req, res) ->
 			return res.status(404).end()
 		query = song.artist + ' ' + song.album + ' ' + song.genre
 		LocalSong.find(
-			{ $text : { $search : query } }, 
+			{ $text : { $search : query } },
 			{ score : { $meta: "textScore" } }
 		)
 		.where('roomID').equals(song.roomID)

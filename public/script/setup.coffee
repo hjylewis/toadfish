@@ -5,6 +5,12 @@ if (electron)
 	{ipcRenderer} = require('electron');
 
 # TODO ping desktop to send songs to db
+if (electron)
+	$.get '/sessionID', (sessionID) =>
+		ipcRenderer.send('storeSongs', {
+			roomID: roomID,
+			sessionID: sessionID
+		});
 
 socket = io(window.location.origin)
 socket.on 'roomID', (msg) ->
