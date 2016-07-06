@@ -34,8 +34,7 @@
       <i ng-if="!apis_loaded.soundcloud" class="fa fa-spinner fa-pulse"></i></p>
     <p>Youtube <i ng-if="apis_loaded.youtube" class="fa fa-check"></i>
       <i ng-if="!apis_loaded.youtube" class="fa fa-spinner fa-pulse"></i></p>
-    <p id="uploadText">Use your own music library! <i ng-class="{'fa-upload clickable hover-purple': !isUploading, 'fa-spinner fa-pulse': isUploading}" class="fa" onclick="document.getElementById('inputFiles').click();"></i></p>
-    <em>Caution: Too many songs will slow down your browser</em>
+    <p id="uploadText">Use your own music library! <i ng-class="{'fa-upload clickable hover-purple': !isUploading, 'fa-spinner fa-pulse': isUploading}" class="fa" ng-click="loadLocalSongs()"></i></p>
     <input type="button" class="clickable" value="Continue" ng-click="startApp()"/>
   </div>
   <div class="content" ng-hide="isLoading" ng-cloak>
