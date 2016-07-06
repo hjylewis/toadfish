@@ -235,7 +235,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 
 	$scope.loadLocalSongs = function () {
 		if (electron) {
-		  ipcRenderer.sendToHost('loadLocalSongs');
+		  ipcRenderer.sendToHost('loadLocalSongs', roomID);
 		} else {
 			//TODO
 		}
