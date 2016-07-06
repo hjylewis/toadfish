@@ -190,7 +190,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 			if ($scope.modals[0]){
 				$scope.modals.splice(0,1);
 				return
-			} 
+			}
 			if ($scope.mode == "search") {
 				$scope.query = "";
 				$scope.mode = "playlist";
@@ -213,24 +213,32 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
     }
 
     $scope.toggleFullScreen = function () {
-		if ((document.fullScreenElement && document.fullScreenElement !== null) ||    
+		if ((document.fullScreenElement && document.fullScreenElement !== null) ||
 			(!document.mozFullScreen && !document.webkitIsFullScreen)) {
-			if (document.documentElement.requestFullScreen) {  
-				document.documentElement.requestFullScreen();  
-			} else if (document.documentElement.mozRequestFullScreen) {  
-				document.documentElement.mozRequestFullScreen();  
-			} else if (document.documentElement.webkitRequestFullScreen) {  
-				document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
-			}  
-		} else {  
-			if (document.cancelFullScreen) {  
-				document.cancelFullScreen();  
-			} else if (document.mozCancelFullScreen) {  
-				document.mozCancelFullScreen();  
-			} else if (document.webkitCancelFullScreen) {  
-				document.webkitCancelFullScreen();  
-			}  
-		}  
+			if (document.documentElement.requestFullScreen) {
+				document.documentElement.requestFullScreen();
+			} else if (document.documentElement.mozRequestFullScreen) {
+				document.documentElement.mozRequestFullScreen();
+			} else if (document.documentElement.webkitRequestFullScreen) {
+				document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+			}
+		} else {
+			if (document.cancelFullScreen) {
+				document.cancelFullScreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.webkitCancelFullScreen) {
+				document.webkitCancelFullScreen();
+			}
+		}
+	}
+
+	$scope.loadLocalSongs = function () {
+		if (electron) {
+		  ipcRenderer.sendToHost('loadLocalSongs');
+		} else {
+			//TODO
+		}
 	}
 
 	angular.element($window).bind("scroll", function() {
