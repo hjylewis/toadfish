@@ -237,7 +237,7 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 		if (electron) {
 		  ipcRenderer.sendToHost('loadLocalSongs', roomID);
 		} else {
-			//TODO
+			window.open('/desktop', '_blank');
 		}
 	}
 
