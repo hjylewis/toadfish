@@ -311,7 +311,7 @@ class Playlist
 		@save "autoplay", "false" if !update
 	loadArt: () ->
 		song = @getCurrentSong()
-		if !song || song.song_details.type == "local"
+		if !song
 			$("body").css "background-image", ""
 			return
 		song_details = song.song_details

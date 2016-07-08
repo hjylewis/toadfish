@@ -6,6 +6,8 @@ params = require('express-params')
 session = require('express-session')
 cookieParser = require('cookie-parser')
 mongoose = require('mongoose')
+Grid = require('gridfs-stream')
+Grid.mongo = mongoose.mongo
 MongoStore = require('connect-mongo')(session)
 Room = require('./models/room')
 stylus = require('stylus')
@@ -32,8 +34,10 @@ app.use(favicon(__dirname + '/public/favicon.ico'))
 
 mongoose.connect(process.env.MONGOLAB_URI)
 db = mongoose.connection
+gfs = null
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once 'open', (callback) ->
+	gfs = Grid(db.db)
 	console.log "Toadfish DB connected"
 
 
@@ -71,8 +75,9 @@ io = require('socket.io')(server)
 
 # Make sockets accessible to the router
 app.use (req, res, next) ->
-    req.io = io
-    next()
+		req.io = io
+		req.gfs = gfs
+		next()
 
 # Routers
 app.use('/', routes)

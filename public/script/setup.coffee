@@ -4,7 +4,6 @@ electron = window && window.process && window.process.type #true if loading usin
 if (electron)
 	{ipcRenderer} = require('electron');
 
-# TODO ping desktop to send songs to db
 if (electron)
 	scope = angular.element($("body")).scope()
 	$.get '/sessionID', (sessionID) =>

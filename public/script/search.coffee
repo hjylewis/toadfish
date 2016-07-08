@@ -6,7 +6,7 @@ class Search
   constructor: () ->
     @storage = {}
     @storageSupport = true
-    try 
+    try
       sessionStorage.setItem('test', '1')
       sessionStorage.removeItem('test')
       @storageSupport = true
@@ -14,7 +14,7 @@ class Search
       @storageSupport = false
 
   getEnabled: (cb) ->
-    $.get '/' + roomID + '/enabled', (obj) -> 
+    $.get '/' + roomID + '/enabled', (obj) ->
       types = _.keys(_.pick(obj, (val, key, obj) -> return val))
       cb types
 
@@ -48,7 +48,7 @@ class Search
       storedResults = JSON.parse(sessionStorage.getItem(str))
     else if @storage[str]
       storedResults = JSON.parse(@storage[str])
-    else 
+    else
       storedResults = { results: {} }
 
     if not options.next?
@@ -155,12 +155,14 @@ class Search
         else if result.user.avatar_url? && result.user.avatar_url.indexOf('a1') == -1
           retObj.artwork_small = result.user.avatar_url
           retObj.artwork_url = result.user.avatar_url.replace('large','t500x500')
-      else if type == 'rdio' 
+      else if type == 'rdio'
         retObj.artwork_small = result.icon if result.icon?
         retObj.artwork_url = result.icon400.replace('400','600') if result.icon400?
       else if type == 'youtube'
         retObj.artwork_small = result.snippet.thumbnails.default.url
         retObj.artwork_url = result.snippet.thumbnails.high.url
+      else if type == 'local'
+        retObj.artwork_url = retObj.artwork_small = result.artwork_url
       if (!retObj.artwork_url)
         retObj.artwork_url = "/images/no_image.jpg"
       else
