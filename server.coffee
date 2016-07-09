@@ -17,6 +17,7 @@ favicon = require('serve-favicon')
 path = require('path')
 http = require('http')
 logger = require('morgan')
+cleanUp = require('./lib/cleanup')
 
 app = express()
 params.extend(app)
@@ -39,6 +40,8 @@ db.on('error', console.error.bind(console, 'connection error:'))
 db.once 'open', (callback) ->
 	gfs = Grid(db.db)
 	console.log "Toadfish DB connected"
+	cleanUp.cleanUpDB(gfs);
+	setInterval (() -> cleanUp.cleanUpDB(gfs)), 86400000 #one day
 
 
 app.use session({
@@ -131,12 +134,3 @@ io.on 'connection', (socket) ->
 
 server.listen port, ->
 	console.log "Listening on #{port}..."
-
-cleanUpDB = () ->
-	console.log "Running room clean up..."
-	oneWeekAgo = new Date()
-	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-	Room.find({update: {"$lt": oneWeekAgo}}).remove().exec()
-	setTimeout(cleanUpDB, 86400000) #one day
-
-cleanUpDB()
