@@ -36,11 +36,6 @@ class Playlist
 
 		if host
 			@endAutoPlay()
-			@playlist = _.filter(@playlist, (song, index) ->
-				ret = song.song_details.type != 'local'
-				if (!ret && index <= @currentIndex)
-					@currentIndex--
-				return ret) # remove local songs on reload
 			@saveToDB 'playlist'
 		else
 			@autoplay = if playlistSettings.autoplay then JSON.parse(playlistSettings.autoplay) else false
