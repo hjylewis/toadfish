@@ -71,9 +71,6 @@
 
     <nav>
       <li><a href="/">Toadfish</a></li>
-      <li id="register"><a href="/#about">about</a></li>
-      <li id="register"><a href="/#contact">contact</a></li>
-      <li><a href="/#accounts">log in</a></li>
     </nav>
 
 
