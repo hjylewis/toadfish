@@ -39,7 +39,8 @@
         <div class="info"><h2>Follow <a href="https://twitter.com/toadfish_music">@toadfish_music</a> for updates</h2></div>
     </section>
     <div class="footer">
-        <span>© Toadfish 2015</span>
+        <span><a href="mailto:henry.jy.lewis@gmail.com">email</a> | <a href="https://twitter.com/toadfish_music">twitter</a> | <a href="https://github.com/hjylewis/toadfish">github</a></span><br />
+        <span class="copyright">© Toadfish 2016</span>
     </div>
 
 </div>
@@ -51,4 +52,3 @@ if (window.location.hash) {
     }, 500);
 }
 </script>
-
