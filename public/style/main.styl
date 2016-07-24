@@ -48,18 +48,18 @@ body
   font-family "Raleway", helvetica
   position relative
   min-height 100%
-  
+
 h1
   text-align center
   font-family: 'Roboto';
-  font-size 70px 
+  font-size 70px
   margin-top 25px
   color: white;
   padding: 14px;
-    
+
 h4
   font-family: 'Roboto';
-  font-size 30px 
+  font-size 30px
   font-weight: bold
 
 input
@@ -73,21 +73,22 @@ input
   margin-top 10px
   color: black
   font-family "Roboto", helvetica
-    
+
 input[type=range]
   float right
   padding 0px
   margin 0px
-  
+
 nav
   text-align right
-  background transblack
+  background #3B3738
   padding-right 14px
   padding-bottom 15px
   position fixed
   width 100%
   top 0px
   left 0px
+  box-shadow 0 0 5px rgba(0, 0, 0, 0.5)
 
   a
     color white
@@ -109,7 +110,7 @@ nav
   li:first-child
     padding-left 20px
     float left
-    
+
 div.content
   min-width 300px
   width 80%
@@ -122,26 +123,26 @@ div.content
 
 .hover-purple:hover
   color link-purple
-  
+
 .black-background
   background-color black
-  
+
 .hover-view
   display none
   &:hover
     display inherit
-  
+
 .dndDraggingSource
   display none !important
 
 .fa-exclamation-triangle
   color red
-  
+
 .warning
   color red
-  
+
 .no-margin
-  margin 0px !important 
+  margin 0px !important
 
 //////////////
 //Launch page
@@ -154,7 +155,7 @@ input.launch-button
   margin 10px
   color white
   font-size 40px
-  padding 10px 35px 
+  padding 10px 35px
   margin auto
   margin-top 20px
   cursor pointer
@@ -173,7 +174,7 @@ input.launch-button
 
   .create-room-container
     overflow:hidden
-    
+
 input#createRoomName
   margin auto
   font-size 55px
@@ -183,7 +184,7 @@ input#createRoomName
   color white
   background-color transparent
   text-overflow ellipsis
-  
+
   input_grey = white
 
   &::-webkit-input-placeholder { /* WebKit browsers */
@@ -200,19 +201,19 @@ input#createRoomName
   &:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    input_grey;
   }
-  
-  
-  
+
+
+
 #createWarning
   margin-top 10px
 
 #yt_player
   margin-top 20px
   width 100%
-  height 400px 
-  
+  height 400px
+
 section
-  background-size cover 
+  background-size cover
   overflow:hidden
   min-height 100vh
   &#create
@@ -225,12 +226,12 @@ section
       margin-top 55px
       color black
     div.info
-      width 551px 
-      text-align center 
+      width 551px
+      text-align center
       font-family 'Roboto'
       margin auto
       margin-top 30px
-      margin-bottom 50px   
+      margin-bottom 50px
       font-size 40px
       color black
       padding 20px
@@ -239,7 +240,7 @@ section
         font-size 20px
         text-align left
       div
-        position relative 
+        position relative
         width 438px
         margin auto
         .fa-volume-up
@@ -254,7 +255,7 @@ section
           top -28px
           right -15px
   &#accounts
-    position relative 
+    position relative
     background-image url('../images/9a2d8cf6.jpeg')
     div.info
       text-align left
@@ -264,11 +265,11 @@ section
       font-size 22px
       h1
         text-align left
-        padding 0px 
+        padding 0px
         font-size 80px
       h2
-        padding 20px 0px 
-        font-size 38px  
+        padding 20px 0px
+        font-size 38px
       div
         margin-left 10px
         ul
@@ -283,24 +284,24 @@ section
     background-image url('../images/photo-1429962714451-bb934ecdc4ec.jpeg')
     div.info
       text-align center
-      height 100% 
-      position relative 
+      height 100%
+      position relative
       font-family 'Roboto'
       font-size 22px
       h2
         margin-top 500px
-        padding 20px 0px 
-        font-size 38px 
+        padding 20px 0px
+        font-size 38px
         position absolute
         bottom 10px
         width 100%
-        
+
 .footer
   padding 10
   font-size 15px
   text-align right
-    
-    
+
+
 
 
 //////////////
@@ -319,9 +320,9 @@ section
       background purple
       border 0
   #uploadText
-    padding-top 30px  
+    padding-top 30px
   em
-    font-size 12px  
+    font-size 12px
 
 div.search-container
   margin-top 20px
@@ -331,7 +332,7 @@ div.search-container
   width 100%
   overflow hidden
   .search-loading
-    float right 
+    float right
     margin 23px 15px
     color rgba(0,0,0,.5)
   span
@@ -339,13 +340,13 @@ div.search-container
     overflow hidden
     #first_search
       font-size 40px
-      width 100% 
+      width 100%
       padding 20px 20px
       padding-right 0px
       color black
       background rgba(255,255,255,0)
       border none
-      margin-top 0px 
+      margin-top 0px
 
       input_grey = #848484
 
@@ -363,7 +364,7 @@ div.search-container
       &:-ms-input-placeholder { /* Internet Explorer 10+ */
         color:    input_grey;
       }
-  
+
 div.share
   background-color transblack
   padding 15px
@@ -382,7 +383,7 @@ div.share
   .uploadButton
     float right
     margin-top 9px
-    
+
 div.getting-started
   color black
   width 360px
@@ -400,12 +401,12 @@ div#player
   border-radius radius radius radius radius
   margin-top 20px
   padding 15px
-  
+
   #top-line
     // display inline-block
     // vertical-align middle
     height 23px
-    width 100% 
+    width 100%
     #buttons
       float left
       margin-right 10px
@@ -421,20 +422,20 @@ div#player
         float right
         margin-right 10px
       #volume
-        float right 
+        float right
         .fa-volume-up
-          float right 
+          float right
     #details
       white-space nowrap
       text-overflow ellipsis
       display block
       overflow hidden
-      
+
   .progress
     clear both
     margin-top 15px
     margin-bottom 0px
-    height 10px 
+    height 10px
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -454,9 +455,9 @@ div#player
           box-shadow 0 2px 5px rgba(0, 0, 0, 0.25) inset
         &::-webkit-progress-value
           background-color purple
-          border-radius 2px 
+          border-radius 2px
           background-size 35px 20px, 100% 100%, 100% 100%
-        
+
 
 div#playlist
   margin-top 20px
@@ -470,7 +471,7 @@ div#playlist
     padding 10px
     position relative
     margin-top -1px
-    height 22px 
+    height 22px
     &.hover:hover
       background-color transblacker
     &:first-child
@@ -484,7 +485,7 @@ div#playlist
       overflow hidden
       text-overflow ellipsis
       white-space nowrap
-      
+
 div#autoplay
   margin-top 20px
   padding 10px
@@ -503,7 +504,7 @@ div#autoplay
     text-overflow ellipsis
     overflow hidden
     white-space nowrap
-   
+
 
 
 ul#result_list
@@ -531,12 +532,12 @@ ul#result_list
       text-transform capitalize
       padding 10px
       span
-        font-size 85%  
+        font-size 85%
         float right
         cursor pointer
         &:hover
           text-decoration underline
-          
+
     &.infiniteLoading
       height 22px
       background-color transblack
@@ -555,7 +556,7 @@ ul#result_list
 
     &.no_border_result
       border-top none
-      
+
     .art
       float right
       padding 20px
@@ -563,7 +564,7 @@ ul#result_list
       text-overflow ellipsis
       display block
       overflow hidden
-      
+
     h2
       padding-top 20px
       padding-left 20px
@@ -578,7 +579,7 @@ ul#result_list
       text-overflow ellipsis
       display inline-block
       overflow hidden
-      max-width 100% 
+      max-width 100%
 
     img
       max-height 100px
@@ -587,7 +588,7 @@ ul#result_list
       text-overflow ellipsis
       display inline-block
       overflow hidden
-      max-width 100% 
+      max-width 100%
       max-height 70px
       color black
       &:hover
@@ -615,7 +616,7 @@ ul#result_list
         left -10px
       &.play_now
         left 110px
-        
+
 div.modal
   background-color grey
   border-radius radius
@@ -625,7 +626,7 @@ div.modal
   position fixed
   padding 30px
   top 50%
-  left 50%  
+  left 50%
   margin-top -180px
   margin-left -230px
   a
@@ -637,15 +638,15 @@ div.modal
     padding 5px
     right 7px
     top 7px
-  
+
 div.overlay
   background-color rgba(0,0,0,0.7)
   width 100%
   height 100%
   position absolute
-  top 0px    
+  top 0px
   z-index 5
-  
+
 
 //////////////
 //Mobile
@@ -660,7 +661,7 @@ div.overlay
     box-sizing border-box
     padding 100px 5px
 
-  
+
 @media screen and (max-width: 500px)
   div.modal-view
     height 100%
@@ -677,11 +678,11 @@ div.overlay
     top 0
   li#register
     display none
-    
+
 @media screen and (max-width: 550px)
   .launch-container
-    width 100% 
-  section#about div.info 
+    width 100%
+  section#about div.info
     width 90%
     div
       display none
@@ -690,7 +691,7 @@ div.overlay
       font-size 50px
     h2
       font-size 30px
-      
+
 @media screen and (max-width: 700px)
   input#createRoomName
     font-size 33px
@@ -719,7 +720,7 @@ div.overlay
   width: 275px;
   color: black;
   white-space: nowrap;
-  
+
   ul {
     margin : 0;
     list-style:none;
@@ -728,7 +729,7 @@ div.overlay
     padding : 0;
     height:10px;
     margin-bottom: 10px;
-    
+
     li {
       position : absolute;
       width:2px;

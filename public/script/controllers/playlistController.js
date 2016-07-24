@@ -177,16 +177,18 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 	}
 
 	$scope.dropCallback = function(to, item) {
+		console.log('dropCllback ')
+		console.log(to);
+		console.log(item);
 		var from = $scope.from.index
 		if (from < to)
 			to = to - 1
 		$scope.playlist.move(from, to);
-        return false;
-    };
+		return false;
+	};
 
-    $scope.shortcut = function (e) {
-
-  		if (e.keyCode == 27) {
+	$scope.shortcut = function (e) {
+		if (e.keyCode == 27) {
 			if ($scope.modals[0]){
 				$scope.modals.splice(0,1);
 				return
@@ -198,21 +200,21 @@ var PlaylistController = ['$scope', '$timeout', '$q', '$window', '$document', '$
 			}
 		}
 
-    	// if search bar is focused
-    	if (document.activeElement.id === 'first_search') {
-    		return
-    	}
+		// if search bar is focused
+		if (document.activeElement.id === 'first_search') {
+			return
+		}
 
-    	if (e.keyCode == 32) {
-    		$scope.play();
-    	} else if (e.keyCode == 39) {
-			$scope.next();
-    	} else if (e.keyCode == 37) {
-			$scope.prev();
-    	}
-    }
+		if (e.keyCode == 32) {
+			$scope.play();
+		} else if (e.keyCode == 39) {
+		$scope.next();
+		} else if (e.keyCode == 37) {
+		$scope.prev();
+		}
+	}
 
-    $scope.toggleFullScreen = function () {
+  $scope.toggleFullScreen = function () {
 		if ((document.fullScreenElement && document.fullScreenElement !== null) ||
 			(!document.mozFullScreen && !document.webkitIsFullScreen)) {
 			if (document.documentElement.requestFullScreen) {

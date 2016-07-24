@@ -94,7 +94,7 @@
     <script src="//apis.google.com/js/client.js?onload=googleApiClientReady"></script>
 
     <script src="/script/tf-app.js"></script>
-    <script src="/script/vendor/angular-drag-and-drop-lists.min.js"></script>
+    <script src="/script/vendor/angular-drag-and-drop-lists.js"></script>
 
     <!-- Google Analytics -->
     <script>

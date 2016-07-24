@@ -332,7 +332,10 @@ class Playlist
 
 		if host
 			_this = @
-			URL.revokeObjectURL(_this.localURL)
+			oldURL = _this.localURL
+			callback = () ->
+				URL.revokeObjectURL(oldURL) # remove old URL
+				cb()
 			_this.localURL = null
 			if (song_details.type == "soundcloud")
 				SC.stream "/tracks/" + song_details.id, {
@@ -357,7 +360,7 @@ class Playlist
 								_this.setPlayState 1
 					}, (sound) ->
 						SC.sound = sound
-						cb()
+						callback()
 			else if (song_details.type == "youtube")
 				if (yt_player == null)
 					yt_player = new YT.Player('yt_player', {
@@ -368,7 +371,7 @@ class Playlist
 						events: {
 							'onReady': () ->
 								yt_player.unMute()
-								cb()
+								callback()
 							'onStateChange': (event) =>
 								if (event.data == YT.PlayerState.PLAYING)
 									@setPlayState 1
@@ -382,11 +385,11 @@ class Playlist
 			        })
 				else
 					yt_player.loadVideoById(song_details.id)
-					cb()
+					callback()
 			else if (song_details.type == "rdio")
 				rdio_player.rdio_play(song_details.id)
 				rdio_player.rdio_pause()
-				cb()
+				callback()
 			else if (song_details.type == "local")
 				if (electron)
 					path = song_details.permalink_url
@@ -399,7 +402,6 @@ class Playlist
 							_this.next()
 						else if (data.confirmPath == path) # ignore stale messages TODO: switch to current song path?
 							_this.localURL = URL.createObjectURL(new Blob([data.song]));
-							console.log(_this.localURL);
 							soundManager.sound = soundManager.createSound({
 								url: _this.localURL,
 								whileplaying: () ->
@@ -422,7 +424,7 @@ class Playlist
 									else
 										_this.setPlayState 1
 							})
-							cb()
+							callback()
 							ipcRenderer.removeAllListeners('song'); # remove listener
 				else
 					# TODO get desktop
