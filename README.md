@@ -1,4 +1,4 @@
-# [Toadfish](http://toadfish.xyz)
+# [Toadfish](http://toadfish.hjylewis.com/)
 
 ## Music, Together.
 
@@ -16,5 +16,12 @@ Toadfish allows users to make ‘rooms’ that host a playlist that others can a
 ![Image of search](https://raw.githubusercontent.com/hjylewis/toadfish/master/screenshots/search.png)
 ![Image of player](https://raw.githubusercontent.com/hjylewis/toadfish/master/screenshots/player.png)
 <img src='https://raw.githubusercontent.com/hjylewis/toadfish/master/screenshots/mobile%20-%20autoplay.png' width='400'>
+
+## Run Locally
+```
+$ sudo mongod
+$ source .env
+$ ./server.coffee
+```
 
 © Toadfish 2015

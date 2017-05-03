@@ -3,16 +3,16 @@
     <title>#{title}</title>
 
     <meta property="fb:app_id" content="911101582335475" />
-    <meta property="og:url" content="http://toadfish.xyz/#{roomID}" />
+    <meta property="og:url" content="/#{roomID}" />
     <meta property="og:description" content="#{description}" />
     <meta property="og:title" content="#{title}" />
-    <meta property="og:image" content="http://toadfish.xyz/images/Dj-Club-Mix-Girl-2015-Wallpaper.jpg" />
+    <meta property="og:image" content="/images/Dj-Club-Mix-Girl-2015-Wallpaper.jpg" />
     <meta property="og:site_name" content="Toadfish" />
 
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="#{title}" />
     <meta property="twitter:description" content="#{description}" />
-    <meta property="twitter:image" content="https://toadfish.xyz/images/Dj-Club-Mix-Girl-2015-Wallpaper.jpg" />
+    <meta property="twitter:image" content="/images/Dj-Club-Mix-Girl-2015-Wallpaper.jpg" />
     <meta property="twitter:site" content="@toadfish_music" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +48,7 @@
             var ENV = "dev";
             break;
           case "toadfish.herokuapp.com":
-          case "toadfish.xyz":
+          case "toadfish.hjylewis.com":
             var ENV = "production";
             break;
           default:
