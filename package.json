@@ -20,7 +20,7 @@
     "redis": "^0.12.1",
     "request": "^2.58.0",
     "serve-favicon": "^2.1.1",
-    "socket.io": "^1.3.5",
+    "socket.io": "^1.7.3",
     "stylus": "^0.48.1",
     "toadfish-frame": "git+https://github.com/hjylewis/toadfish-frame.git",
     "toffee": "^0.1.12"
